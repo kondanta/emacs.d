@@ -120,6 +120,10 @@
   (setq display-time-24hr-format t)
   (display-time-mode 1)
 #+END_SRC
+** Remove C-z
+#+BEGIN_SRC emacs-lisp
+  (global-unset-key (kbd "C-z"))
+#+END_SRC
 * Utils
 ** Selection
 #+BEGIN_SRC emacs-lisp
