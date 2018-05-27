@@ -368,7 +368,10 @@
     (diminish 'text-scale-mode)
     (diminish 'irony-mode)
     (diminish 'linum-mode)
-    (diminish 'company-mode))
+    (diminish 'company-mode)
+    (diminish 'yas-minor-mode)
+    (diminish 'projectile-mode)
+    (diminish 'abbrev-mode))
 #+END_SRC
 * Swiper
 ** Searcher
