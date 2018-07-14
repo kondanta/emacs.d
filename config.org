@@ -124,6 +124,11 @@
 #+BEGIN_SRC emacs-lisp
   (global-unset-key (kbd "C-z"))
 #+END_SRC
+** Set specpdl size
+#+BEGIN_SRC emacs-lisp
+(setq max-specpdl-size 32000)
+(setq debug-on-error t)
+#+END_SRC
 * Utils
 ** Selection
 #+BEGIN_SRC emacs-lisp
@@ -371,7 +376,6 @@
     (diminish 'linum-mode)
     (diminish 'text-scale-mode)
     (diminish 'company-mode)
-    (diminish 'yas-minor-mode)
     (diminish 'abbrev-mode)
     (diminish 'eldoc-mode)
     (diminish 'racer-mode))
@@ -391,99 +395,88 @@
 * IntelliSense
 ** Company
 #+BEGIN_SRC emacs-lisp
-  (use-package company
-    :ensure t
-    :config
-    (setq company-idle-delay 0)
-    (setq company-minimum-prefix-length 2))
+      (use-package company
+	:ensure t
+	:config
+	(setq company-idle-delay 0)
+	(setq company-minimum-prefix-length 2))
 
-  (with-eval-after-load 'company
-    (define-key company-active-map (kbd "M-n") nil)
-    (define-key company-active-map (kbd "M-p") nil)
-    (define-key company-active-map (kbd "C-n") #'company-select-next)
-    (define-key company-active-map (kbd "C-p") #'company-select-previous)
-    (define-key company-active-map (kbd "SPC") #'company-abort))
-
-  (add-hook 'c++-mode-hook 'yas-minor-mode)
-  (add-hook 'c-mode-hook 'yas-minor-mode)
-
-  (use-package flycheck-clang-analyzer
-    :ensure t
-    :config
-    (with-eval-after-load 'flycheck
-      (require 'flycheck-clang-analyzer)
-      (flycheck-clang-analyzer-setup)))
-
-  (with-eval-after-load 'company
-    (add-hook 'c++-mode-hook 'company-mode)
-    (add-hook 'c-mode-hook 'company-mode)
-    (add-hook 'python-mode-hook 'company-mode))
+      (with-eval-after-load 'company
+	(define-key company-active-map (kbd "M-n") nil)
+	(define-key company-active-map (kbd "M-p") nil)
+	(define-key company-active-map (kbd "C-n") #'company-select-next)
+	(define-key company-active-map (kbd "C-p") #'company-select-previous)
+	(define-key company-active-map (kbd "SPC") #'company-abort))
 
 
-  ;; C++
-  (use-package company-c-headers
-    :ensure t)
+      (use-package flycheck-clang-analyzer
+	:ensure t
+	:config
+	(with-eval-after-load 'flycheck
+	  (require 'flycheck-clang-analyzer)
+	  (flycheck-clang-analyzer-setup)))
 
-  (use-package company-irony
-    :ensure t
-    :config
-    (setq company-backends '((company-c-headers
-			      company-dabbrev-code
-			      company-irony))))
+      (with-eval-after-load 'company
+	(add-hook 'c++-mode-hook 'company-mode)
+	(add-hook 'c-mode-hook 'company-mode)
+	(add-hook 'python-mode-hook 'company-mode))
 
-  (use-package irony
-    :ensure t
-    :config
-    (add-hook 'c++-mode-hook 'irony-mode)
-    (add-hook 'c-mode-hook 'irony-mode)
-    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
-  ;; Python
-  ;;Flycheck
-  (add-hook 'python-mode-hook 'flycheck-mode)
-  (use-package company-jedi
-    :ensure t
-    :config 
-    (require 'company)
-    (add-to-list 'company-backends 'company-jedi)
-    )
+      ;; C++
+      (use-package company-c-headers
+	:ensure t)
 
-  (defun python-mode-company-init ()
-    (setq-local company-backends '((company-jedi
-				    company-etags
-				    company-dabbrev-code))))
+      (use-package company-irony
+	:ensure t
+	:config
+	(setq company-backends '((company-c-headers
+				  company-dabbrev-code
+				  company-irony))))
 
-  (use-package company-jedi
-    :ensure t
-    :config
-    (require 'company)
-    (add-hook 'python-mode-hook 'python-mode-company-init)
-    )
+      (use-package irony
+	:ensure t
+	:config
+	(add-hook 'c++-mode-hook 'irony-mode)
+	(add-hook 'c-mode-hook 'irony-mode)
+	(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
-  ;; Rust
-  (setq racer-cmd (concat (getenv "HOME") "/.cargo/bin/racer"))
-  (setq racer-rust-src-path (concat (getenv "HOME") "/.multirust/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src"))
+      ;; Python
+      ;;Flycheck
+      (add-hook 'python-mode-hook 'flycheck-mode)
+      (use-package company-jedi
+	:ensure t
+	:config 
+	(require 'company)
+	(add-to-list 'company-backends 'company-jedi)
+	)
 
-  (add-hook 'rust-mode-hook #'racer-mode)
-  (add-hook 'racer-mode-hook #'eldoc-mode)
-  (add-hook 'racer-mode-hook #'company-mode)
+      (defun python-mode-company-init ()
+	(setq-local company-backends '((company-jedi
+					company-etags
+					company-dabbrev-code))))
 
-  ;; Add flycheck for rust
-  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
+      (use-package company-jedi
+	:ensure t
+	:config
+	(require 'company)
+	(add-hook 'python-mode-hook 'python-mode-company-init)
+	)
+
+    ;; Rust
+    (setq racer-cmd (concat (getenv "HOME") "/.cargo/bin/racer"))
+    (setq racer-rust-src-path (concat (getenv "HOME") "/.multirust/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src"))
+
+    (add-hook 'rust-mode-hook #'racer-mode)
+    (add-hook 'racer-mode-hook #'eldoc-mode)
+    (add-hook 'racer-mode-hook #'company-mode)
+
+    ;; Add flycheck for rust
+    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
 #+END_SRC
 ** Js2-mode
 #+BEGIN_SRC emacs-lisp
   (use-package js2-mode
     :ensure t)
-#+END_SRC
-* Yasnippet
-#+BEGIN_SRC emacs-lisp
-  (use-package yasnippet
-    :ensure t
-    :config
-    (use-package yasnippet-snippets
-      :ensure t)
-      (yas-reload-all))
 #+END_SRC
 * Magit
 ** Git handler
@@ -521,4 +514,24 @@
     :config
     (setq rust-rustfmt-bin "/home/kondanta/.cargo/bin/rustfmt")
     (setq rust-cargo-bin "/home/kondanta/.cargo/bin/cargo"))
+
+(add-hook 'dart-mode-hook (lambda ()
+ (set (make-local-variable 'company-backends)
+  '(company-dart (company-dabbrev company-yankpad)))))
+#+END_SRC
+** Dart
+#+BEGIN_SRC emacs-lisp
+(use-package dart-mode
+:ensure t
+:config
+(setq dart-sdk-path "/home/kondanta/.dart-sdk-dev/")
+(setq dart-format-path "/home/kondanta/.dart-sdk-dev/bin/dartfmt")
+(setq dart-executable-path "/home/kondanta/.dart-sdk-dev/bin/dart")
+(setq dart-analysis-server-snapshot-path "/home/kondanta/.dart-sdk-dev/bin/snapshots/analysis_server.dart.snapshot")
+(setq format-on-save t)
+;;problematics
+;;(setq dart-debug t)
+;;(setq dart-enable-analysis-server t)
+;;(add-hook 'dart-mode-hook 'flycheck-mode)
+)
 #+END_SRC
