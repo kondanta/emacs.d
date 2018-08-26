@@ -22,13 +22,6 @@
   (column-number-mode t)
   (size-indication-mode t)
 #+END_SRC
-** Theme
-#+BEGIN_SRC emacs-lisp
-  ;;(use-package zerodark-theme
-  ;;  :ensure t
-  ;;  :init
-  ;;    (load-theme 'zerodark t))
-#+END_SRC
 ** Warning File Size
 #+BEGIN_SRC emacs-lisp
   (setq large-file-warning-threshold 100000000)
@@ -146,13 +139,14 @@
 * Utils
 ** Selection
 #+BEGIN_SRC emacs-lisp
-  (use-package mark-multiple
-    :ensure t
-    :bind ("C-c q" . 'mark-next-like-this))
+  ;; (use-package mark-multiple
+  ;;   :ensure t
+  ;;   :bind ("C-c q" . 'mark-next-like-this))
 
-  (use-package expand-region
-    :ensure t
-    :bind ("C-q" . er/expand-region))
+  ;; ;; (u
+;;  se-package expand-region
+  ;;   :ensure t
+  ;;   :bind ("C-q" . er/expand-region))
 #+END_SRC
 ** Change Word
 #+BEGIN_SRC emacs-lisp
@@ -236,14 +230,6 @@
     (which-key-mode))
 #+END_SRC
 
-* Beacon
-#+BEGIN_SRC emacs-lisp
-  (use-package beacon
-    :ensure t
-    :init
-    (beacon-mode 1))
-#+END_SRC
-
 * IDO mode
 ** Enabling Ido Mode
 #+BEGIN_SRC emacs-lisp
@@ -254,11 +240,12 @@
 #+END_SRC
 ** Enable Vertical Mode
 #+BEGIN_SRC emacs-lisp
-  (use-package ido-vertical-mode
-    :ensure t
-    :init
-    (ido-vertical-mode 1))
-  (setq ido-vetical-define-keys 'C-n-and-C-p-only)
+    (use-package ido-vertical-mode
+      :ensure t
+      :init
+      (ido-vertical-mode 1))
+    (setq 
+	  do-vetical-define-keys 'C-n-and-C-p-only)
 #+END_SRC
 ** Smex
 *** put latest to top
@@ -528,24 +515,19 @@
     :config
     (setq rust-rustfmt-bin "/home/kondanta/.cargo/bin/rustfmt")
     (setq rust-cargo-bin "/home/kondanta/.cargo/bin/cargo"))
-
-(add-hook 'dart-mode-hook (lambda ()
- (set (make-local-variable 'company-backends)
-  '(company-dart (company-dabbrev company-yankpad)))))
 #+END_SRC
 ** Dart
 #+BEGIN_SRC emacs-lisp
-(use-package dart-mode
-:ensure t
-:config
-(setq dart-sdk-path "/home/kondanta/.dart-sdk-dev/")
-(setq dart-format-path "/home/kondanta/.dart-sdk-dev/bin/dartfmt")
-(setq dart-executable-path "/home/kondanta/.dart-sdk-dev/bin/dart")
-(setq dart-analysis-server-snapshot-path "/home/kondanta/.dart-sdk-dev/bin/snapshots/analysis_server.dart.snapshot")
-(setq format-on-save t)
-;;problematics
-;;(setq dart-debug t)
-;;(setq dart-enable-analysis-server t)
-;;(add-hook 'dart-mode-hook 'flycheck-mode)
-)
+  (use-package dart-mode
+    :ensure t
+    :config
+    (setq dart-sdk-path "/home/kondanta/.dart-sdk-dev/")
+    (setq dart-format-path "/home/kondanta/.dart-sdk-dev/bin/dartfmt")
+    (setq dart-executable-path "/home/kondanta/.dart-sdk-dev/bin/dart")
+    (setq dart-analysis-server-snapshot-path "/home/kondanta/.dart-sdk-dev/bin/snapshots/analysis_server.dart.snapshot")
+    (setq dart-format-on-save t)
+;;    problematics
+;;    (setq dart-debug t)
+;;    (setq dart-enable-analysis-server t)
+    (add-hook 'dart-mode-hook 'flycheck-mode))
 #+END_SRC
