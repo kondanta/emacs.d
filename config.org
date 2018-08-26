@@ -497,11 +497,13 @@
 #+END_SRC
 * Projectile
 #+BEGIN_SRC emacs-lisp
-  (use-package projectile
-    :ensure t
-    :init
-    (projectile-mode 1))
-  (global-set-key (kbd "<f5>") 'projectile-compile-project)
+    (use-package projectile
+      :ensure t
+      :init
+      (projectile-mode 1)
+      (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  )
+    (global-set-key (kbd "<f5>") 'projectile-compile-project)
 #+END_SRC
 * Languages
 ** GO
