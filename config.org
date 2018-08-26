@@ -305,7 +305,8 @@
   (use-package rainbow-delimiters
     :ensure t
     :init
-    (rainbow-delimiters-mode 1))
+    (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+    )
 #+END_SRC
 * Switching Windows
 #+BEGIN_SRC emacs-lisp
