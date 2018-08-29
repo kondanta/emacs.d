@@ -136,7 +136,15 @@
 #+END_SRC
 ** Font
 #+BEGIN_SRC emacs-lisp
-(set-face-attribute 'default nil :font "Noto Sans Mono-13")
+;;(set-face-attribute 'default nil :font "Noto Sans Mono"
+;;:height 130)
+#+END_SRC
+** Theme
+#+BEGIN_SRC emacs-lisp
+(use-package zerodark-theme
+  :ensure t
+  :init
+    (load-theme 'zerodark t))
 #+END_SRC
 * Utils
 ** Selection
@@ -535,4 +543,30 @@
 ;;    (setq dart-debug t)
 ;;    (setq dart-enable-analysis-server t)
     (add-hook 'dart-mode-hook 'flycheck-mode))
+#+END_SRC
+* Yasnippet
+** Yasnippet and its hooks
+#+BEGIN_SRC emacs-lisp
+(use-package yasnippet
+  :ensure t
+  :config
+    (use-package yasnippet-snippets
+      :ensure t)
+    (yas-reload-all))
+
+;; c++
+(add-hook 'c++-mode-hook 'yas-minor-mode)
+(add-hook 'c-mode-hook 'yas-minor-mode)
+;; python
+(add-hook 'python-mode-hook 'yas-minor-mode)
+;; elisp
+(add-hook 'emacs-lisp-mode-hook 'yas-minor-mode)
+;; bash
+(add-hook 'shell-mode-hook 'yas-minor-mode)
+;; flutter
+(add-hook 'dart-mode-hook 'yas-minor-mode)
+(add-hook 'flutter-mode-hook 'yas-minor-mode)
+;; go
+(add-hook 'go-mode-hook 'yas-minor-mode)
+
 #+END_SRC

@@ -1,3 +1,4 @@
+
 ;; Start
 
 (setq gc-cons-threshold 402653184
@@ -40,15 +41,16 @@
  '(custom-enabled-themes (quote (spacemacs-dark)))
  '(custom-safe-themes
    (quote
-    ("217ec62e2aba3b5bf1781b30ac94870c7d8192b24e856c346b98fce4a896046b" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
+    ("83b1fda71a1cf78a596891c0cc10601e93d5450148f98e9b66dde80349b20195" "217ec62e2aba3b5bf1781b30ac94870c7d8192b24e856c346b98fce4a896046b" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
+ '(line-number-mode nil)
  '(package-selected-packages
    (quote
-    (yasnippet-snippets dart-mode ido-vertical-mode company-dart flycheck-rust racer rust rust-mode js2-mode company-tern company-jedi go-mode company-c-headers flycheck-clang-analyzer projectile company-irony pretty-mode swiper diminish spaceline company dashboard rainbow-delimiters rainbow-delimeters switch-window rainbow-mode avy smex org-bullets spacemacs-theme which-key use-package))))
+    (yasnippet yasnippet-snippets dart-mode ido-vertical-mode company-dart flycheck-rust racer rust rust-mode js2-mode company-tern company-jedi go-mode company-c-headers flycheck-clang-analyzer projectile company-irony pretty-mode swiper diminish spaceline company dashboard rainbow-delimiters rainbow-delimeters switch-window rainbow-mode avy smex org-bullets spacemacs-theme which-key use-package)))
+ '(pdf-view-midnight-colors (quote ("#b2b2b2" . "#292b2e"))))
             
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 113 :width normal :foundry "CYRE" :family "Inconsolata")))))
-                                                              
+ '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 135 :width normal :family "Noto Sans Mono")))))
