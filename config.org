@@ -57,7 +57,6 @@
 #+BEGIN_SRC emacs-lisp
   ;; revert buffers automatically when underlying files are changed externally
   (global-auto-revert-mode t)
-
   (prefer-coding-system 'utf-8)
   (set-default-coding-systems 'utf-8)
   (set-terminal-coding-system 'utf-8)
@@ -77,8 +76,7 @@
     (use-package pretty-mode
       :ensure t
       :config
-      (global-pretty-mode 1)))
-      ;;(add-hook 'prog-mode-hook 'pretty-mode)))
+      (add-hook 'prog-mode-hook 'turn-on-pretty-mode)))
 #+END_SRC
 ** Backups
 #+BEGIN_SRC emacs-lisp
@@ -135,6 +133,10 @@
       (next-line)))
 
 (global-set-key (kbd "C-?") 'comment-or-uncomment-region-or-line) ;; Ctrl+shift+/
+#+END_SRC
+** Font
+#+BEGIN_SRC emacs-lisp
+(set-face-attribute 'default nil :font "Noto Sans Mono-13")
 #+END_SRC
 * Utils
 ** Selection
