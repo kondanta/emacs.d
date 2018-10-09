@@ -425,7 +425,7 @@
 	  (with-eval-after-load 'company
 	    (add-hook 'c++-mode-hook 'company-mode)
 	    (add-hook 'c-mode-hook 'company-mode)
-	    ;;(add-hook 'python-mode-hook 'company-mode)
+	    (add-hook 'python-mode-hook 'company-mode)
 	    (add-hook 'js2-mode-hook 'company-mode)    
 	    (add-hook 'js-mode-hook 'company-mode)
 	    )
@@ -452,27 +452,27 @@
   ;; I'll re enable this after handling jedi thing.
   ;; For now it does not work, and editing py files become pita
   ;; bc of this 
-  ;; ;; Python
-  ;; ;;Flycheck
-  ;; (add-hook 'python-mode-hook 'flycheck-mode)
-  ;; (use-package company-jedi
-  ;; 	:ensure t
-  ;; 	:config 
-  ;; 	(require 'company)
-  ;; 	(add-to-list 'company-backends 'company-jedi)
-  ;; 	)
+  ;; Python
+  ;;Flycheck
+   (add-hook 'python-mode-hook 'flycheck-mode)
+   (use-package company-jedi
+   	:ensure t
+   	:config 
+   	(require 'company)
+   	(add-to-list 'company-backends 'company-jedi)
+  	)
 
-  ;; (defun python-mode-company-init ()
-  ;; 	(setq-local company-backends '((company-jedi
-  ;; 					company-etags
-  ;; 					company-dabbrev-code))))
+   (defun python-mode-company-init ()
+   	(setq-local company-backends '((company-jedi
+   					company-etags
+   					company-dabbrev-code))))
 
-  ;; (use-package company-jedi
-  ;; 	:ensure t
-  ;; 	:config
-  ;; 	(require 'company)
-  ;; 	(add-hook 'python-mode-hook 'python-mode-company-init)
-  ;;)
+   (use-package company-jedi
+   	:ensure t
+   	:config
+  	(require 'company)
+ 	(add-hook 'python-mode-hook 'python-mode-company-init)
+  )
 
   ;; Rust
   (setq racer-cmd (concat (getenv "HOME") "/.cargo/bin/racer"))
@@ -558,7 +558,7 @@
     (setq dart-format-on-save t)
 ;;    problematics
 ;;    (setq dart-debug t)
-;;    (setq dart-enable-analysis-server t)
+    (setq dart-enable-analysis-server t)
     (add-hook 'dart-mode-hook 'flycheck-mode))
 #+END_SRC
 * Yasnippet
