@@ -134,15 +134,6 @@
 
 (global-set-key (kbd "C-?") 'comment-or-uncomment-region-or-line) ;; Ctrl+shift+/
 #+END_SRC
-** Theme
-#+BEGIN_SRC emacs-lisp
-  (use-package zerodark-theme
-    :ensure t
-    :init
-      (load-theme 'zerodark t)
-      (zerodark-setup-modeline-format)
-      )
-#+END_SRC
 * Utils
 ** Selection
 #+BEGIN_SRC emacs-lisp
@@ -368,8 +359,7 @@
     (setq spaceline-line-p nil)
     (setq powerline-default-separator (quote arrow))
     ;; (setq powerline-default-separator nil)
-    ;;(spaceline-spacemacs-theme))
-    )
+    (spaceline-spacemacs-theme))
 #+END_SRC
 ** Remove Minor Mods
 #+BEGIN_SRC emacs-lisp
@@ -409,105 +399,114 @@
 * IntelliSense
 ** Company
 #+BEGIN_SRC emacs-lisp
-	  (use-package company
-	    :ensure t
-	    :config
-	    (setq company-idle-delay 0)
-	    (setq company-minimum-prefix-length 2))
+		  (use-package company
+		    :ensure t
+		    :config
+		    (setq company-idle-delay 0)
+		    (setq company-minimum-prefix-length 2))
 
-	  (with-eval-after-load 'company
-	    (define-key company-active-map (kbd "M-n") nil)
-	    (define-key company-active-map (kbd "M-p") nil)
-	    (define-key company-active-map (kbd "C-n") #'company-select-next)
-	    (define-key company-active-map (kbd "C-p") #'company-select-previous)
-	    (define-key company-active-map (kbd "SPC") #'company-abort))
-
-
-	  (use-package flycheck-clang-analyzer
-	    :ensure t
-	    :config
-	    (with-eval-after-load 'flycheck
-	      (require 'flycheck-clang-analyzer)
-	      (flycheck-clang-analyzer-setup)))
-
-	  (with-eval-after-load 'company
-	    (add-hook 'c++-mode-hook 'company-mode)
-	    (add-hook 'c-mode-hook 'company-mode)
-	    (add-hook 'python-mode-hook 'company-mode)
-	    (add-hook 'js2-mode-hook 'company-mode)    
-	    (add-hook 'js-mode-hook 'company-mode)
-	    )
+		  (with-eval-after-load 'company
+		    (define-key company-active-map (kbd "M-n") nil)
+		    (define-key company-active-map (kbd "M-p") nil)
+		    (define-key company-active-map (kbd "C-n") #'company-select-next)
+		    (define-key company-active-map (kbd "C-p") #'company-select-previous)
+		    (define-key company-active-map (kbd "SPC") #'company-abort))
 
 
-	  ;; C++
-	  (use-package company-c-headers
-	    :ensure t)
+		  (use-package flycheck-clang-analyzer
+		    :ensure t
+		    :config
+		    (with-eval-after-load 'flycheck
+		      (require 'flycheck-clang-analyzer)
+		      (flycheck-clang-analyzer-setup)))
 
-	  (use-package company-irony
-	    :ensure t
-	    :config
-	    (setq company-backends '((company-c-headers
-				      company-dabbrev-code
-				      company-irony))))
+		  (with-eval-after-load 'company
+		    (add-hook 'c++-mode-hook 'company-mode)
+		    (add-hook 'c-mode-hook 'company-mode)
+		    (add-hook 'python-mode-hook 'company-mode)
+		    (add-hook 'js2-mode-hook 'company-mode)    
+		    (add-hook 'js-mode-hook 'company-mode)
+		    )
 
-	  (use-package irony
-	    :ensure t
-	    :config
-	    (add-hook 'c++-mode-hook 'irony-mode)
-	    (add-hook 'c-mode-hook 'irony-mode)
-	    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
-  ;; I'll re enable this after handling jedi thing.
-  ;; For now it does not work, and editing py files become pita
-  ;; bc of this 
-  ;; Python
-  ;;Flycheck
-   (add-hook 'python-mode-hook 'flycheck-mode)
-   (use-package company-jedi
-   	:ensure t
-   	:config 
-   	(require 'company)
-   	(add-to-list 'company-backends 'company-jedi)
-  	)
+		  ;; C++
+		  (use-package company-c-headers
+		    :ensure t)
 
-   (defun python-mode-company-init ()
-   	(setq-local company-backends '((company-jedi
-   					company-etags
-   					company-dabbrev-code))))
+		  (use-package company-irony
+		    :ensure t
+		    :config
+		    (setq company-backends '((company-c-headers
+					      company-dabbrev-code
+					      company-irony))))
 
-   (use-package company-jedi
-   	:ensure t
-   	:config
-  	(require 'company)
- 	(add-hook 'python-mode-hook 'python-mode-company-init)
-  )
+		  (use-package irony
+		    :ensure t
+		    :config
+		    (add-hook 'c++-mode-hook 'irony-mode)
+		    (add-hook 'c-mode-hook 'irony-mode)
+		    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
-  ;; Rust
-  (setq racer-cmd (concat (getenv "HOME") "/.cargo/bin/racer"))
-	  (setq racer-rust-src-path (concat (getenv "HOME") "/.multirust/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src"))
+	  ;; I'll re enable this after handling jedi thing.
+	  ;; For now it does not work, and editing py files become pita
+	  ;; bc of this 
+	  ;; Python
+	  ;;Flycheck
+	   (add-hook 'python-mode-hook 'flycheck-mode)
+	   (use-package company-jedi
+		:ensure t
+		:config 
+		(require 'company)
+		(add-to-list 'company-backends 'company-jedi)
+		)
 
-	  (add-hook 'rust-mode-hook #'racer-mode)
-	  (add-hook 'racer-mode-hook #'eldoc-mode)
-	  (add-hook 'racer-mode-hook #'company-mode)
+	   (defun python-mode-company-init ()
+		(setq-local company-backends '((company-jedi
+						company-etags
+						company-dabbrev-code))))
 
-	  ;; Add flycheck for rust
-	  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
+	   (use-package company-jedi
+		:ensure t
+		:config
+		(require 'company)
+		(add-hook 'python-mode-hook 'python-mode-company-init)
+	  )
 
-    (use-package tern
-      :config
-      (add-hook 'js2-mode-hook 'tern-mode)
-      (add-hook 'js-mode-hook 'tern-mode))
+	  ;; Rust
+	  (setq racer-cmd (concat (getenv "HOME") "/.cargo/bin/racer"))
+		  (setq racer-rust-src-path (concat (getenv "HOME") "/.multirust/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src"))
 
-    (add-hook 'js-mode-hook '(lambda () (setq-local company-backends '(company-tern))))
-	  ;; Javascript
-	  (use-package company-tern
-	    :init (add-to-list 'company-backends 'company-tern)
-	    :ensure t
-	    :config 
-	    (require 'company)
-	    (setq company-tern-property-marker nil)
-	    (setq company-tern-meta-as-single-line t)
-	    )
+		  (add-hook 'rust-mode-hook #'racer-mode)
+		  (add-hook 'racer-mode-hook #'eldoc-mode)
+		  (add-hook 'racer-mode-hook #'company-mode)
+
+		  ;; Add flycheck for rust
+      ;;  (with-eval-after-load 'rust-mode
+      ;;    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+
+	    (use-package tern
+	      :config
+	      (add-hook 'js2-mode-hook 'tern-mode)
+	      (add-hook 'js-mode-hook 'tern-mode))
+
+	    (add-hook 'js-mode-hook '(lambda () (setq-local company-backends '(company-tern))))
+		  ;; Javascript
+		  (use-package company-tern
+		    :init (add-to-list 'company-backends 'company-tern)
+		    :ensure t
+		    :config 
+		    (require 'company)
+		    (setq company-tern-property-marker nil)
+		    (setq company-tern-meta-as-single-line t)
+		   )
+      ;; Golang
+  (use-package company-go
+  :ensure t
+  :config
+  (setq company-begin-commands '(self-insert-command)))
+  (add-hook 'go-mode-hook (lambda ()
+			  (set (make-local-variable 'company-backends) '(company-go))
+			  (company-mode)))
 #+END_SRC
 ** Js2-mode
 #+BEGIN_SRC emacs-lisp
