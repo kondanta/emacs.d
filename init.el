@@ -51,7 +51,7 @@
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (gruvbox-theme gruvbox gruvbox-dark-hard-theme gruvbox-dark-hard cmake-mode company-go flycheck-gometalinter irony-eldoc magit expand-region mark-multiple dockerfile-mode docker-compose-mode yaml-mode yasnippet dart-mode ido-vertical-mode company-dart flycheck-rust racer rust rust-mode js2-mode company-tern company-jedi go-mode company-c-headers flycheck-clang-analyzer projectile company-irony pretty-mode swiper diminish spaceline company dashboard rainbow-delimiters rainbow-delimeters switch-window rainbow-mode avy smex org-bullets spacemacs-theme which-key use-package)))
+    (magit-gitflow gruvbox-theme gruvbox gruvbox-dark-hard-theme gruvbox-dark-hard cmake-mode company-go flycheck-gometalinter irony-eldoc magit expand-region mark-multiple dockerfile-mode docker-compose-mode yaml-mode yasnippet dart-mode ido-vertical-mode company-dart flycheck-rust racer rust rust-mode js2-mode company-tern company-jedi go-mode company-c-headers flycheck-clang-analyzer projectile company-irony pretty-mode swiper diminish spaceline company dashboard rainbow-delimiters rainbow-delimeters switch-window rainbow-mode avy smex org-bullets spacemacs-theme which-key use-package)))
  '(pdf-view-midnight-colors (quote ("#b2b2b2" . "#292b2e")))
  '(vc-annotate-background "#2B2B2B")
  '(vc-annotate-color-map

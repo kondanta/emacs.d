@@ -531,6 +531,10 @@
     :config
     (setq magit-push-always-verify nil)
     :bind ("C-x g" . magit-status))
+  (use-package magit-gitflow
+    :ensure t
+    :config
+    (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
 #+END_SRC
 * Async
 #+BEGIN_SRC emacs-lisp
