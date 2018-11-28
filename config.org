@@ -134,6 +134,15 @@
 
 (global-set-key (kbd "C-?") 'comment-or-uncomment-region-or-line) ;; Ctrl+shift+/
 #+END_SRC
+
+#+END_SRC
+** Theme
+#+BEGIN_SRC emacs-lisp
+(use-package gruvbox-theme
+  :ensure t
+  :config
+  (load-theme 'gruvbox-dark-hard t))
+#+END_SRC
 * Utils
 ** Selection
 #+BEGIN_SRC emacs-lisp
@@ -543,7 +552,10 @@
 ** GO
 #+BEGIN_SRC emacs-lisp
   (use-package go-mode
-    :ensure t)
+    :ensure t
+    :config
+    (add-hook 'before-save-hook 'gofmt-before-save)
+    )
 #+END_SRC
 ** Rust
 #+BEGIN_SRC emacs-lisp

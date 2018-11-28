@@ -38,15 +38,43 @@
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
- '(custom-enabled-themes (quote (spacemacs-dark)))
+ '(company-quickhelp-color-background "#4F4F4F")
+ '(company-quickhelp-color-foreground "#DCDCCC")
+ '(custom-enabled-themes (quote (gruvbox-dark-hard)))
  '(custom-safe-themes
    (quote
-    ("08ef1356470a9d3bf363ffab0705d90f8a492796e9db489936de4bde6a4fdb19" "83b1fda71a1cf78a596891c0cc10601e93d5450148f98e9b66dde80349b20195" "217ec62e2aba3b5bf1781b30ac94870c7d8192b24e856c346b98fce4a896046b" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
+    ("e2fd81495089dc09d14a88f29dfdff7645f213e2c03650ac2dd275de52a513de" "08ef1356470a9d3bf363ffab0705d90f8a492796e9db489936de4bde6a4fdb19" "83b1fda71a1cf78a596891c0cc10601e93d5450148f98e9b66dde80349b20195" "217ec62e2aba3b5bf1781b30ac94870c7d8192b24e856c346b98fce4a896046b" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
+ '(fci-rule-color "#383838")
  '(line-number-mode nil)
+ '(nrepl-message-colors
+   (quote
+    ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (cmake-mode company-go flycheck-gometalinter irony-eldoc magit expand-region mark-multiple zerodark-theme dockerfile-mode docker-compose-mode yaml-mode yasnippet dart-mode ido-vertical-mode company-dart flycheck-rust racer rust rust-mode js2-mode company-tern company-jedi go-mode company-c-headers flycheck-clang-analyzer projectile company-irony pretty-mode swiper diminish spaceline company dashboard rainbow-delimiters rainbow-delimeters switch-window rainbow-mode avy smex org-bullets spacemacs-theme which-key use-package)))
- '(pdf-view-midnight-colors (quote ("#b2b2b2" . "#292b2e"))))
+    (gruvbox-theme gruvbox gruvbox-dark-hard-theme gruvbox-dark-hard cmake-mode company-go flycheck-gometalinter irony-eldoc magit expand-region mark-multiple dockerfile-mode docker-compose-mode yaml-mode yasnippet dart-mode ido-vertical-mode company-dart flycheck-rust racer rust rust-mode js2-mode company-tern company-jedi go-mode company-c-headers flycheck-clang-analyzer projectile company-irony pretty-mode swiper diminish spaceline company dashboard rainbow-delimiters rainbow-delimeters switch-window rainbow-mode avy smex org-bullets spacemacs-theme which-key use-package)))
+ '(pdf-view-midnight-colors (quote ("#b2b2b2" . "#292b2e")))
+ '(vc-annotate-background "#2B2B2B")
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#BC8383")
+     (40 . "#CC9393")
+     (60 . "#DFAF8F")
+     (80 . "#D0BF8F")
+     (100 . "#E0CF9F")
+     (120 . "#F0DFAF")
+     (140 . "#5F7F5F")
+     (160 . "#7F9F7F")
+     (180 . "#8FB28F")
+     (200 . "#9FC59F")
+     (220 . "#AFD8AF")
+     (240 . "#BFEBBF")
+     (260 . "#93E0E3")
+     (280 . "#6CA0A3")
+     (300 . "#7CB8BB")
+     (320 . "#8CD0D3")
+     (340 . "#94BFF3")
+     (360 . "#DC8CC3"))))
+ '(vc-annotate-very-old-color "#DC8CC3"))
             
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
