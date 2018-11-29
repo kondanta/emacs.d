@@ -207,10 +207,7 @@
 * Terminal
 ** Specifiying the terminal
 #+BEGIN_SRC emacs-lisp
-  (defvar my-term-shell "/bin/sh")
-  (defadvice ansi-term (before force-bash)
-    (interactive (list my-term-shell)))
-  (ad-activate 'ansi-term)
+  (global-set-key (kbd "<S-return>") 'term)
 #+END_SRC
 
 * Org
