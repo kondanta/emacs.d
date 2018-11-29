@@ -204,6 +204,11 @@
   (global-set-key (kbd "C-x k") 'kill-current-buffer)
   (setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
 #+END_SRC
+** Discord Rich Presence
+#+BEGIN_SRC emacs-lisp
+  (use-package elcord
+    :ensure t)
+#+END_SRC
 * Terminal
 ** Specifiying the terminal
 #+BEGIN_SRC emacs-lisp
