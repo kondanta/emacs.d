@@ -189,6 +189,21 @@
        (point-at-eol)))))
   (global-set-key (kbd "C-c y y") 'copy-line)
 #+END_SRC
+** Move Text Up/Down
+#+BEGIN_SRC emacs-lisp
+  (use-package move-text
+    :ensure t)
+#+END_SRC
+
+** Kill Current Buffer
+#+BEGIN_SRC emacs-lisp
+  (defun kill-current-buffer ()
+    "Kills the current buffer."
+    (interactive)
+    (kill-buffer (current-buffer)))
+  (global-set-key (kbd "C-x k") 'kill-current-buffer)
+  (setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
+#+END_SRC
 * Terminal
 ** Specifiying the terminal
 #+BEGIN_SRC emacs-lisp
