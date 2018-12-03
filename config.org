@@ -1,7 +1,7 @@
 * Minor Settings
 ** Whoami
 #+BEGIN_SRC emacs-lisp
-  (setq user-full-name "Taylan Dogan"
+  (setq user-full-name "Taylan Doğan"
 	user-mail-address "doganntaylan@gmail.com")
 #+END_SRC
 ** Remove UI Elements
