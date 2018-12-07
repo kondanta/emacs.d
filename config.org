@@ -219,7 +219,7 @@
 * Org
 ** General
 #+BEGIN_SRC emacs-lisp
-  (setq org-ellipsis " ")
+  (setq org-ellipsis "⤵")
   (setq org-src-fontify-natively t)
   (setq org-src-tab-acts-natively t)
   (setq org-confirm-babel-evaluate nil)
@@ -246,6 +246,99 @@
 #+BEGIN_SRC emacs-lisp
   (setq org-src-window-setup 'current-window)
 #+END_SRC
+** Task and org-capture Management
+#+BEGIN_SRC emacs-lisp
+  (setq org-directory "~/documents/org")
+  (defun org-file-path (filename)
+    (concat (file-name-as-directory org-directory) filename)
+    )
+  (setq org-index-file (org-file-path "index.org"))
+  (setq org-archive-location (concat
+			      (org-file-path "archive.org") "::* From %s"))
+
+  ;; storing todos in index
+  (setq org-agenda-files (list org-index-file))
+
+  ;; when task done, put it into archive
+  (defun kon/mark-done-and-archive ()
+    "mark task done and archive it"
+    (interactive)
+    (org-todo 'done)
+    (org-archive-subtree)
+    )
+  (define-key org-mode-map (kbd "C-c C-x C-s") 'kon/mark-done-and-archive)
+
+  ;; log the archive time
+  (setq org-log-done 'time)
+  (setq org-directory "~/documents/org")
+  (defun org-file-path (filename)
+    (concat (file-name-as-directory org-directory) filename)
+    )
+  (setq org-index-file (org-file-path "index.org"))
+  (setq org-archive-location (concat
+			      (org-file-path "archive.org") "::* From %s"))
+
+  ;; storing todos in index
+  (setq org-agenda-files (list org-index-file))
+
+  ;; when task done, put it into archive
+  (defun kon/mark-done-and-archive ()
+    "mark task done and archive it"
+    (interactive)
+    (org-todo 'done)
+    (org-archive-subtree)
+    )
+  (define-key org-mode-map (kbd "C-c C-x C-s") 'kon/mark-done-and-archive)
+
+  ;; log the archive time
+  (setq org-log-done 'time)
+#+END_SRC
+*** Capturing tasks (from hrs/dotfiles)
+#+BEGIN_SRC emacs-lisp
+  (setq org-capture-templates
+	'(("f" "Finished books"
+	   (table-line (file "~/documents/notes/books-read.org")
+		       "| %^{Title} | %^{Author | %u |}")
+	   )
+
+	  ("r" "Reading"
+	   checkitem (file (org-file-path "to-read.org")))
+	  ("t" "Todo"
+	   entry
+	   (file+headline org-index-file "TodoList")
+	   "* TODO %?\n"
+	   )
+	  )
+	)
+  ;; dunno what these does
+  (setq org-refile-use-outline-path t)
+  (setq org-outline-path-complete-in-steps nil)
+#+END_SRC
+
+*** Keybindings
+#+BEGIN_SRC emacs-lisp
+  (define-key global-map "\C-cl" 'org-store-link)
+  (define-key global-map "\C-ca" 'org-agenda)
+  (define-key global-map "\C-cc" 'org-capture)
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun kon/open-index ()
+    (interactive)
+    (find-file org-index-file)
+    (flycheck-mode -1)
+    (end-of-buffer)
+    )
+  (global-set-key (kbd "C-c i") 'kon/open-index)
+
+  ;; capture todo
+  (defun org-capture-todo ()
+    (interactive)
+    (org-capture :keys "t"))
+  (global-set-key (kbd "M-n") 'org-capture-todo)
+  (add-hook 'gfm-mode-hook (lambda ()(local-set-key (kbd "M-n") 'org-capture-todo)))
+  (add-hook 'haskell-mode-hook (lambda ()(local-set-key (kbd "M-n") 'org-capture-todo)))
+#+END_SRC
+
 * Which-Key
 ** See key shortcuts
 #+BEGIN_SRC emacs-lisp
@@ -593,13 +686,13 @@
   (use-package dart-mode
     :ensure t
     :config
-    (setq dart-sdk-path "/home/kondanta/.dart-sdk-dev/")
-    (setq dart-format-path "/home/kondanta/.dart-sdk-dev/bin/dartfmt")
-    (setq dart-executable-path "/home/kondanta/.dart-sdk-dev/bin/dart")
-    (setq dart-analysis-server-snapshot-path "/home/kondanta/.dart-sdk-dev/bin/snapshots/analysis_server.dart.snapshot")
+    (setq dart-sdk-path "/opt/dart-sdk-dev/")
+    (setq dart-format-path "/opt/dart-sdk-dev/bin/dartfmt")
+    (setq dart-executable-path "/opt/dart-sdk-dev/bin/dart")
+    (setq dart-analysis-server-snapshot-path "/opt/dart-sdk-dev/bin/snapshots/analysis_server.dart.snapshot")
     (setq dart-format-on-save t)
-;;    problematics
-;;    (setq dart-debug t)
+    ;;    problematics
+    (setq dart-debug t)
     (setq dart-enable-analysis-server t)
     (add-hook 'dart-mode-hook 'flycheck-mode))
 #+END_SRC
