@@ -308,6 +308,10 @@
 	   (file+headline org-index-file "TodoList")
 	   "* TODO %?\n"
 	   )
+	  ("i" "Ideas"
+	   entry
+	   (file "~/documents/notes/ideas.org")
+	   "* %?\n")
 	  )
 	)
   ;; dunno what these does
@@ -317,7 +321,7 @@
 
 *** Keybindings
 #+BEGIN_SRC emacs-lisp
-  (define-key global-map "\C-cl" 'org-store-link)
+  (define-key global-map "\C-ck" 'org-store-link)
   (define-key global-map "\C-ca" 'org-agenda)
   (define-key global-map "\C-cc" 'org-capture)
 #+END_SRC
