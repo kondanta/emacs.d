@@ -469,21 +469,21 @@
   (global-set-key (kbd "C-c l") 'split-horizon)
 #+END_SRC
 # Dashboard is kinda broken so disabled for now! 
-# * Dashboard
-# ** Opening Screen
-# #+BEGIN_SRC emacs-lisp
-#     (use-package dashboard
-#        :ensure t
-#        :config
-#        (dashboard-setup-startup-hook)
-#        (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-#   (setq dashboard-footer-icon (all-the-icons-octicon "dashboard"
-# 						       :height 1.1
-# 						       :v-adjust -0.05
-# 						       :face 'font-lock-keyword-face)) 
-#   (setq dashboard-items '((recents . 10)
-# 			  (projects . 10))))
-# #+END_SRC
+* Dashboard
+** Opening Screen
+#+BEGIN_SRC emacs-lisp
+  ;;   (use-package dashboard
+  ;;      :ensure t
+  ;;      :config
+  ;;      (dashboard-setup-startup-hook)
+  ;;      (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+  ;; (setq dashboard-footer-icon (all-the-icons-octicon "dashboard"
+  ;; 						     :height 1.1
+  ;; 						     :v-adjust -0.05
+  ;; 						     :face 'font-lock-keyword-face)) 
+  ;; (setq dashboard-items '((recents . 10)
+  ;; 			(projects . 10))))
+#+END_SRC
 * Footer
 ** Arrow
 #+BEGIN_SRC emacs-lisp
@@ -625,7 +625,7 @@
   ;;   (setq company-tern-property-marker nil)
   ;;   (setq company-tern-meta-as-single-line t)
   ;;   )
-  ;; ;; Golang
+  ;; Golang
   (use-package company-go
     :ensure t
     :config
@@ -689,7 +689,7 @@
     (add-hook 'racer-mode-hook #'eldoc-mode)
     (setq company-tooltip-align-annotations t)
     (setq racer-cmd (concat (getenv "CARGO_HOME") "/bin/racer"))
-    (setq racer-rust-src-path (getenv "RUST_SRC_PATH"))
+    (setq racer-rust-src-path (getenv "RUST_SRC_PATH")))
 
   (use-package rust-mode
     :ensure t
