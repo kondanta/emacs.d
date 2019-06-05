@@ -685,31 +685,32 @@
   (use-package racer
     :ensure t
     :config
-    (add-hook 'racer-mode-hook #'company-mode)
-    (add-hook 'racer-mode-hook #'eldoc-mode)
     (setq company-tooltip-align-annotations t)
     (setq racer-cmd (concat (getenv "CARGO_HOME") "/bin/racer"))
-    (setq racer-rust-src-path (getenv "RUST_SRC_PATH")))
+    (setq racer-rust-src-path (getenv "RUST_NIGHTLY_PATH")))
+  (add-hook 'racer-mode-hook #'company-mode)
+  (add-hook 'racer-mode-hook #'eldoc-mode)
+  (setq company-tooltip-align-annotations t)
 
-  (use-package rust-mode
-    :ensure t
-    :config
-    (setq rust-format-on-save t)
-    (setq rust-rustfmt-bin "~/.cargo/bin/rustfmt")
-    (setq rust-cargo-bin "~/.cargo/bin/cargo")
-    (add-hook 'rust-mode-hook #'racer-mode))
+    (use-package rust-mode
+      :ensure t
+      :config
+      (setq rust-format-on-save t)
+      (setq rust-rustfmt-bin "~/.cargo/bin/rustfmt")
+      (setq rust-cargo-bin "~/.cargo/bin/cargo")
+      (add-hook 'rust-mode-hook #'racer-mode))
 
-  ;; (use-package cargo
-  ;;   :ensure t
-  ;;   :config
-  ;;   (setq compilation-scroll-output t)
-  ;;   (add-hook 'rust-mode-hook 'cargo-minor-mode))
+    ;; (use-package cargo
+    ;;   :ensure t
+    ;;   :config
+    ;;   (setq compilation-scroll-output t)
+    ;;   (add-hook 'rust-mode-hook 'cargo-minor-mode))
 
-  (use-package flycheck-rust
-    :ensure t
-    :config
-    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
-    (add-hook 'rust-mode-hook 'flycheck-mode))
+    (use-package flycheck-rust
+      :ensure t
+      :config
+      (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
+      (add-hook 'rust-mode-hook 'flycheck-mode))
 #+END_SRC
 ** Dart
 #+BEGIN_SRC emacs-lisp
