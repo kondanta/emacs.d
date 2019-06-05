@@ -1,0 +1,9 @@
+auto-save-list/
+backup/
+elpa/
+ido.last
+projectile*
+recentf
+smex*
+transient/
+config.el

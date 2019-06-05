@@ -210,6 +210,14 @@
   (use-package elcord
     :ensure t)
 #+END_SRC
+** Exec-path-from-shell
+#+BEGIN_SRC emacs-lisp
+  (use-package exec-path-from-shell 
+    :ensure t
+    :init
+    (when (memq window-system '(mac ns x))
+      (exec-path-from-shell-initialize)))
+#+END_SRC
 * Terminal
 ** Specifiying the terminal
 #+BEGIN_SRC emacs-lisp
@@ -234,7 +242,6 @@
 	       '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
 #+END_SRC
 ** Org Bullets
-/Just for visual/
 #+BEGIN_SRC emacs-lisp
   (use-package org-bullets
     :ensure t
@@ -461,16 +468,22 @@
     (other-window 1))
   (global-set-key (kbd "C-c l") 'split-horizon)
 #+END_SRC
-* Dashboard
-** Opening Screen
-#+BEGIN_SRC emacs-lisp
-  (use-package dashboard
-    :ensure t
-    :config
-    (dashboard-setup-startup-hook)
-    (setq dashboard-items '((recents . 10)
-			    (projects . 10))))
-#+END_SRC
+# Dashboard is kinda broken so disabled for now! 
+# * Dashboard
+# ** Opening Screen
+# #+BEGIN_SRC emacs-lisp
+#     (use-package dashboard
+#        :ensure t
+#        :config
+#        (dashboard-setup-startup-hook)
+#        (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+#   (setq dashboard-footer-icon (all-the-icons-octicon "dashboard"
+# 						       :height 1.1
+# 						       :v-adjust -0.05
+# 						       :face 'font-lock-keyword-face)) 
+#   (setq dashboard-items '((recents . 10)
+# 			  (projects . 10))))
+# #+END_SRC
 * Footer
 ** Arrow
 #+BEGIN_SRC emacs-lisp
@@ -522,104 +535,104 @@
 * IntelliSense
 ** Company
 #+BEGIN_SRC emacs-lisp
-    (use-package company
-      :ensure t
-      :config
-      (setq company-idle-delay 0)
-      (setq company-minimum-prefix-length 2))
+  (use-package company
+    :ensure t
+    :config
+    (setq company-idle-delay 0)
+    (setq company-minimum-prefix-length 2))
 
-    (with-eval-after-load 'company
-      (define-key company-active-map (kbd "M-n") nil)
-      (define-key company-active-map (kbd "M-p") nil)
-      (define-key company-active-map (kbd "C-n") #'company-select-next)
-      (define-key company-active-map (kbd "C-p") #'company-select-previous)
-      (define-key company-active-map (kbd "SPC") #'company-abort))
-
-
-    (use-package flycheck-clang-analyzer
-      :ensure t
-      :config
-      (with-eval-after-load 'flycheck
-	(require 'flycheck-clang-analyzer)
-	(flycheck-clang-analyzer-setup)))
-
-    (with-eval-after-load 'company
-      (add-hook 'c++-mode-hook 'company-mode)
-      (add-hook 'c-mode-hook 'company-mode)
-      (add-hook 'python-mode-hook 'company-mode)
-      (add-hook 'js2-mode-hook 'company-mode)    
-      (add-hook 'js-mode-hook 'company-mode)
-      )
+  (with-eval-after-load 'company
+    (define-key company-active-map (kbd "M-n") nil)
+    (define-key company-active-map (kbd "M-p") nil)
+    (define-key company-active-map (kbd "C-n") #'company-select-next)
+    (define-key company-active-map (kbd "C-p") #'company-select-previous)
+    (define-key company-active-map (kbd "SPC") #'company-abort))
 
 
-    ;; C++
-    (use-package company-c-headers
-      :ensure t)
+  (use-package flycheck-clang-analyzer
+    :ensure t
+    :config
+    (with-eval-after-load 'flycheck
+      (require 'flycheck-clang-analyzer)
+      (flycheck-clang-analyzer-setup)))
 
-    (use-package company-irony
-      :ensure t
-      :config
-      (setq company-backends '((company-c-headers
-				company-dabbrev-code
-				company-irony))))
-
-    (use-package irony
-      :ensure t
-      :config
-      (add-hook 'c++-mode-hook 'irony-mode)
-      (add-hook 'c-mode-hook 'irony-mode)
-      (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
-
-    ;; I'll re enable this after handling jedi thing.
-    ;; For now it does not work, and editing py files become pita
-    ;; bc of this 
-    ;; Python
-    ;;Flycheck
-    (add-hook 'python-mode-hook 'flycheck-mode)
-    (use-package company-jedi
-      :ensure t
-      :config 
-      (require 'company)
-      (add-to-list 'company-backends 'company-jedi)
-      )
-
-    (defun python-mode-company-init ()
-      (setq-local company-backends '((company-jedi
-				      company-etags
-				      company-dabbrev-code))))
-
-    (use-package company-jedi
-      :ensure t
-      :config
-      (require 'company)
-      (add-hook 'python-mode-hook 'python-mode-company-init)
-      )
+  (with-eval-after-load 'company
+    (add-hook 'c++-mode-hook 'company-mode)
+    (add-hook 'c-mode-hook 'company-mode)
+    (add-hook 'python-mode-hook 'company-mode)
+    (add-hook 'js2-mode-hook 'company-mode)    
+    (add-hook 'js-mode-hook 'company-mode)
+    )
 
 
+  ;; C++
+  (use-package company-c-headers
+    :ensure t)
 
-    (use-package tern
-      :config
-      (add-hook 'js2-mode-hook 'tern-mode)
-      (add-hook 'js-mode-hook 'tern-mode))
+  (use-package company-irony
+    :ensure t
+    :config
+    (setq company-backends '((company-c-headers
+			      company-dabbrev-code
+			      company-irony))))
 
-    (add-hook 'js-mode-hook '(lambda () (setq-local company-backends '(company-tern))))
-    ;; Javascript
-    (use-package company-tern
-      :init (add-to-list 'company-backends 'company-tern)
-      :ensure t
-      :config 
-      (require 'company)
-      (setq company-tern-property-marker nil)
-      (setq company-tern-meta-as-single-line t)
-      )
-    ;; Golang
-    (use-package company-go
-      :ensure t
-      :config
-      (setq company-begin-commands '(self-insert-command)))
-    (add-hook 'go-mode-hook (lambda ()
-			      (set (make-local-variable 'company-backends) '(company-go))
-			      (company-mode)))
+  (use-package irony
+    :ensure t
+    :config
+    (add-hook 'c++-mode-hook 'irony-mode)
+    (add-hook 'c-mode-hook 'irony-mode)
+    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
+  ;; I'll re enable this after handling jedi thing.
+  ;; For now it does not work, and editing py files become pita
+  ;; bc of this 
+  ;; Python
+  ;;Flycheck
+  (add-hook 'python-mode-hook 'flycheck-mode)
+  (use-package company-jedi
+    :ensure t
+    :config 
+    (require 'company)
+    (add-to-list 'company-backends 'company-jedi)
+    )
+
+  (defun python-mode-company-init ()
+    (setq-local company-backends '((company-jedi
+				    company-etags
+				    company-dabbrev-code))))
+
+  (use-package company-jedi
+    :ensure t
+    :config
+    (require 'company)
+    (add-hook 'python-mode-hook 'python-mode-company-init)
+    )
+
+
+
+  ;; (use-package tern
+  ;;   :config
+  ;;   (add-hook 'js2-mode-hook 'tern-mode)
+  ;;   (add-hook 'js-mode-hook 'tern-mode))
+
+  ;; (add-hook 'js-mode-hook '(lambda () (setq-local company-backends '(company-tern))))
+  ;; ;; Javascript
+  ;; (use-package company-tern
+  ;;   :init (add-to-list 'company-backends 'company-tern)
+  ;;   :ensure t
+  ;;   :config 
+  ;;   (require 'company)
+  ;;   (setq company-tern-property-marker nil)
+  ;;   (setq company-tern-meta-as-single-line t)
+  ;;   )
+  ;; ;; Golang
+  (use-package company-go
+    :ensure t
+    :config
+    (setq company-begin-commands '(self-insert-command)))
+  (add-hook 'go-mode-hook (lambda ()
+			    (set (make-local-variable 'company-backends) '(company-go))
+			    (company-mode)))
 
 #+END_SRC
 ** Js2-mode
@@ -675,8 +688,8 @@
     (add-hook 'racer-mode-hook #'company-mode)
     (add-hook 'racer-mode-hook #'eldoc-mode)
     (setq company-tooltip-align-annotations t)
-    (setq racer-cmd (concat (getenv "HOME") "/.cargo/bin/racer"))
-    (setq racer-rust-src-path "~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src"))
+    (setq racer-cmd (concat (getenv "CARGO_HOME") "/bin/racer"))
+    (setq racer-rust-src-path (getenv "RUST_SRC_PATH"))
 
   (use-package rust-mode
     :ensure t
