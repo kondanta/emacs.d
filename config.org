@@ -18,7 +18,8 @@
 #+END_SRC
 ** Beautify Ui
 #+BEGIN_SRC emacs-lisp
-  (global-linum-mode t)
+  (when (version<= "26.0.50" emacs-version )
+  (global-display-line-numbers-mode))
   (column-number-mode t)
   (size-indication-mode t)
 #+END_SRC
@@ -509,7 +510,6 @@
     (eval-after-load "rainbow-delimiters" '(diminish 'rainbow-delimiters-mode))
     (eval-after-load "text-scale" '(diminish 'text-scale-mode))
     (eval-after-load "irony" '(diminish 'irony-mode))
-    (eval-after-load "linum" '(diminish 'linum-mode))
     (eval-after-load "abbrev" '(diminish 'abbrev-mode))
     (eval-after-load "racer" '(diminish 'racer-mode))
     (eval-after-load "yas-minor" '(diminish 'yas-minor-mode))
