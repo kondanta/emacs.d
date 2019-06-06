@@ -471,19 +471,32 @@
 #+END_SRC
 # Dashboard is kinda broken so disabled for now! 
 * Dashboard
+** Icons
+ #+BEGIN_SRC emacs-lisp
+   (use-package all-the-icons
+     :ensure t
+     )
+ #+END_SRC
 ** Opening Screen
 #+BEGIN_SRC emacs-lisp
-  ;;   (use-package dashboard
-  ;;      :ensure t
-  ;;      :config
-  ;;      (dashboard-setup-startup-hook)
-  ;;      (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-  ;; (setq dashboard-footer-icon (all-the-icons-octicon "dashboard"
-  ;; 						     :height 1.1
-  ;; 						     :v-adjust -0.05
-  ;; 						     :face 'font-lock-keyword-face)) 
-  ;; (setq dashboard-items '((recents . 10)
-  ;; 			(projects . 10))))
+  (use-package dashboard
+    ;; :ensure t
+    :config
+    (dashboard-setup-startup-hook)
+    (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+    ;; burasi kirik
+    (setq dashboard-footer-icon (all-the-icons-octicon "dashboard"
+						       :height 1.1
+						       :v-adjust -0.05
+						       :face 'font-lock-keyword-face))
+    (setq dashboard-set-navigator t)
+    (setq dashboard-center-content t)
+    (setq show-week-agenda-p t)
+    (setq dashboard-items '((recents  . 5)
+			    (bookmarks . 5)
+			    (projects . 5)
+			    (agenda . 5)
+			    (registers . 5))))
 #+END_SRC
 * Footer
 ** Arrow
