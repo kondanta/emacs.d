@@ -480,8 +480,10 @@
 ** Opening Screen
 #+BEGIN_SRC emacs-lisp
   (use-package dashboard
-    ;; :ensure t
+    :ensure t
+    :if (< (length command-line-args) 2)
     :config
+
     (dashboard-setup-startup-hook)
     (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
     ;; burasi kirik
