@@ -745,6 +745,20 @@
     (setq dart-enable-analysis-server t)
     (add-hook 'dart-mode-hook 'flycheck-mode))
 #+END_SRC
+** Yaml
+#+BEGIN_SRC emacs-lisp
+  (use-package yaml-mode
+    :ensure t
+    )
+#+END_SRC
+** Docker
+#+BEGIN_SRC emacs-lisp
+  (use-package docker-compose-mode
+    :ensure t)
+  (use-package dockerfile-mode
+    :ensure t)
+
+#+END_SRC
 * Yasnippet
 ** Yasnippet and its hooks
 #+BEGIN_SRC emacs-lisp
