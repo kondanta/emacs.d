@@ -144,6 +144,10 @@
   :config
   (load-theme 'gruvbox-dark-hard t))
 #+END_SRC
+** Find References
+ #+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c C-c r") 'xref-find-references)
+ #+END_SRC
 * Utils
 ** Selection
 #+BEGIN_SRC emacs-lisp
@@ -644,6 +648,7 @@
   (use-package company-go
     :ensure t
     :config
+    (setq company-echo-delay 0)
     (setq company-begin-commands '(self-insert-command)))
   (add-hook 'go-mode-hook (lambda ()
 			    (set (make-local-variable 'company-backends) '(company-go))
@@ -688,10 +693,26 @@
 * Languages
 ** GO
 #+BEGIN_SRC emacs-lisp
+  (use-package go-guru
+    :ensure t
+    )
   (use-package go-mode
     :ensure t
     :config
+    (defun my-golang-setting ()
+      (go-guru-hl-identifier-mode)
+      (local-set-key (kbd "C-c C-c d") 'go-guru-definition)
+      (local-set-key (kbd "C-c C-c D") 'go-guru-definition-other-window)
+      (local-set-key (kbd "C-c C-c q") 'go-guru-describe)
+      (local-set-key (kbd "C-c C-c R") 'pop-tag-mark) ;; return to the place you use godef-jump 
+      (local-set-key (kbd "C-c C-c r") 'xref-find-references)
+      (local-set-key (kbd "C-c C-c c") 'go-guru-callers)
+      (local-set-key (kbd "C-c C-c C") 'go-guru-callstack)
+      (local-set-key (kbd "C-c C-c i") 'go-guru-implements)
+      )
     (setq gofmt-command "goimports")
+    (add-hook 'go-mode-hook 'flycheck-mode)
+    (add-hook 'go-mode-hook 'my-golang-setting)
     (add-hook 'before-save-hook 'gofmt-before-save)
     )
 #+END_SRC
