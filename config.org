@@ -557,9 +557,9 @@
   (use-package company
     :ensure t
     :config
-    (setq company-idle-delay 0)
+    (setq company-idle-delay 0.3)
     (setq company-minimum-prefix-length 2))
-
+  
   (with-eval-after-load 'company
     (define-key company-active-map (kbd "M-n") nil)
     (define-key company-active-map (kbd "M-p") nil)
