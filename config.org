@@ -701,9 +701,9 @@
     :config
     (defun my-golang-setting ()
       (go-guru-hl-identifier-mode)
-      (local-set-key (kbd "C-c C-c d") 'go-guru-definition)
-      (local-set-key (kbd "C-c C-c D") 'go-guru-definition-other-window)
-      (local-set-key (kbd "C-c C-c q") 'go-guru-describe)
+      (local-set-key (kbd "C-c C-c d") 'godef-jump)
+      (local-set-key (kbd "C-c C-c D") 'godef-jump-other-window)
+      (local-set-key (kbd "C-c C-c q") 'godef-describe)
       (local-set-key (kbd "C-c C-c R") 'pop-tag-mark) ;; return to the place you use godef-jump 
       (local-set-key (kbd "C-c C-c r") 'xref-find-references)
       (local-set-key (kbd "C-c C-c c") 'go-guru-callers)
