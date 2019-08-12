@@ -621,8 +621,7 @@
   (use-package lsp-ui
     :ensure t
     :config
-    (add-hook 'lsp-mode-hook 'lsp-ui-mode
-	      ))
+    (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 #+END_SRC
 * Magit
 ** Git handler
@@ -679,35 +678,40 @@
 #+END_SRC
 ** Rust
 #+BEGIN_SRC emacs-lisp
-  (use-package racer
+  (defun configure-rust/setup-env ()
+    "RLS requires some environment variables to be setup. We use rustup to get the values."
+
+    ;; (when (executable-find "rustup")
+    ;; (require 's)
+    ;; (require 'dash)
+    ;; (setq rust-default-toolchain
+    ;; (car (s-split " " (-first
+    ;; (lambda (line) (s-match "default" line)) 
+    ;; (s-lines (shell-command-to-string "rustup toolchain list"))))))
+
+    ;; tell racer to use the rustup-managed rust-src
+    ;; rustup component add rust-src
+    (setq rust-default-toolchain "nightly-x86_64-apple-darwin")
+    (setq rust-src-path (concat (getenv "HOME") "/util/rust/rustup/toolchains/" rust-default-toolchain "/lib/rustlib/src/rust/src"))
+    (setq rust-lib-path (concat (getenv "HOME") "/util/rust/rustup/toolchains/" rust-default-toolchain "/lib"))
+    (setq rust-bin-path (concat (getenv "HOME") "/util/rust/rustup/toolchains/" rust-default-toolchain "/bin"))
+    (setenv "RUST_SRC_PATH" rust-src-path)
+    (setenv "RUSTC" rust-bin-path)
+    (setenv "DYLD_LIBRARY_PATH" rust-lib-path)
+    (setenv "RLS_ROOT" rust-src-path))
+
+  (use-package rust-mode
+    :ensure t
+    :hook (rust-mode . lsp)
+    :config
+    (configure-rust/setup-env)
+    (setq rust-format-on-save t)
+    :after lsp-mode)
+  
+(use-package flycheck-rust
     :ensure t
     :config
-    (setq company-tooltip-align-annotations t)
-    (setq racer-cmd (concat (getenv "CARGO_HOME") "/bin/racer"))
-    (setq racer-rust-src-path (getenv "RUST_NIGHTLY_PATH")))
-  (add-hook 'racer-mode-hook #'company-mode)
-  (add-hook 'racer-mode-hook #'eldoc-mode)
-  (setq company-tooltip-align-annotations t)
-
-    (use-package rust-mode
-      :ensure t
-      :config
-      (setq rust-format-on-save t)
-      (setq rust-rustfmt-bin "~/.cargo/bin/rustfmt")
-      (setq rust-cargo-bin "~/.cargo/bin/cargo")
-      (add-hook 'rust-mode-hook #'racer-mode))
-
-    ;; (use-package cargo
-    ;;   :ensure t
-    ;;   :config
-    ;;   (setq compilation-scroll-output t)
-    ;;   (add-hook 'rust-mode-hook 'cargo-minor-mode))
-
-    (use-package flycheck-rust
-      :ensure t
-      :config
-      (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
-      (add-hook 'rust-mode-hook 'flycheck-mode))
+    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 #+END_SRC
 ** Dart
 #+BEGIN_SRC emacs-lisp
