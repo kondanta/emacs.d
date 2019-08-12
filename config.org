@@ -217,6 +217,12 @@
     :init
     (when (memq window-system '(mac ns x))
       (exec-path-from-shell-initialize)))
+  (let ((path (shell-command-to-string ". ~/.bashrc; echo -n $PATH")))
+    (setenv "PATH" path)
+    (setq exec-path 
+	  (append
+	   (split-string-and-unquote path ":")
+	   exec-path)))
 #+END_SRC
 * Terminal
 ** Specifiying the terminal
