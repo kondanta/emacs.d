@@ -1,4 +1,5 @@
 * Minor Settings
+#+END_SRC
 ** Whoami
 #+BEGIN_SRC emacs-lisp
   (setq user-full-name "Taylan Doğan"
@@ -630,6 +631,10 @@
   (use-package lsp-ui
     :ensure t
     :config
+    (set-face-attribute 'lsp-ui-sideline-global nil
+			:inherit 'firacode
+			:height 160
+			)
     (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 #+END_SRC
 * Magit
