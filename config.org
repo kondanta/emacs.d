@@ -155,6 +155,10 @@
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "M-SPC") 'cycle-spacing)
 #+END_SRC
+** Newline with indentation
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "RET") 'newline-and-indent)
+#+END_SRC
 * Utils
 ** Selection
 #+BEGIN_SRC emacs-lisp
