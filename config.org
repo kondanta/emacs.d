@@ -151,6 +151,10 @@
  #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-c C-c r") 'xref-find-references)
  #+END_SRC
+** Cycle Spacing
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "M-SPC") 'cycle-spacing)
+#+END_SRC
 * Utils
 ** Selection
 #+BEGIN_SRC emacs-lisp
