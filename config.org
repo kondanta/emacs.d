@@ -329,7 +329,7 @@
 	   checkitem (file (org-file-path "to-read.org")))
 	  ("t" "Todo"
 	   entry
-	   (file+headline org-index-file "TodoList")
+	   (file "~/documents/org/index.org")
 	   "* TODO %?\n"
 	   )
 	  ("i" "Ideas"
@@ -342,14 +342,12 @@
   (setq org-refile-use-outline-path t)
   (setq org-outline-path-complete-in-steps nil)
 #+END_SRC
-
 *** Keybindings
 #+BEGIN_SRC emacs-lisp
   (define-key global-map "\C-ck" 'org-store-link)
   (define-key global-map "\C-ca" 'org-agenda)
   (define-key global-map "\C-cc" 'org-capture)
-#+END_SRC
-#+BEGIN_SRC emacs-lisp
+
   (defun kon/open-index ()
     (interactive)
     (find-file org-index-file)
@@ -366,7 +364,26 @@
   (add-hook 'gfm-mode-hook (lambda ()(local-set-key (kbd "M-n") 'org-capture-todo)))
   (add-hook 'haskell-mode-hook (lambda ()(local-set-key (kbd "M-n") 'org-capture-todo)))
 #+END_SRC
+*** Custom Todo States
+#+BEGIN_SRC emacs-lisp
+  (setq org-todo-keywords
+	'((sequence
+	   "STARTED(s)"
+	   "TODO(t)"  ; next action
+	   "TOBLOG(b)"  ; next action
+	   "WAITING(w@/!)"
+	   "SOMEDAY(.)" "|" "DONE(x)" "CANCELLED(c)")
+	  (sequence "LEARN" "TRY" "TEACH" "|" "COMPLETE(x)")
+	  (sequence "TODELEGATE(-)" "DELEGATED(d)" "|" "COMPLETE(x)")))
 
+  (setq org-todo-keyword-faces
+	'(("TODO" . (:foreground "red" :weight bold))
+	  ("DONE" . (:foreground "green" :weight bold))
+	  ("WAITING" . (:foreground "cyan" :weight bold))
+	  ("SOMEDAY" . (:foreground "gray" :weight bold))))
+
+  (setq org-log-done 'time)
+#+END_SRC
 * Which-Key
 ** See key shortcuts
 #+BEGIN_SRC emacs-lisp
@@ -510,11 +527,11 @@
     (setq dashboard-set-navigator t)
     (setq dashboard-center-content t)
     (setq show-week-agenda-p t)
-    (setq dashboard-items '((recents  . 5)
-			    (bookmarks . 5)
-			    (projects . 5)
-			    (agenda . 5)
-			    (registers . 5))))
+    (setq dashboard-items '((recents  . 7)
+			    (bookmarks . 3)
+			    (projects . 7)
+			    (agenda . 7)
+			    (registers . 3))))
 #+END_SRC
 * Footer
 ** Arrow
