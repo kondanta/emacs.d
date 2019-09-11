@@ -235,6 +235,12 @@
 	   (split-string-and-unquote path ":")
 	   exec-path)))
 #+END_SRC
+** MAC CMD to ALT binder
+#+BEGIN_SRC emacs-lisp
+(when (eq system-type 'darwin)
+  (setq mac-command-modifier nil)
+  (setq mac-option-modifier 'meta))
+#+END_SRC
 * Terminal
 ** Specifiying the terminal
 #+BEGIN_SRC emacs-lisp
