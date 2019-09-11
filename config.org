@@ -781,6 +781,14 @@
     :ensure t)
 
 #+END_SRC
+** Terraform
+#+BEGIN_SRC emacs-lisp
+(use-package terraform-mode
+:ensure t
+:config
+(custom-set-variables
+ '(terraform-indent-level 4)))
+#+END_SRC
 * Yasnippet
 ** Yasnippet and its hooks
 #+BEGIN_SRC emacs-lisp
