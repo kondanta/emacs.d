@@ -278,7 +278,7 @@
 #+END_SRC
 ** Task and org-capture Management
 #+BEGIN_SRC emacs-lisp
-  (setq org-directory "~/documents/org")
+  (setq org-directory "~/.syncthing/emacs/org")
   (defun org-file-path (filename)
     (concat (file-name-as-directory org-directory) filename)
     )
@@ -287,7 +287,15 @@
 			      (org-file-path "archive.org") "::* From %s"))
 
   ;; storing todos in index
-  (setq org-agenda-files (list org-index-file))
+  ;; (setq org-agenda-files (list org-index-file))
+  (setq org-agenda-files 
+	(delq nil
+	      (mapcar (lambda(x) (and x(file-exists-p x) x))
+		      `("~/.syncthing/emacs/org/index.org"
+			"~/.syncthing/emacs/org/ideas.org"
+			"~/.syncthing/emacs/org/personal.org"
+			"~/.syncthing/emacs/org/programming.org"
+			"~/.syncthing/emacs/org/work.org"))))
 
   ;; when task done, put it into archive
   (defun kon/mark-done-and-archive ()
@@ -300,7 +308,7 @@
 
   ;; log the archive time
   (setq org-log-done 'time)
-  (setq org-directory "~/documents/org")
+  (setq org-directory "~/.syncthing/emacs/org")
   (defun org-file-path (filename)
     (concat (file-name-as-directory org-directory) filename)
     )
@@ -310,7 +318,6 @@
 
   ;; storing todos in index
   (setq org-agenda-files (list org-index-file))
-
   ;; when task done, put it into archive
   (defun kon/mark-done-and-archive ()
     "mark task done and archive it"
@@ -323,25 +330,55 @@
   ;; log the archive time
   (setq org-log-done 'time)
 #+END_SRC
+*** Task Estimation
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-clock-in-prepare-hook
+	    'my/org-mode-ask-effort)
+
+  (defun my/org-mode-ask-effort ()
+    "Ask for an effort estimate when clocking in."
+    (unless (org-entry-get (point) "Effort")
+      (let ((effort
+	     (completing-read
+	      "Effort: "
+	      (org-entry-get-multivalued-property (point) "Effort"))))
+	(unless (equal effort "")
+	  (org-set-property "Effort" effort)))))
+#+END_SRC
 *** Capturing tasks (from hrs/dotfiles)
 #+BEGIN_SRC emacs-lisp
   (setq org-capture-templates
 	'(("f" "Finished books"
-	   (table-line (file "~/documents/notes/books-read.org")
+	   (table-line (file "~/.syncthing/emacs/org/books.org")
 		       "| %^{Title} | %^{Author | %u |}")
 	   )
-
 	  ("r" "Reading"
-	   checkitem (file (org-file-path "to-read.org")))
+	   checkitem (file "~/.syncthing/emacs/org/to-read.org"))
 	  ("t" "Todo"
 	   entry
-	   (file "~/documents/org/index.org")
+	   (file "~/.syncthing/emacs/org/index.org")
 	   "* TODO %?\n"
 	   )
 	  ("i" "Ideas"
 	   entry
-	   (file "~/documents/notes/ideas.org")
+	   (file "~/.syncthing/emacs/org/ideas.org")
 	   "* %?\n")
+	  ("w" "Work" 
+	   entry 
+	   (file "~/.syncthing/emacs/org/work.org")
+	   "* TODO %?\n")
+	  ("j" "Journal" 
+	   entry 
+	   (file "~/.syncthing/emacs/org/journal.org")
+	   "* %(org-read-date) \n %?\n")
+	  ("P" "Personal programming stuff" 
+	   entry 
+	   (file "~/.syncthing/emacs/org/programming.org")
+	   "* TODO %?\n")
+	  ("p" "Personal stuff" 
+	   entry 
+	   (file "~/.syncthing/emacs/org/personal.org")
+	   "* TODO %?\n")
 	  )
 	)
   ;; dunno what these does
@@ -389,6 +426,20 @@
 	  ("SOMEDAY" . (:foreground "gray" :weight bold))))
 
   (setq org-log-done 'time)
+#+END_SRC
+*** Agenda timeline
+#+BEGIN_SRC emacs-lisp
+  (defun org-agenda-timeline-all (&optional arg)
+    (interactive "P")
+    (with-temp-buffer
+      (dolist (org-agenda-file org-agenda-files)
+	(insert-file-contents org-agenda-file nil)
+	(end-of-buffer)
+	(newline))
+      (write-file "/tmp/timeline.org")
+      (org-agenda arg "L")))
+
+  (define-key org-mode-map (kbd "C-c t") 'org-agenda-timeline-all)
 #+END_SRC
 * Which-Key
 ** See key shortcuts
