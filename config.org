@@ -290,13 +290,13 @@
   ;; (setq org-agenda-files (list org-index-file))
   (setq org-agenda-files 
 	(delq nil
-	      (mapcar (lambda(x) (and x(file-exists-p x) x))
+	      (mapcar (lambda(x) (and x (file-exists-p x) x))
 		      `("~/.syncthing/emacs/org/index.org"
 			"~/.syncthing/emacs/org/ideas.org"
 			"~/.syncthing/emacs/org/personal.org"
 			"~/.syncthing/emacs/org/programming.org"
 			"~/.syncthing/emacs/org/work.org"))))
-
+  ;; (add-to-list 'auto-mode-alist '("\\.txt$" . org-mode))
   ;; when task done, put it into archive
   (defun kon/mark-done-and-archive ()
     "mark task done and archive it"
@@ -397,7 +397,36 @@
     (flycheck-mode -1)
     (end-of-buffer)
     )
-  (global-set-key (kbd "C-c i") 'kon/open-index)
+  (defun kon/open-personal ()
+    (interactive)
+    (find-file "~/.syncthing/emacs/org/personal.org")
+    (flycheck-mode -1)
+    (end-of-buffer)
+    )
+  (defun kon/open-journal ()
+    (interactive)
+    (find-file "~/.syncthing/emacs/org/journal.org")
+    (flycheck-mode -1)
+    (end-of-buffer)
+    )
+  (defun kon/open-programming ()
+    (interactive)
+    (find-file "~/.syncthing/emacs/org/programming.org")
+    (flycheck-mode -1)
+    (end-of-buffer)
+    )
+  (defun kon/open-work ()
+    (interactive)
+    (find-file "~/.syncthing/emacs/org/programming.org")
+    (flycheck-mode -1)
+    (end-of-buffer)
+    )
+
+  (global-set-key (kbd "C-c C-r i") 'kon/open-index)
+  (global-set-key (kbd "C-c C-r p") 'kon/open-personal)
+  (global-set-key (kbd "C-c C-r j") 'kon/open-journal)
+  (global-set-key (kbd "C-c C-r P") 'kon/open-programming)
+  (global-set-key (kbd "C-c C-r w") 'kon/open-work)
 
   ;; capture todo
   (defun org-capture-todo ()
