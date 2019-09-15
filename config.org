@@ -638,78 +638,10 @@
     :ensure t)
 #+END_SRC
 * IntelliSense
-** Company
-#+BEGIN_SRC emacs-lisp
-  (use-package company
-    :ensure t
-    :config
-    (setq company-idle-delay 0.7)
-    (setq company-minimum-prefix-length 2))
-  (global-set-key (kbd "C-c C-n") #'company-complete)
-  (with-eval-after-load 'company
-    (define-key company-active-map (kbd "M-n") nil)
-    (define-key company-active-map (kbd "M-p") nil)
-    (define-key company-active-map (kbd "C-n") #'company-select-next)
-    (define-key company-active-map (kbd "C-p") #'company-select-previous)
-    (define-key company-active-map (kbd "SPC") #'company-abort)
-    (define-key company-active-map (kbd "TAB")       #'company-complete)
-    (define-key company-active-map (kbd "<tab>")     #'company-complete)
-    )
-
-
-  (use-package flycheck-clang-analyzer
-    :ensure t
-    :config
-    (with-eval-after-load 'flycheck
-      (require 'flycheck-clang-analyzer)
-      (flycheck-clang-analyzer-setup)))
-
-  (with-eval-after-load 'company
-    (add-hook 'c++-mode-hook 'company-mode)
-    (add-hook 'c-mode-hook 'company-mode)
-    (add-hook 'python-mode-hook 'company-mode)
-    )
-
-
-  ;; C++
-  (use-package company-c-headers
-    :ensure t)
-
-  (use-package company-irony
-    :ensure t
-    :config
-    (setq company-backends '((company-c-headers
-			      company-dabbrev-code
-			      company-irony))))
-
-  (use-package irony
-    :ensure t
-    :config
-    (add-hook 'c++-mode-hook 'irony-mode)
-    (add-hook 'c-mode-hook 'irony-mode)
-    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
-
-  ;; I'll re enable this after handling jedi thing.
-  ;; For now it does not work, and editing py files become pita
-  ;; bc of this 
-  ;; Python
-  ;;Flycheck
-  (add-hook 'python-mode-hook 'flycheck-mode)
-  ;; Golang
-  (use-package company-go
-    :ensure t
-    :config
-    (setq company-echo-delay 0)
-    (setq company-begin-commands '(self-insert-command)))
-  (add-hook 'go-mode-hook (lambda ()
-			    (set (make-local-variable 'company-backends) '(company-go))
-			    (company-mode)))
-
-#+END_SRC
 ** LSP
 #+BEGIN_SRC emacs-lisp
   (use-package lsp-mode
-    :commands lsp
+    :commands (lsp lsp-deferred)
     :config (require 'lsp-clients))
 
   (use-package lsp-ui
@@ -754,10 +686,10 @@
 ** GO
 #+BEGIN_SRC emacs-lisp
   (use-package go-mode
+    :hook (go-mode . lsp)
     :ensure t
     :config
     (defun my-golang-setting ()
-      (go-guru-hl-identifier-mode)
       (local-set-key (kbd "C-c C-c d") 'godef-jump)
       (local-set-key (kbd "C-c C-c D") 'godef-jump-other-window)
       (local-set-key (kbd "C-c C-c q") 'godef-describe)
@@ -767,23 +699,13 @@
     (setq gofmt-command "goimports")
     (add-hook 'go-mode-hook 'flycheck-mode)
     (add-hook 'go-mode-hook 'my-golang-setting)
-    (add-hook 'before-save-hook 'gofmt-before-save))
+    (add-hook 'before-save-hook 'gofmt-before-save)
+    :after lsp-mode)
 #+END_SRC
 ** Rust
 #+BEGIN_SRC emacs-lisp
   (defun configure-rust/setup-env ()
     "RLS requires some environment variables to be setup. We use rustup to get the values."
-
-    ;; (when (executable-find "rustup")
-    ;; (require 's)
-    ;; (require 'dash)
-    ;; (setq rust-default-toolchain
-    ;; (car (s-split " " (-first
-    ;; (lambda (line) (s-match "default" line)) 
-    ;; (s-lines (shell-command-to-string "rustup toolchain list"))))))
-
-    ;; tell racer to use the rustup-managed rust-src
-    ;; rustup component add rust-src
     (when (eq system-type 'darwin)
       (setq rust-default-toolchain "nightly-x86_64-apple-darwin")
       (setq rust-src-path (concat (getenv "HOME") "/util/rust/rustup/toolchains/" rust-default-toolchain "/lib/rustlib/src/rust/src"))
@@ -816,6 +738,7 @@
 ** Dart
 #+BEGIN_SRC emacs-lisp
   (use-package dart-mode
+    :hook (dart-mode . lsp)
     :ensure t
     :config
     (setq dart-sdk-path "/home/kondanta/tools/flutter/bin/cache/dart-sdk/")
