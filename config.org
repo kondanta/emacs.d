@@ -733,10 +733,17 @@
 
     ;; tell racer to use the rustup-managed rust-src
     ;; rustup component add rust-src
-    (setq rust-default-toolchain "nightly-x86_64-apple-darwin")
-    (setq rust-src-path (concat (getenv "HOME") "/util/rust/rustup/toolchains/" rust-default-toolchain "/lib/rustlib/src/rust/src"))
-    (setq rust-lib-path (concat (getenv "HOME") "/util/rust/rustup/toolchains/" rust-default-toolchain "/lib"))
-    (setq rust-bin-path (concat (getenv "HOME") "/util/rust/rustup/toolchains/" rust-default-toolchain "/bin"))
+    (when (eq system-type 'darwin)
+      (setq rust-default-toolchain "nightly-x86_64-apple-darwin")
+      (setq rust-src-path (concat (getenv "HOME") "/util/rust/rustup/toolchains/" rust-default-toolchain "/lib/rustlib/src/rust/src"))
+      (setq rust-lib-path (concat (getenv "HOME") "/util/rust/rustup/toolchains/" rust-default-toolchain "/lib"))
+      (setq rust-bin-path (concat (getenv "HOME") "/util/rust/rustup/toolchains/" rust-default-toolchain "/bin")))
+    (when (eq system-type 'gnu/linux)
+      (setq rust-default-toolchain "nightly-x86_64-unknown-linux-gnu")
+      (setq rust-src-path (concat (getenv "HOME") "/programming/tools/rust/rustup/toolchains/" rust-default-toolchain "/lib/rustlib/src/rust/src"))
+      (setq rust-lib-path (concat (getenv "HOME") "/programming/tools/rust/rustup/toolchains/" rust-default-toolchain "/lib"))
+      (setq rust-bin-path (concat (getenv "HOME") "/programming/tools/rust/rustup/toolchains/" rust-default-toolchain "/bin"))
+      )
     (setenv "RUST_SRC_PATH" rust-src-path)
     (setenv "RUSTC" rust-bin-path)
     (setenv "DYLD_LIBRARY_PATH" rust-lib-path)
@@ -749,8 +756,8 @@
     (configure-rust/setup-env)
     (setq rust-format-on-save t)
     :after lsp-mode)
-  
-(use-package flycheck-rust
+
+  (use-package flycheck-rust
     :ensure t
     :config
     (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
