@@ -427,6 +427,20 @@
 
   (setq org-log-done 'time)
 #+END_SRC
+*** Agenda timeline
+#+BEGIN_SRC emacs-lisp
+  (defun org-agenda-timeline-all (&optional arg)
+    (interactive "P")
+    (with-temp-buffer
+      (dolist (org-agenda-file org-agenda-files)
+	(insert-file-contents org-agenda-file nil)
+	(end-of-buffer)
+	(newline))
+      (write-file "/tmp/timeline.org")
+      (org-agenda arg "L")))
+
+  (define-key org-mode-map (kbd "C-c t") 'org-agenda-timeline-all)
+#+END_SRC
 * Which-Key
 ** See key shortcuts
 #+BEGIN_SRC emacs-lisp
