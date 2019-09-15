@@ -330,6 +330,21 @@
   ;; log the archive time
   (setq org-log-done 'time)
 #+END_SRC
+*** Task Estimation
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-clock-in-prepare-hook
+	    'my/org-mode-ask-effort)
+
+  (defun my/org-mode-ask-effort ()
+    "Ask for an effort estimate when clocking in."
+    (unless (org-entry-get (point) "Effort")
+      (let ((effort
+	     (completing-read
+	      "Effort: "
+	      (org-entry-get-multivalued-property (point) "Effort"))))
+	(unless (equal effort "")
+	  (org-set-property "Effort" effort)))))
+#+END_SRC
 *** Capturing tasks (from hrs/dotfiles)
 #+BEGIN_SRC emacs-lisp
   (setq org-capture-templates
