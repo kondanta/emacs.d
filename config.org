@@ -417,7 +417,7 @@
     )
   (defun kon/open-work ()
     (interactive)
-    (find-file "~/.syncthing/emacs/org/programming.org")
+    (find-file "~/.syncthing/emacs/org/work.org")
     (flycheck-mode -1)
     (end-of-buffer)
     )
