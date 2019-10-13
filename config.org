@@ -6,6 +6,7 @@
 	user-mail-address "doganntaylan@gmail.com")
 #+END_SRC
 ** Remove UI Elements
+Remove unnecessary stuff
 #+BEGIN_SRC emacs-lisp
   ;; the blinking cursor is nothing, but an annoyance
   (blink-cursor-mode -1)
@@ -56,7 +57,7 @@
   (setq require-final-newline t)
 #+END_SRC
 ** Encoding
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SReeC emacs-lisp
   ;; revert buffers automatically when underlying files are changed externally
   (global-auto-revert-mode t)
   (prefer-coding-system 'utf-8)
@@ -105,7 +106,6 @@
 #+BEGIN_SRC emacs-lisp
 (delete-selection-mode t)
 #+END_SRC
-** Forward Sub Words
 ** Enable Subword with M-f
 #+BEGIN_SRC emacs-lisp
   (global-subword-mode 1)
@@ -223,12 +223,13 @@
 #+END_SRC
 ** Exec-path-from-shell
 #+BEGIN_SRC emacs-lisp
-  (use-package exec-path-from-shell 
-    :ensure t
-    :init
-    (when (memq window-system '(mac ns x))
-      (exec-path-from-shell-initialize)))
-  (let ((path (shell-command-to-string ". ~/.bashrc; echo -n $PATH")))
+  ;; (use-package exec-path-from-shell 
+  ;;   :ensure t
+  ;;   :init
+  ;;   (when (memq window-system '(mac ns x))
+  ;;     (exec-path-from-shell-initialize)))
+  (let ((
+	 path (shell-command-to-string ". ~/.bashrc; echo -n $PATH")))
     (setenv "PATH" path)
     (setq exec-path 
 	  (append
@@ -588,7 +589,6 @@
     (other-window 1))
   (global-set-key (kbd "C-c l") 'split-horizon)
 #+END_SRC
-# Dashboard is kinda broken so disabled for now! 
 * Dashboard
 ** Icons
  #+BEGIN_SRC emacs-lisp
@@ -630,7 +630,6 @@
     (setq spaceline-line-column-p nil)
     (setq spaceline-line-p nil)
     (setq powerline-default-separator (quote arrow))
-    ;; (setq powerline-default-separator nil)
     (spaceline-spacemacs-theme))
 #+END_SRC
 ** Remove Minor Mods
@@ -817,11 +816,6 @@
       :ensure t)
     (yas-reload-all))
 
-  ;; c++
-  (add-hook 'c++-mode-hook 'yas-minor-mode)
-  (add-hook 'c-mode-hook 'yas-minor-mode)
-  ;; python
-  (add-hook 'python-mode-hook 'yas-minor-mode)
   ;; elisp
   (add-hook 'emacs-lisp-mode-hook 'yas-minor-mode)
   ;; bash
@@ -831,7 +825,4 @@
   (add-hook 'flutter-mode-hook 'yas-minor-mode)
   ;; go
   (add-hook 'go-mode-hook 'yas-minor-mode)
-  ;; javascript
-  (add-hook 'js-mode 'yas-minor-mode)
-
 #+END_SRC
