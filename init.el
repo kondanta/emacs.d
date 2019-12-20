@@ -49,11 +49,11 @@
  '(nrepl-message-colors
    (quote
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
- '(org-agenda-files nil)
+ '(org-agenda-files (quote ("~/.syncthing/emacs/org")))
  '(org-export-backends (quote (ascii html icalendar latex md odt)))
  '(package-selected-packages
    (quote
-    (json-mode terraform-mode all-the-icons exec-path-from-shell go-autocomplete markdown-mode dart-mode move-text magit-gitflow gruvbox-theme gruvbox gruvbox-dark-hard-theme gruvbox-dark-hard cmake-mode company-go flycheck-gometalinter irony-eldoc magit expand-region mark-multiple dockerfile-mode docker-compose-mode yaml-mode yasnippet ido-vertical-mode company-dart flycheck-rust rust rust-mode go-mode company-c-headers flycheck-clang-analyzer projectile company-irony pretty-mode swiper diminish spaceline company dashboard rainbow-delimiters rainbow-delimeters switch-window rainbow-mode avy smex org-bullets which-key use-package)))
+    (json-mode terraform-mode all-the-icons exec-path-from-shell go-autocomplete markdown-mode dart-mode move-text magit-gitflow gruvbox-theme gruvbox gruvbox-dark-hard-theme gruvbox-dark-hard cmake-mode company-go flycheck-gometalinter irony-eldoc magit expand-region mark-multiple dockerfile-mode docker-compose-mode yaml-mode yasnippet ido-vertical-mode company-dart flycheck-rust rust rust-mode go-mode company-c-headers flycheck-clang-analyzer projectile company-irony pretty-mode swiper diminish spaceline company dashboard rainbow-delimiters rainbow-delimeters switch-window rainbow-mode avy smex org-bullets which-key)))
  '(pdf-view-midnight-colors (quote ("#b2b2b2" . "#292b2e")))
  '(terraform-indent-level 4)
  '(vc-annotate-background "#2B2B2B")

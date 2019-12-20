@@ -258,27 +258,19 @@ Remove unnecessary stuff
   (setq org-export-with-smart-quotes t)
   (setq org-support-shift-select 'always)
   (add-hook 'org-mode 'org-indent-mode)
-#+END_SRC
-** Language <S
-#+BEGIN_SRC emacs-lisp
+
+  ;; using <S automatically generates #+BEGIN_SRC block
   (setq org-src-window-setup 'current-window)
   (add-to-list 'org-structure-template-alist
 	       '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
-#+END_SRC
-** Org Bullets
-#+BEGIN_SRC emacs-lisp
+  ;; Bullet mode
   (use-package org-bullets
     :ensure t
     :config
     (add-hook 'org-mode-hook (lambda() (org-bullets-mode))))
 
-#+END_SRC
-** Disable Additional Page for <S
-#+BEGIN_SRC emacs-lisp
   (setq org-src-window-setup 'current-window)
-#+END_SRC
-** Task and org-capture Management
-#+BEGIN_SRC emacs-lisp
+
   (setq org-directory "~/.syncthing/emacs/org")
   (defun org-file-path (filename)
     (concat (file-name-as-directory org-directory) filename)
@@ -288,35 +280,10 @@ Remove unnecessary stuff
 			      (org-file-path "archive.org") "::* From %s"))
 
   ;; storing todos in index
-  ;; (setq org-agenda-files (list org-index-file))
-  (setq org-agenda-files 
-	(delq nil
-	      (mapcar (lambda(x) (and x (file-exists-p x) x))
-		      `("~/.syncthing/emacs/org/index.org"
-			"~/.syncthing/emacs/org/ideas.org"
-			"~/.syncthing/emacs/org/personal.org"
-			"~/.syncthing/emacs/org/programming.org"
-			"~/.syncthing/emacs/org/work.org"))))
-  ;; (add-to-list 'auto-mode-alist '("\\.txt$" . org-mode))
-  ;; when task done, put it into archive
-  (defun kon/mark-done-and-archive ()
-    "mark task done and archive it"
-    (interactive)
-    (org-todo 'done)
-    (org-archive-subtree)
-    )
-  (define-key org-mode-map (kbd "C-c C-x C-s") 'kon/mark-done-and-archive)
-
-  ;; log the archive time
-  (setq org-log-done 'time)
-  (setq org-directory "~/.syncthing/emacs/org")
-  (defun org-file-path (filename)
-    (concat (file-name-as-directory org-directory) filename)
-    )
-  (setq org-index-file (org-file-path "index.org"))
-  (setq org-archive-location (concat
-			      (org-file-path "archive.org") "::* From %s"))
-
+  ;; M-x customize-variable RET org-agenda-files RET, then click state
+  ;; then remove state 
+  (setq org-agenda-files '("~/.syncthing/emacs/org"))
+  (add-to-list 'auto-mode-alist '("\\.txt$" . org-mode))
   ;; storing todos in index
   (setq org-agenda-files (list org-index-file))
   ;; when task done, put it into archive
@@ -324,18 +291,27 @@ Remove unnecessary stuff
     "mark task done and archive it"
     (interactive)
     (org-todo 'done)
-    (org-archive-subtree)
-    )
+    (org-archive-subtree))
   (define-key org-mode-map (kbd "C-c C-x C-s") 'kon/mark-done-and-archive)
 
   ;; log the archive time
   (setq org-log-done 'time)
-#+END_SRC
-*** Task Estimation
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'org-clock-in-prepare-hook
-	    'my/org-mode-ask-effort)
+  (setq org-deadline-warning-days 14)
+  (setq org-agenda-show-all-dates t)
+  (setq org-clock-out-when-done t)
+  (setq org-clock-in-resume t)
 
+  ;; other configs
+  (setq org-agenda-tags-colmn -100)
+  (setq org-agenda-sticky nil)
+  (setq org-agenda-use-tag-inheritance t)
+  (setq org-agenda-show-log t)
+  (setq org-agenda-skip-deadline-if-done t)
+  (setq org-agenda-skip-scheduled-if-done t)
+  (setq org-use-speed-commands t)
+
+
+  ;; Effort estimation
   (defun my/org-mode-ask-effort ()
     "Ask for an effort estimate when clocking in."
     (unless (org-entry-get (point) "Effort")
@@ -345,9 +321,10 @@ Remove unnecessary stuff
 	      (org-entry-get-multivalued-property (point) "Effort"))))
 	(unless (equal effort "")
 	  (org-set-property "Effort" effort)))))
-#+END_SRC
-*** Capturing tasks (from hrs/dotfiles)
-#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-clock-in-prepare-hook
+	    'my/org-mode-ask-effort)
+
+  ;; Capturing templates
   (setq org-capture-templates
 	'(("f" "Finished books"
 	   (table-line (file "~/.syncthing/emacs/org/books.org")
@@ -385,12 +362,11 @@ Remove unnecessary stuff
   ;; dunno what these does
   (setq org-refile-use-outline-path t)
   (setq org-outline-path-complete-in-steps nil)
-#+END_SRC
-*** Keybindings
-#+BEGIN_SRC emacs-lisp
+  ;; Keybindings
   (define-key global-map "\C-ck" 'org-store-link)
   (define-key global-map "\C-ca" 'org-agenda)
   (define-key global-map "\C-cc" 'org-capture)
+  ;; (bind-key "Y" 'org-agenda-todo-yesterday org-agenda-mode-map)
 
   (defun kon/open-index ()
     (interactive)
@@ -436,9 +412,8 @@ Remove unnecessary stuff
   (global-set-key (kbd "M-n") 'org-capture-todo)
   (add-hook 'gfm-mode-hook (lambda ()(local-set-key (kbd "M-n") 'org-capture-todo)))
   (add-hook 'haskell-mode-hook (lambda ()(local-set-key (kbd "M-n") 'org-capture-todo)))
-#+END_SRC
-*** Custom Todo States
-#+BEGIN_SRC emacs-lisp
+
+  ;; Custom todo keywords
   (setq org-todo-keywords
 	'((sequence
 	   "STARTED(s)"
@@ -447,18 +422,19 @@ Remove unnecessary stuff
 	   "WAITING(w@/!)"
 	   "SOMEDAY(.)" "|" "DONE(x)" "CANCELLED(c)")
 	  (sequence "LEARN" "TRY" "TEACH" "|" "COMPLETE(x)")
-	  (sequence "TODELEGATE(-)" "DELEGATED(d)" "|" "COMPLETE(x)")))
+	  (sequence "TODELEGATE(-)" "DELEGATED(d)" "|" "COMPLETE(x)")
+	  (sequence "WAITING(w@/!)" "ON_HOLD(h@/!)" "|" "CANCELLED(c@/!)")))
 
   (setq org-todo-keyword-faces
 	'(("TODO" . (:foreground "red" :weight bold))
 	  ("DONE" . (:foreground "green" :weight bold))
 	  ("WAITING" . (:foreground "cyan" :weight bold))
-	  ("SOMEDAY" . (:foreground "gray" :weight bold))))
+	  ("SOMEDAY" . (:foreground "gray" :weight bold))
+	  ("ON_HOLD" . (:foreground "magenta" :weight bold))))
 
-  (setq org-log-done 'time)
-#+END_SRC
-*** Agenda timeline
-#+BEGIN_SRC emacs-lisp
+  (setq org-use-fast-todo-selection t)
+
+  ;; Agenda timeline :/
   (defun org-agenda-timeline-all (&optional arg)
     (interactive "P")
     (with-temp-buffer
@@ -469,7 +445,231 @@ Remove unnecessary stuff
       (write-file "/tmp/timeline.org")
       (org-agenda arg "L")))
 
-  (define-key org-mode-map (kbd "C-c t") 'org-agenda-timeline-all)
+  ;; test
+
+  (defun my/org-agenda-project-agenda ()
+    "Return the project headline and up to `org-agenda-max-entries' tasks."
+    (save-excursion
+      (let* ((marker (org-agenda-new-marker))
+	     (heading
+	      (org-agenda-format-item "" (org-get-heading) (org-get-category) nil))
+	     (org-agenda-restrict t)
+	     (org-agenda-restrict-begin (point))
+	     (org-agenda-restrict-end (org-end-of-subtree 'invisible))
+	     ;; Find the TODO items in this subtree
+	     (list (org-agenda-get-day-entries (buffer-file-name) (calendar-current-date) :todo)))
+	(org-add-props heading
+	    (list 'face 'defaults
+		  'done-face 'org-agenda-done
+		  'undone-face 'default
+		  'mouse-face 'highlight
+		  'org-not-done-regexp org-not-done-regexp
+		  'org-todo-regexp org-todo-regexp
+		  'org-complex-heading-regexp org-complex-heading-regexp
+		  'help-echo
+		  (format "mouse-2 or RET jump to org file %s"
+			  (abbreviate-file-name
+			   (or (buffer-file-name (buffer-base-buffer))
+			       (buffer-name (buffer-base-buffer))))))
+	  'org-marker marker
+	  'org-hd-marker marker
+	  'org-category (org-get-category)
+	  'type "tagsmatch")
+	(concat heading "\n"
+		(org-agenda-finalize-entries list)))))
+
+  (defun my/org-agenda-projects-and-tasks (match)
+    "Show TODOs for all `org-agenda-files' headlines matching MATCH."
+    (interactive "MString: ")
+    (let ((todo-only nil))
+      (if org-agenda-overriding-arguments
+	  (setq todo-only (car org-agenda-overriding-arguments)
+		match (nth 1 org-agenda-overriding-arguments)))
+      (let* ((org-tags-match-list-sublevels
+	      org-tags-match-list-sublevels)
+	     (completion-ignore-case t)
+	     rtn rtnall files file pos matcher
+	     buffer)
+	(when (and (stringp match) (not (string-match "\\S-" match)))
+	  (setq match nil))
+	(when match
+	  (setq matcher (org-make-tags-matcher match)
+		match (car matcher) matcher (cdr matcher)))
+	(catch 'exit
+	  (if org-agenda-sticky
+	      (setq org-agenda-buffer-name
+		    (if (stringp match)
+			(format "*Org Agenda(%s:%s)*"
+				(or org-keys (or (and todo-only "M") "m")) match)
+		      (format "*Org Agenda(%s)*" (or (and todo-only "M") "m")))))
+	  (org-agenda-prepare (concat "TAGS " match))
+	  (org-compile-prefix-format 'tags)
+	  (org-set-sorting-strategy 'tags)
+	  (setq org-agenda-query-string match)
+	  (setq org-agenda-redo-command
+		(list 'org-tags-view `(quote ,todo-only)
+		      (list 'if 'current-prefix-arg nil `(quote ,org-agenda-query-string))))
+	  (setq files (org-agenda-files nil 'ifmode)
+		rtnall nil)
+	  (while (setq file (pop files))
+	    (catch 'nextfile
+	      (org-check-agenda-file file)
+	      (setq buffer (if (file-exists-p file)
+			       (org-get-agenda-file-buffer file)
+			     (error "No such file %s" file)))
+	      (if (not buffer)
+		  ;; If file does not exist, error message to agenda
+		  (setq rtn (list
+			     (format "ORG-AGENDA-ERROR: No such org-file %s" file))
+			rtnall (append rtnall rtn))
+		(with-current-buffer buffer
+		  (unless (derived-mode-p 'org-mode)
+		    (error "Agenda file %s is not in `org-mode'" file))
+		  (save-excursion
+		    (save-restriction
+		      (if org-agenda-restrict
+			  (narrow-to-region org-agenda-restrict-begin
+					    org-agenda-restrict-end)
+			(widen))
+		      (setq rtn (org-scan-tags 'my/org-agenda-project-agenda matcher todo-only))
+		      (setq rtnall (append rtnall rtn))))))))
+	  (if org-agenda-overriding-header
+	      (insert (org-add-props (copy-sequence org-agenda-overriding-header)
+			  nil 'face 'org-agenda-structure) "\n")
+	    (insert "Headlines with TAGS match: ")
+	    (add-text-properties (point-min) (1- (point))
+				 (list 'face 'org-agenda-structure
+				       'short-heading
+				       (concat "Match: " match)))
+	    (setq pos (point))
+	    (insert match "\n")
+	    (add-text-properties pos (1- (point)) (list 'face 'org-warning))
+	    (setq pos (point))
+	    (unless org-agenda-multi
+	      (insert "Press `C-u r' to search again with new search string\n"))
+	    (add-text-properties pos (1- (point)) (list 'face 'org-agenda-structure)))
+	  (org-agenda-mark-header-line (point-min))
+	  (when rtnall
+	    (insert (mapconcat 'identity rtnall "\n") ""))
+	  (goto-char (point-min))
+	  (or org-agenda-multi (org-agenda-fit-window-to-buffer))
+	  (add-text-properties (point-min) (point-max)
+			       `(org-agenda-type tags
+						 org-last-args (,todo-only ,match)
+						 org-redo-cmd ,org-agenda-redo-command
+						 org-series-cmd ,org-cmd))
+	  (org-agenda-finalize)
+	  (setq buffer-read-only t)))))
+
+  (defvar my/org-agenda-contexts
+    '((tags-todo "phone")
+      (tags-todo "work")
+      (tags-todo "coding")
+      (tags-todo "writing")
+      (tags-todo "computer")
+      (tags-todo "home"))
+    "Usual list of contexts.")
+  (defun my/org-agenda-skip-scheduled ()
+    (org-agenda-skip-entry-if 'scheduled 'deadline 'regexp "\n]+>"))
+  (setq org-agenda-custom-commands
+	`(("a" "Agenda"
+	   ((agenda "" ((org-agenda-span 2)))
+	    ;; Unscheduled
+	    (tags-todo "TODO=\"TODO\"-project-cooking-routine-errands-shopping-video" 
+		       ((org-agenda-skip-function 'my/org-agenda-skip-scheduled)
+			(org-agenda-overriding-header "Unscheduled TODO entries: ")
+			(org-agenda-sorting-strategy '(priority-down effort-up tag-up category-keep))))
+	    ;; Active projects
+	    (tags "+project-someday-TODO=\"DONE\"-TODO=\"SOMEDAY\"-inactive"
+		  ((org-tags-exclude-from-inheritance '("project"))
+		   (org-agenda-overriding-header "Projects: ")
+		   (org-agenda-sorting-strategy '(priority-down tag-up category-keep effort-down))))
+	    ))
+	  ("f" tags-todo "focus-TODO=\"DONE\"-TODO=\"CANCELLED\"")
+	  ("b" todo ""
+	   ((org-agenda-files '("~/.syncthing/emacs/org/personal.org"))))
+	  ("x" "Column view" todo ""  ; Column view
+	   ((org-agenda-prefix-format "")
+	    (org-agenda-cmp-user-defined 'my/org-sort-agenda-items-todo)
+	    (org-agenda-view-columns-initially t)
+	    ))
+	  ;; Weekly review
+	  ("w" "Weekly review" agenda ""
+	   ((org-agenda-span 7)
+	    (org-agenda-log-mode 1)) "~/cloud/agenda/this-week.html")
+	  ("W" "Weekly review sans routines" agenda ""
+	   ((org-agenda-span 7)
+	    (org-agenda-log-mode 1)
+	    (org-agenda-tag-filter-preset '("-routine"))) "~/.syncthing/emacs/org/this-week-nonroutine.html")
+	  ("2" "Bi-weekly review" agenda "" ((org-agenda-span 14) (org-agenda-log-mode 1)))
+	  ("5" "Quick tasks" tags-todo "EFFORT>=\"0:05\"&EFFORT<=\"0:15\"")
+	  ("0" "Unestimated tasks" tags-todo "EFFORT=\"\"")
+	  ("gc" "Coding" tags-todo "@coding"
+	   ((org-agenda-view-columns-initially t)))
+	  ("gw" "Writing" tags-todo "@writing"
+	   ((org-agenda-view-columns-initially t)))
+	  ("gp" "Phone" tags-todo "@phone"
+	   ((org-agenda-view-columns-initially t)))
+	  ("gh" "Home" tags-todo "@home"
+	   ((org-agenda-view-columns-initially t)))
+	  ("c" "Top 3 by context"
+	   ,my/org-agenda-contexts
+	   ((org-agenda-sorting-strategy '(priority-up effort-down))
+	    (org-agenda-max-entries 3)))
+	  ("C" "All by context"
+	   ,my/org-agenda-contexts
+	   ((org-agenda-sorting-strategy '(priority-down effort-down))
+	    (org-agenda-max-entries nil)))
+	  ("9" "Unscheduled top 3 by context"
+	   ,my/org-agenda-contexts
+	   ((org-agenda-skip-function 'my/org-agenda-skip-scheduled)
+	    (org-agenda-sorting-strategy '(priority-down effort-down))
+	    (org-agenda-max-entries 3)))
+	  ("(" "All unscheduled by context"
+	   ,my/org-agenda-contexts
+	   ((org-agenda-skip-function 'my/org-agenda-skip-scheduled)
+	    (org-agenda-sorting-strategy '(priority-down effort-down))
+	    ))
+	  ("d" "Timeline for today" ((agenda "" ))
+	   ((org-agenda-ndays 1)
+	    (org-agenda-show-log t)
+	    (org-agenda-log-mode-items '(clock closed))
+	    (org-agenda-clockreport-mode t)
+	    (org-agenda-entry-types '())))
+	  ("." "Waiting for" todo "WAITING")
+	  ("u" "Unscheduled tasks" tags-todo "-someday-TODO=\"SOMEDAY\"-TODO=\"DELEGATED\"-TODO=\"WAITING\"-project-cooking-routine"
+	   ((org-agenda-skip-function 'my/org-agenda-skip-scheduled)
+	    (org-agenda-view-columns-initially nil)
+	    (org-tags-exclude-from-inheritance '("project"))
+	    (org-agenda-overriding-header "Unscheduled TODO entries: ")
+	    (org-columns-default-format "%50ITEM %TODO %3PRIORITY %Effort{:} %TAGS")
+	    (org-agenda-sorting-strategy '(todo-state-up priority-down effort-up tag-up category-keep))))
+	  ("s" "Someday" tags-todo "TODO=\"SOMEDAY\""
+	   ((org-agenda-skip-function 'my/org-agenda-skip-scheduled)
+	    (org-agenda-view-columns-initially nil)
+	    (org-tags-exclude-from-inheritance '("project"))
+	    (org-agenda-overriding-header "Someday: ")
+	    (org-columns-default-format "%50ITEM %TODO %3PRIORITY %Effort{:} %TAGS")
+	    (org-agenda-sorting-strategy '(todo-state-up priority-down effort-up tag-up category-keep))))
+	  ("P" "By priority"
+	   ((tags-todo "+PRIORITY=\"A\"")
+	    (tags-todo "+PRIORITY=\"B\"")
+	    (tags-todo "+PRIORITY=\"\"")
+	    (tags-todo "+PRIORITY=\"C\""))
+	   ((org-agenda-prefix-format "%-10c %-10T %e ")
+	    (org-agenda-sorting-strategy '(priority-down tag-up category-keep effort-down))))
+	  ("pp" tags "+project-someday-TODO=\"DONE\"-TODO=\"SOMEDAY\"-inactive"
+	   ((org-tags-exclude-from-inheritance '("project"))
+	    (org-agenda-sorting-strategy '(priority-down tag-up category-keep effort-down))))
+	  ("p." tags "+project-TODO=\"DONE\""
+	   ((org-tags-exclude-from-inheritance '("project"))
+	    (org-agenda-sorting-strategy '(priority-down tag-up category-keep effort-down))))
+	  ("S" tags-todo "TODO=\"STARTED\"")
+	  ("2" "List projects with tasks" my/org-agenda-projects-and-tasks
+	   "+PROJECT"
+	   ((org-agenda-max-entries 3)))))
+  (bind-key "<apps> a" 'org-agenda)
+
 #+END_SRC
 * Which-Key
 ** See key shortcuts
