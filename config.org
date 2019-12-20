@@ -242,6 +242,10 @@ Remove unnecessary stuff
   (setq mac-command-modifier nil)
   (setq mac-option-modifier 'meta))
 #+END_SRC
+** Prettify Symbols
+#+BEGIN_SRC emacs-lisp
+  (global-prettify-symbols-mode 1)
+#+END_SRC
 * Terminal
 ** Specifiying the terminal
 #+BEGIN_SRC emacs-lisp
@@ -444,6 +448,13 @@ Remove unnecessary stuff
 	(newline))
       (write-file "/tmp/timeline.org")
       (org-agenda arg "L")))
+
+  (add-hook 'org-mode-hook (lambda ()
+   "Beautify Org Checkbox Symbol"
+   (push '("[ ]" .  "☐") prettify-symbols-alist)
+   (push '("[X]" . "☑" ) prettify-symbols-alist)
+   (push '("[-]" . "❍" ) prettify-symbols-alist)
+   (prettify-symbols-mode)))
 
   ;; test
 
