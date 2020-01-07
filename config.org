@@ -883,13 +883,13 @@ Remove unnecessary stuff
     :commands (lsp lsp-deferred)
     :config (require 'lsp-clients))
 
-  (use-package lsp-ui
-    :ensure t
-    :config
-    (set-face-attribute 'lsp-ui-sideline-global nil
-			:inherit 'firacode
-			:height 160
-			)
+   (use-package lsp-ui
+   :ensure t
+   :config
+   (set-face-attribute 'lsp-ui-sideline-global t
+  			:inherit 'firacode
+  			:height 160
+  			)
     (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 #+END_SRC
 * Magit
