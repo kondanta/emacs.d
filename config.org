@@ -1,5 +1,4 @@
 * Minor Settings
-#+END_SRC
 ** Whoami
 #+BEGIN_SRC emacs-lisp
   (setq user-full-name "Taylan Doğan"
@@ -57,7 +56,7 @@ Remove unnecessary stuff
   (setq require-final-newline t)
 #+END_SRC
 ** Encoding
-#+BEGIN_SReeC emacs-lisp
+#+BEGIN_SRC emacs-lisp
   ;; revert buffers automatically when underlying files are changed externally
   (global-auto-revert-mode t)
   (prefer-coding-system 'utf-8)
@@ -104,7 +103,7 @@ Remove unnecessary stuff
 #+END_SRC
 ** Delete Selection Mode
 #+BEGIN_SRC emacs-lisp
-(delete-selection-mode t)
+  (delete-selection-mode t)
 #+END_SRC
 ** Enable Subword with M-f
 #+BEGIN_SRC emacs-lisp
@@ -121,8 +120,8 @@ Remove unnecessary stuff
 #+END_SRC
 ** Set specpdl size
 #+BEGIN_SRC emacs-lisp
-(setq max-specpdl-size 32000)
-(setq debug-on-error t)
+  (setq max-specpdl-size 32000)
+  (setq debug-on-error t)
 #+END_SRC
 ** Comment Line
 #+BEGIN_SRC emacs-lisp
@@ -137,8 +136,6 @@ Remove unnecessary stuff
       (next-line)))
 
 (global-set-key (kbd "C-?") 'comment-or-uncomment-region-or-line) ;; Ctrl+shift+/
-#+END_SRC
-
 #+END_SRC
 ** Theme
 #+BEGIN_SRC emacs-lisp
@@ -163,11 +160,9 @@ Remove unnecessary stuff
 ** Selection
 #+BEGIN_SRC emacs-lisp
   (use-package mark-multiple
-    :ensure t
     :bind ("C-c q" . 'mark-next-like-this))
 
   (use-package expand-region
-    :ensure t
     :bind ("C-q" . er/expand-region))
 #+END_SRC
 ** Change Word
