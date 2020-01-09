@@ -853,22 +853,36 @@ Remove unnecessary stuff
 #+END_SRC
 * Flycheck
 #+BEGIN_SRC emacs-lisp
-  (use-package flycheck)
+  (use-package flycheck
+    :init (global-flycheck-mode))
 #+END_SRC
 * IntelliSense
 ** LSP
 #+BEGIN_SRC emacs-lisp
   (use-package lsp-mode
-    :commands (lsp lsp-deferred)
+    :commands (lsp)
+    :custom
+    (lsp-prefer-flymake nil)
     :config (require 'lsp-clients))
 
-   (use-package lsp-ui
-   :config
-   (set-face-attribute 'lsp-ui-sideline-global t
-  			:inherit 'firacode
-  			:height 160
-  			)
-    (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+  (use-package lsp-ui
+    :custom
+    (lsp-ui-doc-enable t)
+    (lsp-ui-doc-header t)
+    (lsp-ui-doc-include-signature t)
+    (lsp-ui-doc-position 'top)
+    (lsp-ui-doc-border (face-foreground 'default))
+    (lsp-ui-sideline-enable t)
+    (lsp-ui-sidline-ignore-duplicate t)
+    (lsp-ui-sideline-show-code-actions t)
+    (lsp-ui-peek t)
+    :config
+    (set-face-attribute 'lsp-ui-sideline-global t
+			:inherit 'firacode
+			:height 160
+			)(setq lsp-ui-doc-use-webkit t)
+    (defadvice lsp-ui-imenu (after hide-lsp-ui-imenu-mode-line activate)
+      (setq mode-line-format nil)))
 #+END_SRC
 * Magit
 ** Git handler
