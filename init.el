@@ -8,7 +8,7 @@
 
 ;; keep the installed packages in .emacs.d
 (setq package-user-dir (expand-file-name "elpa" user-emacs-directory))
-(package-initialize)
+;; (package-initialize)
 
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -26,7 +26,8 @@
 
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
-
+;; (setq package-archives '(("melpa" . "http://melpa.org/packages/")
+;;                          ("gnu" . "http://elpa.gnu.org/packages/")))
 ;; (require 'package)
 ;; (add-to-list 'package-archives
 ;;              '("melpa" . "https://melpa.org/packages/") t)

@@ -202,11 +202,9 @@ Remove unnecessary stuff
 #+END_SRC
 ** Move Text Up/Down
 #+BEGIN_SRC emacs-lisp
-  (use-package move-text
-    :ensure t)
+  (use-package move-text)
   (move-text-default-bindings)
 #+END_SRC
-
 ** Kill Current Buffer
 #+BEGIN_SRC emacs-lisp
   (defun kill-current-buffer ()
@@ -264,7 +262,6 @@ Remove unnecessary stuff
 	       '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
   ;; Bullet mode
   (use-package org-bullets
-    :ensure t
     :config
     (add-hook 'org-mode-hook (lambda() (org-bullets-mode))))
 
@@ -675,13 +672,11 @@ Remove unnecessary stuff
 	   "+PROJECT"
 	   ((org-agenda-max-entries 3)))))
   (bind-key "<apps> a" 'org-agenda)
-
 #+END_SRC
 * Which-Key
 ** See key shortcuts
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
-    :ensure t
     :init
     (which-key-mode))
 #+END_SRC
@@ -697,7 +692,6 @@ Remove unnecessary stuff
 ** Enable Vertical Mode
 #+BEGIN_SRC emacs-lisp
     (use-package ido-vertical-mode
-      :ensure t
       :init
       (ido-vertical-mode 1))
     (setq 
@@ -707,7 +701,6 @@ Remove unnecessary stuff
 *** put latest to top
 #+BEGIN_SRC emacs-lisp
   (use-package smex
-    :ensure t
     :init (smex-initialize)
     :bind
     ("M-x" . smex))
@@ -729,7 +722,6 @@ Remove unnecessary stuff
 ** Qutebrowser's f functionality
 #+BEGIN_SRC emacs-lisp
   (use-package avy
-    :ensure t
     :bind
     ("M-s" . avy-goto-char))
 #+END_SRC
@@ -753,13 +745,11 @@ Remove unnecessary stuff
 ** Coloring #'s
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-mode
-    :ensure t
     :init (add-hook 'prog-mode-hook 'rainbow-mode))
 #+END_SRC
 ** Color Each Paren
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-delimiters
-    :ensure t
     :init
     (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
     )
@@ -799,13 +789,11 @@ Remove unnecessary stuff
 ** Icons
  #+BEGIN_SRC emacs-lisp
    (use-package all-the-icons
-     :ensure t
      )
  #+END_SRC
 ** Opening Screen
 #+BEGIN_SRC emacs-lisp
   (use-package dashboard
-    :ensure t
     :if (< (length command-line-args) 2)
     :config
 
@@ -829,7 +817,6 @@ Remove unnecessary stuff
 ** Arrow
 #+BEGIN_SRC emacs-lisp
   (use-package spaceline
-    :ensure t
     :config
     (require 'spaceline-config)
     (setq spaceline-buffer-encoding-abbrev-p nil)
@@ -841,7 +828,6 @@ Remove unnecessary stuff
 ** Remove Minor Mods
 #+BEGIN_SRC emacs-lisp
   (use-package diminish
-    :ensure t
     :init
     (eval-after-load "which-key" '(diminish 'which-key-mode))
     (eval-after-load "subword" '(diminish 'subword-mode))
@@ -863,13 +849,11 @@ Remove unnecessary stuff
 ** Searcher
 #+BEGIN_SRC emacs-lisp
   (use-package swiper
-    :ensure t
     :bind ("C-s" . swiper))
 #+END_SRC
 * Flycheck
 #+BEGIN_SRC emacs-lisp
-  (use-package flycheck
-    :ensure t)
+  (use-package flycheck)
 #+END_SRC
 * IntelliSense
 ** LSP
@@ -879,7 +863,6 @@ Remove unnecessary stuff
     :config (require 'lsp-clients))
 
    (use-package lsp-ui
-   :ensure t
    :config
    (set-face-attribute 'lsp-ui-sideline-global t
   			:inherit 'firacode
@@ -891,25 +874,18 @@ Remove unnecessary stuff
 ** Git handler
 #+BEGIN_SRC emacs-lisp
   (use-package magit
-    :ensure t
     :config
     (setq magit-push-always-verify nil)
     :bind ("C-x g" . magit-status))
-  (use-package magit-gitflow
-    :ensure t
-    :config
-    (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
 #+END_SRC
 * Async
 #+BEGIN_SRC emacs-lisp
   (use-package async
-    :ensure t
     :init (dired-async-mode 1))
 #+END_SRC
 * Projectile
 #+BEGIN_SRC emacs-lisp
     (use-package projectile
-      :ensure t
       :init
       (projectile-mode 1)
       (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
@@ -921,7 +897,7 @@ Remove unnecessary stuff
 #+BEGIN_SRC emacs-lisp
   (use-package go-mode
     :hook (go-mode . lsp)
-    :ensure t
+    :requires(lsp-mode)
     :config
     (defun my-golang-setting ()
       (local-set-key (kbd "C-c C-c d") 'godef-jump)
@@ -990,36 +966,27 @@ Remove unnecessary stuff
 #+END_SRC
 ** Yaml
 #+BEGIN_SRC emacs-lisp
-  (use-package yaml-mode
-    :ensure t
-    )
+  (use-package yaml-mode)
 #+END_SRC
 ** Docker
 #+BEGIN_SRC emacs-lisp
-  (use-package docker-compose-mode
-    :ensure t)
-  (use-package dockerfile-mode
-    :ensure t)
-
+  (use-package docker-compose-mode)
+  (use-package dockerfile-mode)
 #+END_SRC
 ** Terraform
 #+BEGIN_SRC emacs-lisp
-(use-package terraform-mode
-:ensure t
-:config
-(custom-set-variables
- '(terraform-indent-level 4))
-(add-hook 'terraform-mode-hook 'terraform-format-on-save-mode))
-
+  (use-package terraform-mode
+    :config
+    (custom-set-variables
+     '(terraform-indent-level 4))
+    (add-hook 'terraform-mode-hook 'terraform-format-on-save-mode))
 #+END_SRC
 * Yasnippet
 ** Yasnippet and its hooks
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
-    :ensure t
     :config
-    (use-package yasnippet-snippets
-      :ensure t)
+    (use-package yasnippet-snippets)
     (yas-reload-all))
 
   ;; elisp
