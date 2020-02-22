@@ -952,7 +952,7 @@ Remove unnecessary stuff
       "Config"
       (setq auto-mode-alist (delete '("\\.rs\\'" . rust-mode) auto-mode-alist))
       (setq rustic-rustfmt-bin (concat (getenv "HOME") "/programming/tools/rust/cargo/bin/rustfmt"))
-      (setq lsp-rust-analyzer-server-command '("~/programming/tools/rust/cargo/bin/ra_lsp_server"))
+      (setq lsp-rust-analyzer-server-command '("~/programming/tools/rust/cargo/bin/rust_server"))
       (setq tab-width 4 indent-tabs-mode nil)
       (setq rustic-lsp-server 'rust-analyzer)
       ;; (setq rustic-lsp-format t)

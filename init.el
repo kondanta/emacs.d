@@ -64,9 +64,19 @@
  '(custom-enabled-themes (quote (gruvbox-dark-medium)))
  '(custom-safe-themes
    (quote
-    ("8f97d5ec8a774485296e366fdde6ff5589cf9e319a584b845b6f7fa788c9fa9a" "a622aaf6377fe1cd14e4298497b7b2cae2efc9e0ce362dade3a58c16c89e089c" "2a9039b093df61e4517302f40ebaf2d3e95215cb2f9684c8c1a446659ee226b9" "e2fd81495089dc09d14a88f29dfdff7645f213e2c03650ac2dd275de52a513de" "08ef1356470a9d3bf363ffab0705d90f8a492796e9db489936de4bde6a4fdb19" "83b1fda71a1cf78a596891c0cc10601e93d5450148f98e9b66dde80349b20195" "217ec62e2aba3b5bf1781b30ac94870c7d8192b24e856c346b98fce4a896046b" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
+    ("aded61687237d1dff6325edb492bde536f40b048eab7246c61d5c6643c696b7f" "8f97d5ec8a774485296e366fdde6ff5589cf9e319a584b845b6f7fa788c9fa9a" "a622aaf6377fe1cd14e4298497b7b2cae2efc9e0ce362dade3a58c16c89e089c" "2a9039b093df61e4517302f40ebaf2d3e95215cb2f9684c8c1a446659ee226b9" "e2fd81495089dc09d14a88f29dfdff7645f213e2c03650ac2dd275de52a513de" "08ef1356470a9d3bf363ffab0705d90f8a492796e9db489936de4bde6a4fdb19" "83b1fda71a1cf78a596891c0cc10601e93d5450148f98e9b66dde80349b20195" "217ec62e2aba3b5bf1781b30ac94870c7d8192b24e856c346b98fce4a896046b" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
  '(fci-rule-color "#383838")
  '(line-number-mode nil)
+ '(lsp-prefer-flymake nil t)
+ '(lsp-ui-doc-border "#fdf4c1")
+ '(lsp-ui-doc-enable t)
+ '(lsp-ui-doc-header t)
+ '(lsp-ui-doc-include-signature t)
+ '(lsp-ui-doc-position (quote top))
+ '(lsp-ui-peek t t)
+ '(lsp-ui-sideline-enable t)
+ '(lsp-ui-sideline-show-code-actions t)
+ '(lsp-ui-sidline-ignore-duplicate t t)
  '(nrepl-message-colors
    (quote
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
