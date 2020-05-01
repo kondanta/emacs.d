@@ -865,7 +865,6 @@ Remove unnecessary stuff
     (lsp-prefer-flymake nil)
     :config
     (define-key lsp-mode-map (kbd "C-c C-l") lsp-command-map)
-    (require 'lsp-clients)
     )
 
   (use-package lsp-ui
@@ -880,6 +879,7 @@ Remove unnecessary stuff
     (lsp-ui-sideline-show-code-actions t)
     (lsp-ui-peek t)
     :config
+    (setq lsp-enable-snippet nil)
     (set-face-attribute 'lsp-ui-sideline-global t
 			:inherit 'firacode
 			:height 160
@@ -935,18 +935,18 @@ Remove unnecessary stuff
     "Config"
     (setq rustic-rustfmt-bin "~/programming/tools/rust/cargo/bin/rustfmt")
     (setq lsp-rust-analyzer-server-command '("~/programming/tools/rust/cargo/bin/rust-analyzer"))
-    (setq tab-width 4)
     (setq rustic-lsp-server 'rust-analyzer)
     (setq rustic-lsp-client 'lsp-mode)
+    (setq tab-width 4)
     (setq rustic-format-on-save t)
     (setq rustic-cargo-fmt t)
     (setq rustic-format-trigger 'on-save)
+    (setq lsp-rust-server 'rust-analyzer)
     )
 
   (use-package rustic
     :requires(lsp)
     :init
-    :hook (rustic-mode . lsp)
     :config (my/rustic-mode-hook)
     )
 #+END_SRC
