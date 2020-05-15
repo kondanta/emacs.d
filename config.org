@@ -246,7 +246,7 @@ Remove unnecessary stuff
 #+END_SRC
 
 * Org
-** General
+** Configs
 #+BEGIN_SRC emacs-lisp
   (setq org-ellipsis "⤵")
   (setq org-src-fontify-natively t)
@@ -254,16 +254,13 @@ Remove unnecessary stuff
   (setq org-confirm-babel-evaluate nil)
   (setq org-export-with-smart-quotes t)
   (setq org-support-shift-select 'always)
+  (setq org-enforce-todo-dependencies t)
   (add-hook 'org-mode 'org-indent-mode)
 
   ;; using <S automatically generates #+BEGIN_SRC block
   (setq org-src-window-setup 'current-window)
   (add-to-list 'org-structure-template-alist
 	       '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
-  ;; Bullet mode
-  (use-package org-bullets
-    :config
-    (add-hook 'org-mode-hook (lambda() (org-bullets-mode))))
 
   (setq org-src-window-setup 'current-window)
 
@@ -274,7 +271,16 @@ Remove unnecessary stuff
   (setq org-index-file (org-file-path "index.org"))
   (setq org-archive-location (concat
 			      (org-file-path "archive.org") "::* From %s"))
-
+#+END_SRC
+** Bullets
+#+BEGIN_SRC emacs-lisp
+  ;; Bullet mode
+  (use-package org-bullets
+    :config
+    (add-hook 'org-mode-hook (lambda() (org-bullets-mode))))
+#+END_SRC
+** Mark it done and archive
+#+BEGIN_SRC emacs-lisp
   ;; storing todos in index
   ;; M-x customize-variable RET org-agenda-files RET, then click state
   ;; then remove state 
@@ -289,24 +295,21 @@ Remove unnecessary stuff
     (org-todo 'done)
     (org-archive-subtree))
   (define-key org-mode-map (kbd "C-c C-x C-s") 'kon/mark-done-and-archive)
-
+#+END_SRC
+** Log
+#+BEGIN_SRC emacs-lisp
   ;; log the archive time
   (setq org-log-done 'time)
-  (setq org-deadline-warning-days 14)
+  (setq org-deadline-warning-days 7)
   (setq org-agenda-show-all-dates t)
   (setq org-clock-out-when-done t)
   (setq org-clock-in-resume t)
-
-  ;; other configs
-  (setq org-agenda-tags-colmn -100)
-  (setq org-agenda-sticky nil)
-  (setq org-agenda-use-tag-inheritance t)
-  (setq org-agenda-show-log t)
-  (setq org-agenda-skip-deadline-if-done t)
-  (setq org-agenda-skip-scheduled-if-done t)
-  (setq org-use-speed-commands t)
-
-
+  (setq org-clock-persist t)
+  (setq org-clock-idle-time nil)
+  (setq org-clock-continuously nil)
+#+END_SRC
+** Effort Estimation
+#+BEGIN_SRC emacs-lisp
   ;; Effort estimation
   (defun my/org-mode-ask-effort ()
     "Ask for an effort estimate when clocking in."
@@ -319,7 +322,9 @@ Remove unnecessary stuff
 	  (org-set-property "Effort" effort)))))
   (add-hook 'org-clock-in-prepare-hook
 	    'my/org-mode-ask-effort)
-
+#+END_SRC
+** Capturing Templates
+#+BEGIN_SRC emacs-lisp
   ;; Capturing templates
   (setq org-capture-templates
 	'(("f" "Finished books"
@@ -328,31 +333,22 @@ Remove unnecessary stuff
 	   )
 	  ("r" "Reading"
 	   checkitem (file "~/.syncthing/emacs/org/to-read.org"))
-	  ("t" "Todo"
-	   entry
-	   (file "~/.syncthing/emacs/org/index.org")
-	   "* TODO %?\n"
-	   )
 	  ("i" "Ideas"
 	   entry
-	   (file "~/.syncthing/emacs/org/ideas.org")
-	   "* %?\n")
+	   (file "~/.syncthing/emacs/org/personal.org")
+	   "* BRAIN STORMING %?\n")
 	  ("w" "Work" 
 	   entry 
 	   (file "~/.syncthing/emacs/org/work.org")
-	   "* TODO %?\n")
+	   "* BACKLOG %?\n")
 	  ("j" "Journal" 
 	   entry 
 	   (file "~/.syncthing/emacs/org/journal.org")
 	   "* %(org-read-date) \n %?\n")
-	  ("P" "Personal programming stuff" 
-	   entry 
-	   (file "~/.syncthing/emacs/org/programming.org")
-	   "* TODO %?\n")
 	  ("p" "Personal stuff" 
 	   entry 
 	   (file "~/.syncthing/emacs/org/personal.org")
-	   "* TODO %?\n")
+	   "* BACKLOG %?\n")
 	  )
 	)
   ;; dunno what these does
@@ -363,7 +359,9 @@ Remove unnecessary stuff
   (define-key global-map "\C-ca" 'org-agenda)
   (define-key global-map "\C-cc" 'org-capture)
   ;; (bind-key "Y" 'org-agenda-todo-yesterday org-agenda-mode-map)
-
+#+END_SRC
+** Quick Access Files
+#+BEGIN_SRC emacs-lisp
   (defun kon/open-index ()
     (interactive)
     (find-file org-index-file)
@@ -382,12 +380,6 @@ Remove unnecessary stuff
     (flycheck-mode -1)
     (end-of-buffer)
     )
-  (defun kon/open-programming ()
-    (interactive)
-    (find-file "~/.syncthing/emacs/org/programming.org")
-    (flycheck-mode -1)
-    (end-of-buffer)
-    )
   (defun kon/open-work ()
     (interactive)
     (find-file "~/.syncthing/emacs/org/work.org")
@@ -398,9 +390,10 @@ Remove unnecessary stuff
   (global-set-key (kbd "C-c C-r i") 'kon/open-index)
   (global-set-key (kbd "C-c C-r p") 'kon/open-personal)
   (global-set-key (kbd "C-c C-r j") 'kon/open-journal)
-  (global-set-key (kbd "C-c C-r P") 'kon/open-programming)
   (global-set-key (kbd "C-c C-r w") 'kon/open-work)
-
+#+END_SRC
+** Quick Capture a Task
+#+BEGIN_SRC emacs-lisp
   ;; capture todo
   (defun org-capture-todo ()
     (interactive)
@@ -411,25 +404,33 @@ Remove unnecessary stuff
 
   ;; Custom todo keywords
   (setq org-todo-keywords
-	'((sequence
-	   "STARTED(s)"
-	   "TODO(t)"  ; next action
-	   "TOBLOG(b)"  ; next action
-	   "WAITING(w@/!)"
-	   "SOMEDAY(.)" "|" "DONE(x)" "CANCELLED(c)")
-	  (sequence "LEARN" "TRY" "TEACH" "|" "COMPLETE(x)")
-	  (sequence "TODELEGATE(-)" "DELEGATED(d)" "|" "COMPLETE(x)")
-	  (sequence "WAITING(w@/!)" "ON_HOLD(h@/!)" "|" "CANCELLED(c@/!)")))
+	'((sequence ;; development stuff
+	   "BACKLOG(b@/!)" "PENDING(p@/!)" "IN_PROGRESS(i@/!)" "ON_HOLD(h@/!)" "IN_REVIEW(r@/!)"  "|" "DONE(x)" "CANCELLED(c@/!)")
+	  ;; Meetings
+	  (sequence "UP_COMING(c@/!)" "IN_MEETING(m@/!)" "|" "DONE(x)")
+	  ;; Blog
+	  (sequence "BRAIN_STORMING(s@/!)" "UP_COMING(c@/!)" "WRITING(w@/!)" "|" "PUBLISHED(x)" "CANCELLED(c@/!)")
+	  ))
 
+  ;; https://en.wikipedia.org/wiki/X11_color_names
   (setq org-todo-keyword-faces
-	'(("TODO" . (:foreground "red" :weight bold))
+	'(("BACKLOG" . (:foreground "grey" :weight bold))
+	  ("PENDING" . (:foreground "red" :weight bold))
+	  ("IN_PROGRESS" . (:foreground "Cornflower Blue" :weight bold))
+	  ("ON_HOLD" . (:foreground "Dark Violet" :weight bold))
+	  ("IN_REVIEW" . (:foreground "Dark Cyan" :weight bold))
+	  ("BRAIN_STORMING" . (:foreground "grey" :weight bold))
+	  ("UP_COMING" . (:foreground "red" :weight bold))
+	  ("WRITING" . (:foreground "Cornflower Blue" :weight bold))
 	  ("DONE" . (:foreground "green" :weight bold))
-	  ("WAITING" . (:foreground "cyan" :weight bold))
-	  ("SOMEDAY" . (:foreground "gray" :weight bold))
-	  ("ON_HOLD" . (:foreground "magenta" :weight bold))))
+	  ("CANELLED" . (:foreground "green" :weight bold))
+	  ))
 
   (setq org-use-fast-todo-selection t)
 
+#+END_SRC
+** Timeline
+#+BEGIN_SRC emacs-lisp
   ;; Agenda timeline :/
   (defun org-agenda-timeline-all (&optional arg)
     (interactive "P")
@@ -440,15 +441,28 @@ Remove unnecessary stuff
 	(newline))
       (write-file "/tmp/timeline.org")
       (org-agenda arg "L")))
-
+#+END_SRC
+** Prettify Task symbols
+#+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook (lambda ()
-   "Beautify Org Checkbox Symbol"
-   (push '("[ ]" .  "☐") prettify-symbols-alist)
-   (push '("[X]" . "☑" ) prettify-symbols-alist)
-   (push '("[-]" . "❍" ) prettify-symbols-alist)
-   (prettify-symbols-mode)))
+			     "Beautify Org Checkbox Symbol"
+			     (push '("[ ]" .  "☐") prettify-symbols-alist)
+			     (push '("[X]" . "☑" ) prettify-symbols-alist)
+			     (push '("[-]" . "❍" ) prettify-symbols-alist)
+			     (prettify-symbols-mode)))
 
-  ;; test
+#+END_SRC
+** Agenda Stuff
+#+BEGIN_SRC emacs-lisp
+  ;; other configs
+  (setq org-agenda-tags-colmn -100)
+  (setq org-agenda-sticky nil)
+  (setq org-agenda-use-tag-inheritance t)
+  (setq org-agenda-show-log t)
+  (setq org-agenda-skip-deadline-if-done t)
+  (setq org-agenda-skip-scheduled-if-done t)
+  (setq org-use-speed-commands t)
+
 
   (defun my/org-agenda-project-agenda ()
     "Return the project headline and up to `org-agenda-max-entries' tasks."
@@ -565,11 +579,10 @@ Remove unnecessary stuff
 	  (setq buffer-read-only t)))))
 
   (defvar my/org-agenda-contexts
-    '((tags-todo "phone")
+    '((tags-todo "book/article")
       (tags-todo "work")
       (tags-todo "coding")
       (tags-todo "writing")
-      (tags-todo "computer")
       (tags-todo "home"))
     "Usual list of contexts.")
   (defun my/org-agenda-skip-scheduled ()
@@ -578,7 +591,7 @@ Remove unnecessary stuff
 	`(("a" "Agenda"
 	   ((agenda "" ((org-agenda-span 2)))
 	    ;; Unscheduled
-	    (tags-todo "TODO=\"TODO\"-project-cooking-routine-errands-shopping-video" 
+	    (tags-todo "TODO=\"PENDING\"-project-cooking-routine-errands-shopping-video"
 		       ((org-agenda-skip-function 'my/org-agenda-skip-scheduled)
 			(org-agenda-overriding-header "Unscheduled TODO entries: ")
 			(org-agenda-sorting-strategy '(priority-down effort-up tag-up category-keep))))
@@ -599,21 +612,21 @@ Remove unnecessary stuff
 	  ;; Weekly review
 	  ("w" "Weekly review" agenda ""
 	   ((org-agenda-span 7)
-	    (org-agenda-log-mode 1)) "~/cloud/agenda/this-week.html")
+	    (org-agenda-log-mode 1)) "~/.syncthing/emacs/org/this-week.html")
 	  ("W" "Weekly review sans routines" agenda ""
 	   ((org-agenda-span 7)
 	    (org-agenda-log-mode 1)
 	    (org-agenda-tag-filter-preset '("-routine"))) "~/.syncthing/emacs/org/this-week-nonroutine.html")
 	  ("2" "Bi-weekly review" agenda "" ((org-agenda-span 14) (org-agenda-log-mode 1)))
-	  ("5" "Quick tasks" tags-todo "EFFORT>=\"0:05\"&EFFORT<=\"0:15\"")
+	  ("5" "Quick tasks" tags-todo "EFFORT>=\"0:05\"&EFFORT<=\"0:30\"")
 	  ("0" "Unestimated tasks" tags-todo "EFFORT=\"\"")
-	  ("gc" "Coding" tags-todo "@coding"
+	  ("gw" "Work" tags-todo "BER"
 	   ((org-agenda-view-columns-initially t)))
-	  ("gw" "Writing" tags-todo "@writing"
+	  ("gr" "Writing" tags-todo "ART"
 	   ((org-agenda-view-columns-initially t)))
-	  ("gp" "Phone" tags-todo "@phone"
+	  ("gp" "Reading" tags-todo "BOOK"
 	   ((org-agenda-view-columns-initially t)))
-	  ("gh" "Home" tags-todo "@home"
+	  ("gh" "Home" tags-todo "PER"
 	   ((org-agenda-view-columns-initially t)))
 	  ("c" "Top 3 by context"
 	   ,my/org-agenda-contexts
@@ -640,7 +653,7 @@ Remove unnecessary stuff
 	    (org-agenda-clockreport-mode t)
 	    (org-agenda-entry-types '())))
 	  ("." "Waiting for" todo "WAITING")
-	  ("u" "Unscheduled tasks" tags-todo "-someday-TODO=\"SOMEDAY\"-TODO=\"DELEGATED\"-TODO=\"WAITING\"-project-cooking-routine"
+	  ("u" "Unscheduled tasks" tags-todo "-someday-TODO=\"SOMEDAY\"-TODO=\"DELEGATED\"-TODO=\"ON_HOLD\"-project-cooking-routine"
 	   ((org-agenda-skip-function 'my/org-agenda-skip-scheduled)
 	    (org-agenda-view-columns-initially nil)
 	    (org-tags-exclude-from-inheritance '("project"))
@@ -667,7 +680,9 @@ Remove unnecessary stuff
 	  ("p." tags "+project-TODO=\"DONE\""
 	   ((org-tags-exclude-from-inheritance '("project"))
 	    (org-agenda-sorting-strategy '(priority-down tag-up category-keep effort-down))))
-	  ("S" tags-todo "TODO=\"STARTED\"")
+	  ("i" tags-todo "TODO=\"IN_PROGRESS\"")
+	  ("b" tags-todo "TODO=\"BACKLOG\"")
+	  ("bs" tags-todo "TODO=\"BRAIN_STORMING\"")
 	  ("2" "List projects with tasks" my/org-agenda-projects-and-tasks
 	   "+PROJECT"
 	   ((org-agenda-max-entries 3)))))
