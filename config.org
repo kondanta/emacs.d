@@ -310,7 +310,7 @@ Remove unnecessary stuff
 * Org
 ** Configs
 #+BEGIN_SRC emacs-lisp
-  (setq org-ellipsis "..↷")
+  (setq org-ellipsis "..↴")
   (setq org-src-fontify-natively t)
   (setq org-src-tab-acts-natively t)
   (setq org-confirm-babel-evaluate nil)
