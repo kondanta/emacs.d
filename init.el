@@ -1,5 +1,5 @@
 
-;; Start
+;;; Start
 
 (setq gc-cons-threshold 402653184
       gc-cons-percentage 0.6)
@@ -117,6 +117,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#282828" :foreground "#fdf4c1" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 180 :width normal :foundry "CTDB" :family "FiraCode Nerd Font Mono"))))
- '(markdown-code-face ((t (:inherit FiraCode Nerd Font))))
- '(org-level-1 ((t (:foreground "#83a598" :family "FiraCode")))))
+ '(default ((t (:inherit nil :stipple nil :background "#282828" :foreground "#fdf4c1" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 180 :width normal :foundry "CTDB" :family "FiraCodeNerdFont"))))
+ '(markdown-code-face ((t (:inherit FiraCodeNerdFont))))
+ '(org-level-1 ((t (:foreground "#83a598" :family "FiraCodeNerdFont")))))
+
+;;; init.el ends here
