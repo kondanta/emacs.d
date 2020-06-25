@@ -419,7 +419,7 @@ Remove unnecessary stuff
   ;; Keybindings
   (define-key global-map "\C-ck" 'org-store-link)
   (define-key global-map "\C-ca" 'org-agenda)
-  (define-key global-map "\C-cc" 'org-capture)
+  (define-key global-map "C-cc" 'org-capture)
   ;; (bind-key "Y" 'org-agenda-todo-yesterday org-agenda-mode-map)
 #+END_SRC
 ** Quick Access Files
@@ -750,6 +750,53 @@ Remove unnecessary stuff
 	   ((org-agenda-max-entries 3)))))
   (bind-key "<apps> a" 'org-agenda)
 #+END_SRC
+** Org Roam
+#+BEGIN_SRC emacs-lisp
+  (use-package org-roam
+    :hook
+    (after-init . org-roam-mode)
+    :custom
+    (org-roam-directory "~/.syncthing/emacs/org-roam")
+    :init
+    :bind (:map org-roam-mode-map
+		(("C-c n l" . org-roam)
+		 ("C-c n f" . org-roam-find-file)
+		 ("C-c n g" . org-roam-graph-show)
+		 ("C-c n c" . org-roam-capture)
+		 ("C-c n b". org-roam-switch-to-buffer)
+		 )
+		:map org-mode-map
+		(("C-c n i" . org-roam-insert))
+		(("C-c n I" . org-roam-insert-immediate))))
+  (setq org-roam-directory "~/.syncthing/emacs/org-roam")
+  (add-hook 'after-init-hook 'org-mode)
+  (add-hook 'after-init-hook 'org-roam-mode)
+#+END_SRC
+*** Deft
+#+BEGIN_SRC emacs-lisp
+  (use-package deft
+    :after org
+    :bind
+    ("C-c n d" . deft)
+    :custom
+    (deft-recursive t)
+    (deft-use-filter-string-for-filename t)
+    (deft-default-extension "org")
+    (deft_directory "~/.syncthing/emacs/org-roam/"))
+(setq deft-directory "~/.syncthing/emacs/org-roam")
+#+END_SRC
+*** Org Journal
+#+BEGIN_SRC emacs-lisp
+  (use-package org-journal
+    :bind
+    ("C-c n j" . org-journal-new-entry)
+    :custom
+    (org-journal-dir "~/.syncthing/emacs/org-roam/braindump")
+    (org-journal-date-prefix "#+TITLE: ")
+    (org-journal-file-format "%Y-%m-%d.org")
+    (org-journal-date-format "%A, %d %B %Y"))
+  (setq org-journal-enable-agenda-integration t)
+#+END_SRC
 * Which-Key
 ** See key shortcuts
 #+BEGIN_SRC emacs-lisp
@@ -887,7 +934,6 @@ Remove unnecessary stuff
     (setq dashboard-items '((recents  . 7)
 			    (bookmarks . 3)
 			    (projects . 7)
-			    (agenda . 7)
 			    (registers . 3))))
 #+END_SRC
 * Footer
