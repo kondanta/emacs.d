@@ -785,6 +785,7 @@ Remove unnecessary stuff
 		 ("C-c n g" . org-roam-graph-show)
 		 ("C-c n c" . org-roam-capture)
 		 ("C-c n b". org-roam-switch-to-buffer)
+		 ("C-c n u" . org-roam-unlinked-references)
 		 )
 		:map org-mode-map
 		(("C-c n i" . org-roam-insert))
@@ -809,13 +810,13 @@ Remove unnecessary stuff
 		    :file-name "private/${slug}"
 		    :head "#+title: ${title}\n"
 		    :unnarrowed t)
-		 ("s" "standard" plain (function org-roam--capture-get-point)
-		  "%?"
-		  :file-name "${slug}"
-		  :head "#+setupfile: ./hugo_setup.org
+		   ("s" "standard" plain (function org-roam--capture-get-point)
+		    "%?"
+		    :file-name "${slug}"
+		    :head "#+setupfile: ./hugo_setup.org
   ,#+hugo_slug: ${slug}
   ,#+title: ${title}\n"
-		  :unnarrowed t)))
+		    :unnarrowed t)))
     (setq org-roam-capture-ref-templates
 	  '(("r" "ref" plain (function org-roam-capture--get-point)
 	     "%?"
