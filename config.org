@@ -714,65 +714,65 @@ Remove unnecessary stuff
 #+END_SRC
 ** Org Roam
 #+BEGIN_SRC emacs-lisp
-    (use-package org-roam
-      :hook
-      (after-init . org-roam-mode)
-      :custom
-      (org-roam-directory "~/.syncthing/emacs/org-roam")
-      :init
-      :bind (:map org-roam-mode-map
-		  (("C-c n l" . org-roam)
-		   ("C-c n f" . org-roam-find-file)
-		   ("C-c n g" . org-roam-graph-show)
-		   ("C-c n c" . org-roam-capture)
-		   ("C-c n b". org-roam-switch-to-buffer)
-		   ("C-c n u" . org-roam-unlinked-references)
-		   )
-		  :map org-mode-map
-		  (("C-c n i" . org-roam-insert))
-		  (("C-c n I" . org-roam-insert-immediate)))
-      :config
-      (setq org-roam-capture-templates
-		   '(("l" "lit" plain (function org-roam--capture-get-point)
-		      "%?"
-		      :file-name "lit/${slug}"
-		      :head "#+setupfile:./hugo_setup.org
-    ,#+hugo_slug: ${slug}
-    ,#+title: ${title}\n"
-		      :unnarrowed t)
-		     ("c" "concept" plain (function org-roam--capture-get-point)
-		      "%?"
-		      :file-name "concepts/${slug}"
-		      :head "#+setupfile:./hugo_setup.org
-    ,#+hugo_slug: ${slug}
-    ,#+title: ${title}\n"
-		      :unnarrowed t)
-		     ("p" "private" plain (function org-roam-capture--get-point)
-		      "%?"
-		      :file-name "private/${slug}"
-		      :head "#+title: ${title}\n"
-		      :unnarrowed t)
-		     ("s" "standard" plain (function org-roam--capture-get-point)
-		      "%?"
-		      :file-name "${slug}"
-		      :head "#+setupfile: ./hugo_setup.org
-    ,#+hugo_slug: ${slug}
-    ,#+title: ${title}\n"
-		      :unnarrowed t)))
-      (setq org-roam-capture-ref-templates
-	    '(("r" "ref" plain (function org-roam-capture--get-point)
-	       "%?"
-	       :file-name "lit/${slug}"
-	       :head "#+setupfile:./hugo_setup.org
-    ,#+roam_key: ${ref}
-    ,#+hugo_slug: ${slug}
-    ,#+roam_tags: website
-    ,#+title: ${title}
-    - source :: ${ref}"
-	       :unnarrowed t))))
-    (setq org-roam-directory "~/.syncthing/emacs/org-roam")
-    (add-hook 'after-init-hook 'org-mode)
-    (add-hook 'after-init-hook 'org-roam-mode)
+  (use-package org-roam
+    :hook
+    (after-init . org-roam-mode)
+    :custom
+    (org-roam-directory "~/.syncthing/emacs/org-roam")
+    :init
+    :bind (:map org-roam-mode-map
+		(("C-c n l" . org-roam)
+		 ("C-c n f" . org-roam-find-file)
+		 ("C-c n g" . org-roam-graph-show)
+		 ("C-c n c" . org-roam-capture)
+		 ("C-c n b". org-roam-switch-to-buffer)
+		 ("C-c n u" . org-roam-unlinked-references)
+		 )
+		:map org-mode-map
+		(("C-c n i" . org-roam-insert))
+		(("C-c n I" . org-roam-insert-immediate)))
+    :config
+    (setq org-roam-capture-templates
+	  '(("l" "lit" plain (function org-roam--capture-get-point)
+	     "%?"
+	     :file-name "lit/${slug}"
+	     :head "#+title: ${title}
+#+hugo_slug: ${slug}
+#+setupfile:./hugo_setup.org\n"
+	     :unnarrowed t)
+	    ("c" "concept" plain (function org-roam--capture-get-point)
+	     "%?"
+	     :file-name "concepts/${slug}"
+	     :head "#+title: ${title}
+#+hugo_slug: ${slug}
+#+setupfile:./hugo_setup.org\n"
+	     :unnarrowed t)
+	    ("p" "private" plain (function org-roam-capture--get-point)
+	     "%?"
+	     :file-name "private/${slug}"
+	     :head "#+title: ${title}\n"
+	     :unnarrowed t)
+	    ("s" "standard" plain (function org-roam--capture-get-point)
+	     "%?"
+	     :file-name "${slug}"
+	     :head " #+title: ${title}
+#+setupfile: ./hugo_setup.org
+#+hugo_slug: ${slug}\n"
+	     :unnarrowed t)))
+    (setq org-roam-capture-ref-templates
+	  '(("r" "ref" plain (function org-roam-capture--get-point)
+	     "%?"
+	     :file-name "lit/${slug}"
+	     :head "#+title: ${title}
+#+roam_key: ${ref}
+#+hugo_slug: ${slug}
+#+roam_tags: website
+#+setupfile:./hugo_setup.org
+      - source :: ${ref}"
+	     :unnarrowed t))))
+  (setq org-roam-directory "~/.syncthing/emacs/org-roam")
+  (add-hook 'after-init-hook 'org-mode)
+  (add-hook 'after-init-hook 'org-roam-mode)
 #+END_SRC
 *** Deft
 #+BEGIN_SRC emacs-lisp
