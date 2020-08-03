@@ -997,6 +997,7 @@ Remove unnecessary stuff
   ;; (use-package racer :requires (lsp-mode))
 
   (use-package company)
+  (use-package company-quickhelp)
 
   (use-package company-lsp
     :requires(lsp)
@@ -1007,6 +1008,8 @@ Remove unnecessary stuff
     ;; tell company to complete on tabs instead of sitting there like a moron
     (define-key rustic-mode-map (kbd "TAB") #'company-indent-or-complete-common)
     )
+  (eval-after-load 'company
+    '(define-key company-active-map (kbd "C-c h") #'company-quickhelp-manual-begin))
 #+END_SRC
 ** LSP
 #+BEGIN_SRC emacs-lisp
