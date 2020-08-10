@@ -999,10 +999,10 @@ Remove unnecessary stuff
   (use-package company)
   (use-package company-quickhelp)
 
-  (use-package company-lsp
-    :requires(lsp)
-    :after(lsp)
-    )
+  ;; (use-package company-lsp
+  ;;   :requires(lsp)
+  ;;   :after(lsp)
+  ;;   )
   (push 'company-lsp company-backends)
   (with-eval-after-load 'rustic
     ;; tell company to complete on tabs instead of sitting there like a moron
