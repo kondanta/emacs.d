@@ -158,7 +158,7 @@ Remove unnecessary stuff
 #+END_SRC
 ** Fonts
 #+BEGIN_SRC emacs-lisp
-(set-default-font "Sarasa Term Slab CL")
+(set-face-attribute 'default nil :font "Sarasa Term Slab CL")
 #+END_SRC
 
 * Utils
