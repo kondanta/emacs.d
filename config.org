@@ -221,18 +221,16 @@ Remove unnecessary stuff
 #+END_SRC
 ** Exec-path-from-shell
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package exec-path-from-shell
-  ;;   :ensure t
-  ;;   :init
-  ;;   (when (memq window-system '(mac ns x))
-  ;;     (exec-path-from-shell-initialize)))
-  (let ((
-	 path (shell-command-to-string ". ~/.bashrc; echo -n $PATH")))
-    (setenv "PATH" path)
-    (setq exec-path
-	  (append
-	   (split-string-and-unquote path ":")
-	   exec-path)))
+  (use-package exec-path-from-shell
+    :init
+    (when (memq window-system '(mac ns x))
+      (exec-path-from-shell-initialize)))
+  ;; (let ((
+  ;;	 path (shell-command-to-string ". ~/.bashrc; echo -n $PATH")))    (setenv "PATH" path)
+  ;;    (setq exec-path
+  ;;	  (append
+  ;;	   (split-string-and-unquote path ":")
+  ;;	   exec-path)))
 #+END_SRC
 ** MAC CMD to ALT binder
 #+BEGIN_SRC emacs-lisp
@@ -1159,4 +1157,8 @@ Remove unnecessary stuff
     (custom-set-variables
      '(terraform-indent-level 4))
     (add-hook 'terraform-mode-hook 'terraform-format-on-save-mode))
+#+END_SRC
+* Discord Rich Presence
+#+BEGIN_SRC emacs-lisp
+(use-package elcord)
 #+END_SRC
