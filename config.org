@@ -139,11 +139,17 @@ Remove unnecessary stuff
 #+END_SRC
 ** Theme
 #+BEGIN_SRC emacs-lisp
-  (use-package gruvbox-theme
-    :init (progn (load-theme 'gruvbox-dark-hard t t)
-		 (enable-theme 'gruvbox-dark-hard))
+  ;;      (use-package gruvbox-theme
+  ;;	:init (progn (load-theme 'gruvbox-dark-hard t t)
+  ;;		     (enable-theme 'gruvbox-dark-hard))
+  ;;	:defer t
+  ;;	:ensure t)
+  (use-package srcery-theme
+    :init (progn (load-theme 'srcery t)
+		 (enable-theme 'srcery))
     :defer t
-    :ensure t)
+    :ensure t
+    )
 #+END_SRC
 ** Find References
  #+BEGIN_SRC emacs-lisp

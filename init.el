@@ -62,9 +62,9 @@
    ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
  '(company-quickhelp-color-background "#4F4F4F")
  '(company-quickhelp-color-foreground "#DCDCCC")
- '(custom-enabled-themes '(gruvbox-dark-medium))
  '(custom-safe-themes
    '("aded61687237d1dff6325edb492bde536f40b048eab7246c61d5c6643c696b7f" "8f97d5ec8a774485296e366fdde6ff5589cf9e319a584b845b6f7fa788c9fa9a" "a622aaf6377fe1cd14e4298497b7b2cae2efc9e0ce362dade3a58c16c89e089c" "2a9039b093df61e4517302f40ebaf2d3e95215cb2f9684c8c1a446659ee226b9" "e2fd81495089dc09d14a88f29dfdff7645f213e2c03650ac2dd275de52a513de" "08ef1356470a9d3bf363ffab0705d90f8a492796e9db489936de4bde6a4fdb19" "83b1fda71a1cf78a596891c0cc10601e93d5450148f98e9b66dde80349b20195" "217ec62e2aba3b5bf1781b30ac94870c7d8192b24e856c346b98fce4a896046b" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default))
+ '(elcord-mode t nil (elcord))
  '(fci-rule-color "#383838")
  '(line-number-mode nil)
  '(lsp-keymap-prefix "C-c C-l")
@@ -81,11 +81,11 @@
  '(nrepl-message-colors
    '("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3"))
  '(org-agenda-files
-   '("/home/kondanta/.syncthing/emacs/org/Daily.org" "/home/kondanta/.syncthing/emacs/org/archive.org" "/home/kondanta/.syncthing/emacs/org/books.org" "/home/kondanta/.syncthing/emacs/org/ideas.org" "/home/kondanta/.syncthing/emacs/org/index.org" "/home/kondanta/.syncthing/emacs/org/journal.org" "/home/kondanta/.syncthing/emacs/org/personal.org" "/home/kondanta/.syncthing/emacs/org/programming.org" "/home/kondanta/.syncthing/emacs/org/the_devops_handbook.org" "/home/kondanta/.syncthing/emacs/org/to-read.org" "/home/kondanta/.syncthing/emacs/org/work.org" "/home/kondanta/.syncthing/emacs/org-roam/braindump/2020-09-23.org"))
+   '("~/.syncthing/emacs/org/index.org" "/home/kondanta/.syncthing/emacs/org-roam/braindump/2020-12-21.org"))
  '(org-export-backends '(ascii html icalendar latex md odt))
  '(org-tags-column -80)
  '(package-selected-packages
-   '(json-mode terraform-mode all-the-icons exec-path-from-shell go-autocomplete markdown-mode dart-mode move-text magit-gitflow gruvbox-theme gruvbox gruvbox-dark-hard-theme gruvbox-dark-hard cmake-mode company-go flycheck-gometalinter irony-eldoc magit expand-region mark-multiple dockerfile-mode docker-compose-mode yaml-mode yasnippet ido-vertical-mode company-dart flycheck-rust rust rust-mode go-mode company-c-headers flycheck-clang-analyzer projectile company-irony pretty-mode swiper diminish spaceline company dashboard rainbow-delimiters rainbow-delimeters switch-window rainbow-mode avy smex org-bullets which-key))
+   '(json-mode terraform-mode all-the-icons exec-path-from-shell go-autocomplete markdown-mode dart-mode move-text magit-gitflow gruvbox-theme gruvbox gruvbox-dark-hard-theme gruvbox-dark-hard cmake-mode company-go flycheck-gometalinter irony-eldoc magit expand-region mark-multiple dockerfile-mode docker-compose-mode yaml-mode yasnippet ido-vertical-mode company-dart flycheck-rust rust rust-mode go-mode company-c-headers flycheck-clang-analyzer projectile company-irony pretty-mode swiper diminish spaceline company dashboard rainbow-delimiters rainbow-delimeters switch-window rainbow-mode avy smex org-bullets which-key srcery))
  '(pdf-view-midnight-colors '("#b2b2b2" . "#292b2e"))
  '(terraform-indent-level 4)
  '(vc-annotate-background "#2B2B2B")
