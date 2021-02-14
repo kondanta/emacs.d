@@ -275,11 +275,11 @@ Remove unnecessary stuff
 
   (setq org-src-window-setup 'current-window)
 
-  (setq org-directory "~/.syncthing/emacs/org")
+  (setq org-directory "~/.syncthing/emacs/org-roam")
   (defun org-file-path (filename)
     (concat (file-name-as-directory org-directory) filename)
     )
-  (setq org-index-file (org-file-path "index.org"))
+  (setq org-index-file (org-file-path "projects/tasks.org"))
   (setq org-archive-location (concat
 			      (org-file-path "archive.org") "::* From %s"))
 #+END_SRC
@@ -292,20 +292,17 @@ Remove unnecessary stuff
 #+END_SRC
 ** Mark it done and archive
 #+BEGIN_SRC emacs-lisp
-  ;; storing todos in index
-  ;; M-x customize-variable RET org-agenda-files RET, then click state
-  ;; then remove state
-  (setq org-agenda-files '("~/.syncthing/emacs/org"))
-  (add-to-list 'auto-mode-alist '("\\.txt$" . org-mode))
-  ;; storing todos in index
-  (setq org-agenda-files (list org-index-file))
-  ;; when task done, put it into archive
-  (defun kon/mark-done-and-archive ()
-    "mark task done and archive it"
-    (interactive)
-    (org-todo 'done)
-    (org-archive-subtree))
-  (define-key org-mode-map (kbd "C-c C-x C-s") 'kon/mark-done-and-archive)
+    (add-to-list 'auto-mode-alist '("\\.txt$" . org-mode))
+    ;; storing todos in separate files
+    (setq org-agenda-files (list "~/.syncthing/emacs/org-roam/projects/tasks.org"
+				 "~/.syncthing/emacs/org-roam/masomo.org"))
+    ;; when task done, put it into archive
+    (defun kon/mark-done-and-archive ()
+      "mark task done and archive it"
+      (interactive)
+      (org-todo 'done)
+      (org-archive-subtree))
+    (define-key org-mode-map (kbd "C-c C-x C-s") 'kon/mark-done-and-archive)
 #+END_SRC
 ** Log
 #+BEGIN_SRC emacs-lisp
