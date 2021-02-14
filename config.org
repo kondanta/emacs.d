@@ -682,8 +682,8 @@ Remove unnecessary stuff
 	       "%?"
 	       :file-name "lit/${slug}"
 	       :head "#+TITLE: ${title}
-  ,#+hugo_slug: ${slug}
-  ,#+setupfile:./hugo_setup.org\n"
+#+hugo_slug: ${slug}
+#+setupfile:./hugo_setup.org\n"
 	       :unnarrowed t)
 	    ("P" "project" plain (function org-roam--capture-get-point)
 	     "%?"
@@ -697,8 +697,8 @@ Remove unnecessary stuff
 	       "%?"
 	       :file-name "concepts/${slug}"
 	       :head "#+TITLE: ${title}
-  ,#+hugo_slug: ${slug}
-  ,#+setupfile:./hugo_setup.org\n"
+#+hugo_slug: ${slug}
+#+setupfile:./hugo_setup.org\n"
 	       :unnarrowed t)
 	      ("p" "private" plain (function org-roam-capture--get-point)
 	       "%?"
@@ -709,18 +709,18 @@ Remove unnecessary stuff
 	       "%?"
 	       :file-name "${slug}"
 	       :head " #+TITLE: ${title}
-  ,#+setupfile: ./hugo_setup.org
-  ,#+hugo_slug: ${slug}\n"
+#+setupfile: ./hugo_setup.org
+#+hugo_slug: ${slug}\n"
 	       :unnarrowed t)))
       (setq org-roam-capture-ref-templates
 	    '(("r" "ref" plain (function org-roam-capture--get-point)
 	       "%?"
 	       :file-name "lit/${slug}"
 	       :head "#+TITLE: ${title}
-  ,#+roam_key: ${ref}
-  ,#+hugo_slug: ${slug}
-  ,#+roam_tags: website
-  ,#+setupfile:./hugo_setup.org
+#+roam_key: ${ref}
+#+hugo_slug: ${slug}
+#+roam_tags: website
+#+setupfile:./hugo_setup.org
 	- source :: ${ref}"
 	       :unnarrowed t))))
     (setq org-roam-directory "~/.syncthing/emacs/org-roam")
