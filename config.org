@@ -331,61 +331,6 @@ Remove unnecessary stuff
   (add-hook 'org-clock-in-prepare-hook
 	    'my/org-mode-ask-effort)
 #+END_SRC
-** Capturing Templates
-#+BEGIN_SRC emacs-lisp
-  ;; Capturing templates
-  (setq org-capture-templates
-	'(("f" "Finished books"
-	   (table-line (file "~/.syncthing/emacs/org/books.org")
-		       "| %^{Title} | %^{Author | %u |}")
-	   )
-	  ("r" "Reading"
-	   checkitem (file "~/.syncthing/emacs/org/to-read.org"))
-	  ("i" "Ideas"
-	   entry
-	   (file "~/.syncthing/emacs/org/personal.org")
-	   "* BRAIN STORMING %?\n")
-	  ("w" "Work"
-	   entry
-	   (file "~/.syncthing/emacs/org/work.org")
-	   "* BACKLOG %?\n")
-	  ("j" "Journal"
-	   entry
-	   (file "~/.syncthing/emacs/org/journal.org")
-	   "* %(org-read-date) \n %?\n")
-	  ("p" "Personal stuff"
-	   entry
-	   (file "~/.syncthing/emacs/org/personal.org")
-	   "* BACKLOG %?\n")
-	  )
-	)
-  ;; dunno what these does
-  (setq org-refile-use-outline-path t)
-  (setq org-outline-path-complete-in-steps nil)
-  ;; Keybindings
-  (define-key global-map "\C-ck" 'org-store-link)
-  (define-key global-map "\C-ca" 'org-agenda)
-  (define-key global-map "\C-cc" 'org-capture)
-
-  ;; (defvar org-created-property-name "CREATED"
-  ;;   "The name of the org-mode property that stores the creation date of the entry")
-
-  ;; (defun org-set-created-property (&optional active NAME)
-  ;;   "Set a property on the entry giving the creation time.
-
-  ;;   By default the property is called CREATED. If given the `NAME'
-  ;;   argument will be used instead. If the property already exists, it
-  ;;   will not be modified."
-  ;;   (interactive)
-  ;;   (let* ((created (or NAME org-created-property-name))
-  ;; 	 (fmt (if active "<%s>" "[%s]"))
-  ;; 	 (now  (format fmt (format-time-string "%Y-%m-%d %a %H:%M"))))
-  ;;     (unless (org-entry-get (point) created nil)
-  ;;       (org-set-property created now))))
-
-  ;; (add-hook 'org-capture-before-finalize-hook #'org-set-created-property)
-  ;; ;; (bind-key "Y" 'org-agenda-todo-yesterday org-agenda-mode-map)
-#+END_SRC
 ** Quick Access Files
 #+BEGIN_SRC emacs-lisp
   (defun kon/open-index ()
@@ -412,11 +357,6 @@ Remove unnecessary stuff
     (flycheck-mode -1)
     (end-of-buffer)
     )
-
-  (global-set-key (kbd "C-c C-r i") 'kon/open-index)
-  (global-set-key (kbd "C-c C-r p") 'kon/open-personal)
-  (global-set-key (kbd "C-c C-r j") 'kon/open-journal)
-  (global-set-key (kbd "C-c C-r w") 'kon/open-work)
 #+END_SRC
 ** Quick Capture a Task
 #+BEGIN_SRC emacs-lisp
