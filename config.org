@@ -544,11 +544,11 @@ Remove unnecessary stuff
 	  (setq buffer-read-only t)))))
 
   (defvar my/org-agenda-contexts
-    '((tags-todo "book/article")
+    '((tags-todo "reading")
       (tags-todo "work")
-      (tags-todo "coding")
       (tags-todo "writing")
-      (tags-todo "home"))
+      (tags-todo "home")
+      (tags-todo "meeting"))
     "Usual list of contexts.")
   (defun my/org-agenda-skip-scheduled ()
     (org-agenda-skip-entry-if 'scheduled 'deadline 'regexp "\n]+>"))
@@ -556,7 +556,7 @@ Remove unnecessary stuff
 	`(("a" "Agenda"
 	   ((agenda "" ((org-agenda-span 2)))
 	    ;; Unscheduled
-	    (tags-todo "TODO=\"PENDING\"-project-cooking-routine-errands-shopping-video"
+	    (tags-todo "+TODO=\"BACKLOG\""
 		       ((org-agenda-skip-function 'my/org-agenda-skip-scheduled)
 			(org-agenda-overriding-header "Unscheduled TODO entries: ")
 			(org-agenda-sorting-strategy '(priority-down effort-up tag-up category-keep))))
@@ -568,7 +568,7 @@ Remove unnecessary stuff
 	    ))
 	  ("f" tags-todo "focus-TODO=\"DONE\"-TODO=\"CANCELLED\"")
 	  ("b" todo ""
-	   ((org-agenda-files '("~/.syncthing/emacs/org/personal.org"))))
+	   ((org-agenda-files '("~/.syncthing/emacs/org-roam/projects.org"))))
 	  ("x" "Column view" todo ""  ; Column view
 	   ((org-agenda-prefix-format "")
 	    (org-agenda-cmp-user-defined 'my/org-sort-agenda-items-todo)
@@ -577,21 +577,23 @@ Remove unnecessary stuff
 	  ;; Weekly review
 	  ("w" "Weekly review" agenda ""
 	   ((org-agenda-span 7)
-	    (org-agenda-log-mode 1)) "~/.syncthing/emacs/org/this-week.html")
+	    (org-agenda-log-mode 1)) "~/.syncthing/emacs/org-roam/this-week.org")
 	  ("W" "Weekly review sans routines" agenda ""
 	   ((org-agenda-span 7)
 	    (org-agenda-log-mode 1)
-	    (org-agenda-tag-filter-preset '("-routine"))) "~/.syncthing/emacs/org/this-week-nonroutine.html")
+	    (org-agenda-tag-filter-preset '("-routine"))) "~/.syncthing/emacs/org-roam/this-week-nonroutine.org")
 	  ("2" "Bi-weekly review" agenda "" ((org-agenda-span 14) (org-agenda-log-mode 1)))
 	  ("5" "Quick tasks" tags-todo "EFFORT>=\"0:05\"&EFFORT<=\"0:30\"")
 	  ("0" "Unestimated tasks" tags-todo "EFFORT=\"\"")
-	  ("gw" "Work" tags-todo "BER"
+	  ("gw" "Work" tags-todo "work"
 	   ((org-agenda-view-columns-initially t)))
-	  ("gr" "Writing" tags-todo "ART"
+	  ("gr" "Writing" tags-todo "writing"
 	   ((org-agenda-view-columns-initially t)))
-	  ("gp" "Reading" tags-todo "BOOK"
+	  ("gp" "Reading" tags-todo "reading"
 	   ((org-agenda-view-columns-initially t)))
-	  ("gh" "Home" tags-todo "PER"
+	  ("gh" "Home" tags-todo "home"
+	   ((org-agenda-view-columns-initially t)))
+	  ("gm" "Meeting" tags-todo "meeting"
 	   ((org-agenda-view-columns-initially t)))
 	  ("c" "Top 3 by context"
 	   ,my/org-agenda-contexts
@@ -617,8 +619,8 @@ Remove unnecessary stuff
 	    (org-agenda-log-mode-items '(clock closed))
 	    (org-agenda-clockreport-mode t)
 	    (org-agenda-entry-types '())))
-	  ("." "Waiting for" todo "WAITING")
-	  ("u" "Unscheduled tasks" tags-todo "-someday-TODO=\"SOMEDAY\"-TODO=\"DELEGATED\"-TODO=\"ON_HOLD\"-project-cooking-routine"
+	  ("." "Waiting for" todo "ON_HOLD")
+	  ("u" "Unscheduled tasks" tags-todo "-someday-TODO=\"PENDING\"-TODO=\"DELEGATED\"-TODO=\"ON_HOLD\"-project-cooking-routine"
 	   ((org-agenda-skip-function 'my/org-agenda-skip-scheduled)
 	    (org-agenda-view-columns-initially nil)
 	    (org-tags-exclude-from-inheritance '("project"))
@@ -648,72 +650,82 @@ Remove unnecessary stuff
 	  ("i" tags-todo "TODO=\"IN_PROGRESS\"")
 	  ("b" tags-todo "TODO=\"BACKLOG\"")
 	  ("bs" tags-todo "TODO=\"BRAIN_STORMING\"")
+
 	  ("2" "List projects with tasks" my/org-agenda-projects-and-tasks
 	   "+PROJECT"
 	   ((org-agenda-max-entries 3)))))
+  (define-key global-map "\C-ca" 'org-agenda)
   (bind-key "<apps> a" 'org-agenda)
-#+END_SRC
+  #+END_SRC
 ** Org Roam
 #+BEGIN_SRC emacs-lisp
-  (use-package org-roam
-    :hook
-    (after-init . org-roam-mode)
-    :custom
-    (org-roam-directory "~/.syncthing/emacs/org-roam")
-    :init
-    :bind (:map org-roam-mode-map
-		(("C-c n l" . org-roam)
-		 ("C-c n f" . org-roam-find-file)
-		 ("C-c n g" . org-roam-graph-show)
-		 ("C-c n c" . org-roam-capture)
-		 ("C-c n b". org-roam-switch-to-buffer)
-		 ("C-c n u" . org-roam-unlinked-references)
-		 )
-		:map org-mode-map
-		(("C-c n i" . org-roam-insert))
-		(("C-c n I" . org-roam-insert-immediate)))
-    :config
-    (setq org-roam-capture-templates
-	  '(("l" "lit" plain (function org-roam--capture-get-point)
+    (use-package org-roam
+      :hook
+      (after-init . org-roam-mode)
+      :custom
+      (org-roam-directory "~/.syncthing/emacs/org-roam")
+      :init
+      :bind (:map org-roam-mode-map
+		  (("C-c n l" . org-roam)
+		   ("C-c n f" . org-roam-find-file)
+		   ("C-c n g" . org-roam-graph-show)
+		   ("C-c n c" . org-roam-capture)
+		   ("C-c n b". org-roam-switch-to-buffer)
+		   ("C-c n u" . org-roam-unlinked-references)
+		   )
+		  :map org-mode-map
+		  (("C-c n i" . org-roam-insert))
+		  (("C-c n I" . org-roam-insert-immediate)))
+      :config
+      (setq org-roam-capture-templates
+	    '(("l" "lit" plain (function org-roam--capture-get-point)
+	       "%?"
+	       :file-name "lit/${slug}"
+	       :head "#+TITLE: ${title}
+  ,#+hugo_slug: ${slug}
+  ,#+setupfile:./hugo_setup.org\n"
+	       :unnarrowed t)
+	    ("P" "project" plain (function org-roam--capture-get-point)
 	     "%?"
-	     :file-name "lit/${slug}"
-	     :head "#+title: ${title}
+	     :file-name "projects/${slug}"
+	     :head "#+TITLE: ${title}
+#+CATEGORY: Project
 #+hugo_slug: ${slug}
 #+setupfile:./hugo_setup.org\n"
 	     :unnarrowed t)
-	    ("c" "concept" plain (function org-roam--capture-get-point)
-	     "%?"
-	     :file-name "concepts/${slug}"
-	     :head "#+title: ${title}
-#+hugo_slug: ${slug}
-#+setupfile:./hugo_setup.org\n"
-	     :unnarrowed t)
-	    ("p" "private" plain (function org-roam-capture--get-point)
-	     "%?"
-	     :file-name "private/${slug}"
-	     :head "#+title: ${title}\n"
-	     :unnarrowed t)
-	    ("s" "standard" plain (function org-roam--capture-get-point)
-	     "%?"
-	     :file-name "${slug}"
-	     :head " #+title: ${title}
-#+setupfile: ./hugo_setup.org
-#+hugo_slug: ${slug}\n"
-	     :unnarrowed t)))
-    (setq org-roam-capture-ref-templates
-	  '(("r" "ref" plain (function org-roam-capture--get-point)
-	     "%?"
-	     :file-name "lit/${slug}"
-	     :head "#+title: ${title}
-#+roam_key: ${ref}
-#+hugo_slug: ${slug}
-#+roam_tags: website
-#+setupfile:./hugo_setup.org
-      - source :: ${ref}"
-	     :unnarrowed t))))
-  (setq org-roam-directory "~/.syncthing/emacs/org-roam")
-  (add-hook 'after-init-hook 'org-mode)
-  (add-hook 'after-init-hook 'org-roam-mode)
+	      ("c" "concept" plain (function org-roam--capture-get-point)
+	       "%?"
+	       :file-name "concepts/${slug}"
+	       :head "#+TITLE: ${title}
+  ,#+hugo_slug: ${slug}
+  ,#+setupfile:./hugo_setup.org\n"
+	       :unnarrowed t)
+	      ("p" "private" plain (function org-roam-capture--get-point)
+	       "%?"
+	       :file-name "private/${slug}"
+	       :head "#+TITLE: ${title}\n"
+	       :unnarrowed t)
+	      ("s" "standard" plain (function org-roam--capture-get-point)
+	       "%?"
+	       :file-name "${slug}"
+	       :head " #+TITLE: ${title}
+  ,#+setupfile: ./hugo_setup.org
+  ,#+hugo_slug: ${slug}\n"
+	       :unnarrowed t)))
+      (setq org-roam-capture-ref-templates
+	    '(("r" "ref" plain (function org-roam-capture--get-point)
+	       "%?"
+	       :file-name "lit/${slug}"
+	       :head "#+TITLE: ${title}
+  ,#+roam_key: ${ref}
+  ,#+hugo_slug: ${slug}
+  ,#+roam_tags: website
+  ,#+setupfile:./hugo_setup.org
+	- source :: ${ref}"
+	       :unnarrowed t))))
+    (setq org-roam-directory "~/.syncthing/emacs/org-roam")
+    (add-hook 'after-init-hook 'org-mode)
+    (add-hook 'after-init-hook 'org-roam-mode)
 #+END_SRC
 *** Deft
 #+BEGIN_SRC emacs-lisp
@@ -994,6 +1006,10 @@ Remove unnecessary stuff
     :config
     (setq magit-push-always-verify nil)
     :bind ("C-x g" . magit-status))
+(custom-set-variables
+ '(ediff-diff-options "-w")
+ '(ediff-split-window-function (quote split-window-horizontally))
+ '(ediff-window-setup-function (quote ediff-setup-windows-plain)))
 #+END_SRC
 * Async
 #+BEGIN_SRC emacs-lisp
