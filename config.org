@@ -373,9 +373,9 @@ Remove unnecessary stuff
 	'((sequence ;; development stuff
 	   "BACKLOG(b@/!)" "PENDING(p@/!)" "IN_PROGRESS(i@/!)" "ON_HOLD(h@/!)" "IN_REVIEW(r@/!)"  "|" "DONE(x)" "CANCELLED(c@/!)")
 	  ;; Meetings
-	  (sequence "UP_COMING(c@/!)" "IN_MEETING(m@/!)" "|" "DONE(x)")
+	  (sequence "UP_COMING(u@/!)" "IN_MEETING(m@/!)" "|" "DONE(x)")
 	  ;; Blog
-	  (sequence "BRAIN_STORMING(s@/!)" "UP_COMING(c@/!)" "WRITING(w@/!)" "|" "PUBLISHED(x)" "CANCELLED(c@/!)")
+	  (sequence "BRAIN_STORMING(s@/!)" "UP_COMING(u@/!)" "WRITING(w@/!)" "|" "PUBLISHED(x)" "CANCELLED(c@/!)")
 	  ))
 
   ;; https://en.wikipedia.org/wiki/X11_color_names
@@ -405,7 +405,7 @@ Remove unnecessary stuff
 	(insert-file-contents org-agenda-file nil)
 	(end-of-buffer)
 	(newline))
-      (write-file "/tmp/timeline.org")
+      (write-file "~/.syncthing/emacs/org-roam/timeline.org")
       (org-agenda arg "L")))
 #+END_SRC
 ** Prettify Task symbols
@@ -428,7 +428,6 @@ Remove unnecessary stuff
   (setq org-agenda-skip-deadline-if-done t)
   (setq org-agenda-skip-scheduled-if-done t)
   (setq org-use-speed-commands t)
-
 
   (defun my/org-agenda-project-agenda ()
     "Return the project headline and up to `org-agenda-max-entries' tasks."
