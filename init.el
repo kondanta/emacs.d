@@ -74,7 +74,7 @@
  '(nrepl-message-colors
    '("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3"))
  '(org-agenda-files
-   '("~/.syncthing/emacs/org-roam/projects/tasks.org" "~/.syncthing/emacs/org-roam/masomo.org" "/home/kondanta/.syncthing/emacs/org-roam/braindump/2021-02-10.org"))
+   '("~/.syncthing/emacs/org-roam/projects/tasks.org" "~/.syncthing/emacs/org-roam/masomo.org" "/home/kondanta/.syncthing/emacs/org-roam/999-daily/2021-04-13.org"))
  '(org-export-backends '(ascii html icalendar latex md odt))
  '(org-super-agenda-mode t)
  '(org-tags-column -80)
