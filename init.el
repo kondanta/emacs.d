@@ -8,6 +8,7 @@
 
 ;; keep the installed packages in .emacs.d
 (setq package-user-dir (expand-file-name "elpa" user-emacs-directory))
+(setq package-enable-at-startup nil)
 ;; (package-initialize)
 
 (defvar bootstrap-version)
@@ -23,20 +24,21 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-(straight-use-package 'org-plus-contrib)
+;; (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 
-(straight-use-package 'use-package)
-(setq straight-use-package-by-default t)
 ;; (setq package-archives '(("melpa" . "http://melpa.org/packages/")
 ;;                          ("gnu" . "http://elpa.gnu.org/packages/")))
 ;; (require 'package)
+;; (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 ;; (add-to-list 'package-archives
 ;;              '("melpa" . "https://melpa.org/packages/") t)
 
 ;; update the package metadata is the local cache is missing
 ;; (unless package-archive-contents
 ;;   (package-refresh-contents))
-
+(straight-use-package 'use-package)
+(straight-use-package 'org-contrib)
+(setq straight-use-package-by-default t)
 
 ;; (unless (package-installed-p 'use-package)
 ;;   (package-refresh-contents)
@@ -74,7 +76,7 @@
  '(nrepl-message-colors
    '("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3"))
  '(org-agenda-files
-   '("~/.syncthing/emacs/org-roam/projects/tasks.org" "~/.syncthing/emacs/org-roam/masomo.org" "/home/kondanta/.syncthing/emacs/org-roam/999-daily/2021-04-13.org"))
+   '("/home/kondanta/.syncthing/emacs/org-roam/999-daily/2021-04-13.org"))
  '(org-export-backends '(ascii html icalendar latex md odt))
  '(org-super-agenda-mode t)
  '(org-tags-column -80)
@@ -103,7 +105,7 @@
      (340 . "#94BFF3")
      (360 . "#DC8CC3")))
  '(vc-annotate-very-old-color "#DC8CC3"))
-            
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
