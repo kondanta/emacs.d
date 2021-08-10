@@ -667,70 +667,80 @@ Remove unnecessary stuff
     :custom
     (org-roam-directory "~/.syncthing/emacs/org-roam")
     :init
-    :bind (:map org-roam-mode-map
-		(("C-c n l" . org-roam)
-		 ("C-c n f" . org-roam-find-file)
-		 ("C-c n g" . org-roam-graph-show)
-		 ("C-c n c" . org-roam-capture)
-		 ("C-c n b". org-roam-switch-to-buffer)
-		 ("C-c n u" . org-roam-unlinked-references)
-		 )
-		:map org-mode-map
-		(("C-c n i" . org-roam-insert))
-		(("C-c n I" . org-roam-insert-immediate)))
-    :config
-    (setq org-roam-capture-templates
-	  '(("l" "Literature Notes" plain (function org-roam--capture-get-point)
-	     "%?"
-	     :file-name "100-literature_notes/${slug}"
-	     :head "#+TITLE: ${title}
+    :bind (("C-c n l" . org-roam-buffer-toggle)
+	   ("C-c n f" . org-roam-node-file)
+	   ("C-c n g" . org-roam-graph)
+	   ("C-c n c" . org-roam-capture)
+	   ("C-c n b" . org-roam-switch-to-buffer)
+	   ("C-c n u" . org-roam-unlinked-references)
+	   ("C-c n i" . org-roam-node-insert))
+	   :config
+	   (setq org-roam-capture-templates
+		 '(("l" "Literature Notes" plain (function org-roam--capture-get-point)
+		    "%?"
+		    :file-name "100-literature_notes/${slug}"
+		    :head "#+TITLE: ${title}
+      ,#+hugo_slug: ${slug}
+      ,#+setupfile:./hugo_setup.org\n"
+		    :unnarrowed t)
+		   ("p" "Permanent Notes" plain (function org-roam--capture-get-point)
+		    "%?"
+		    :file-name "300-permanent_notes/${slug}"
+		    :head "#+TITLE: ${title}
+    ,#+CATEGORY: Permanent Notes
     ,#+hugo_slug: ${slug}
     ,#+setupfile:./hugo_setup.org\n"
-	     :unnarrowed t)
-	    ("p" "Permanent Notes" plain (function org-roam--capture-get-point)
-	     "%?"
-	     :file-name "300-permanent_notes/${slug}"
-	     :head "#+TITLE: ${title}
-  ,#+CATEGORY: Permanent Notes
-  ,#+hugo_slug: ${slug}
-  ,#+setupfile:./hugo_setup.org\n"
-	     :unnarrowed t)
-	    ("P" "project" plain (function org-roam--capture-get-point)
-	     "%?"
-	     :file-name "800-projects/${slug}"
-	     :head "#+TITLE: ${title}
-    ,#+CATEGORY: Project
-    ,#+hugo_slug: ${slug}
-    ,#+setupfile:./hugo_setup.org\n"
-	     :unnarrowed t)
-	    ("b" "inbox" plain (function org-roam--capture-get-point)
-	     "%?"
-	     :file-name "000-inbox/${slug}"
-	     :head "#+TITLE: ${title}
-    ,#+hugo_slug: ${slug}
-    ,#+setupfile:./hugo_setup.org\n"
-	     :unnarrowed t)
-	    ("s" "plain notes" plain (function org-roam--capture-get-point)
-	     "%?"
-	     :file-name "${slug}"
-	     :head " #+TITLE: ${title}
-    ,#+setupfile: ./hugo_setup.org
-    ,#+hugo_slug: ${slug}\n"
-	     :unnarrowed t)))
-    (setq org-roam-capture-ref-templates
-	  '(("r" "ref" plain (function org-roam-capture--get-point)
-	     "%?"
-	     :file-name "100-literature_notes/${slug}"
-	     :head "#+TITLE: ${title}
-    ,#+roam_key: ${ref}
-    ,#+hugo_slug: ${slug}
-    ,#+roam_tags: website
-    ,#+setupfile:./hugo_setup.org
-	    - source :: ${ref}"
-	     :unnarrowed t))))
-  (setq org-roam-directory "~/.syncthing/emacs/org-roam")
-  (add-hook 'after-init-hook 'org-mode)
-  (add-hook 'after-init-hook 'org-roam-setup)
+		    :unnarrowed t)
+		   ("P" "project" plain (function org-roam--capture-get-point)
+		    "%?"
+		    :file-name "800-projects/${slug}"
+		    :head "#+TITLE: ${title}
+      ,#+CATEGORY: Project
+      ,#+hugo_slug: ${slug}
+      ,#+setupfile:./hugo_setup.org\n"
+		    :unnarrowed t)
+		   ("b" "inbox" plain (function org-roam--capture-get-point)
+		    "%?"
+		    :file-name "000-inbox/${slug}"
+		    :head "#+TITLE: ${title}
+      ,#+hugo_slug: ${slug}
+      ,#+setupfile:./hugo_setup.org\n"
+		    :unnarrowed t)
+		   ("s" "plain notes" plain (function org-roam--capture-get-point)
+		    "%?"
+		    :file-name "${slug}"
+		    :head " #+TITLE: ${title}
+      ,#+setupfile: ./hugo_setup.org
+      ,#+hugo_slug: ${slug}\n"
+		    :unnarrowed t)))
+	   (setq org-roam-capture-ref-templates
+		 '(("r" "ref" plain (function org-roam-capture--get-point)
+		    "%?"
+		    :file-name "100-literature_notes/${slug}"
+		    :head "#+TITLE: ${title}
+      ,#+roam_key: ${ref}
+      ,#+hugo_slug: ${slug}
+      ,#+roam_tags: website
+      ,#+setupfile:./hugo_setup.org
+	      - source :: ${ref}"
+		    :unnarrowed t))))
+    (setq org-roam-directory "~/.syncthing/emacs/org-roam")
+    ;; (add-hook 'after-init-hook 'org-mode)
+    (add-hook 'after-init-hook 'org-roam-setup)
+  
+    ;; for org-roam-buffer-toggle
+    ;; Use side-window like V1
+    ;; This can take advantage of slots available with it
+    (add-to-list 'display-buffer-alist
+		 '("\\*org-roam\\*"
+		   (display-buffer-in-side-window)
+		   (side . right)
+		   (slot . 0)
+		   (window-width . 0.25)
+		   (preserve-size . (t nil))
+		   (window-parameters . ((no-other-window . t)
+					 (no-delete-other-windows . t)))))
+  
 #+END_SRC
 *** Deft
 #+BEGIN_SRC emacs-lisp
