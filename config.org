@@ -663,7 +663,7 @@ Remove unnecessary stuff
 #+BEGIN_SRC emacs-lisp
   (use-package org-roam
     :hook
-    (after-init . org-roam-mode)
+    (after-init . org-roam-setup)
     :custom
     (org-roam-directory "~/.syncthing/emacs/org-roam")
     :init
@@ -730,7 +730,7 @@ Remove unnecessary stuff
 	     :unnarrowed t))))
   (setq org-roam-directory "~/.syncthing/emacs/org-roam")
   (add-hook 'after-init-hook 'org-mode)
-  (add-hook 'after-init-hook 'org-roam-mode)
+  (add-hook 'after-init-hook 'org-roam-setup)
 #+END_SRC
 *** Deft
 #+BEGIN_SRC emacs-lisp
@@ -884,7 +884,7 @@ Remove unnecessary stuff
   (use-package dashboard
     :if (< (length command-line-args) 2)
     :config
-
+  
     (dashboard-setup-startup-hook)
     (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
     ;; burasi kirik
@@ -1049,41 +1049,6 @@ Remove unnecessary stuff
     (add-hook 'go-mode-hook 'my-golang-setting)
     (add-hook 'before-save-hook 'gofmt-before-save)
     )
-#+END_SRC
-** Rust
-#+BEGIN_SRC emacs-lisp
-  (setq lsp-disabled-clients '(rls))
-  (defun my/rustic-mode-hook()
-    "Config"
-    (setq rustic-rustfmt-bin "~/programming/tools/rust/cargo/bin/rustfmt")
-    (setq lsp-rust-analyzer-server-command '("~/programming/tools/rust/cargo/bin/rust-analyzer"))
-    (setq rustic-lsp-server 'rust-analyzer)
-    (setq rustic-lsp-client 'lsp-mode)
-    (setq tab-width 4)
-    (setq rustic-format-on-save t)
-    (setq rustic-cargo-fmt t)
-    (setq rustic-format-trigger 'on-save)
-    (setq lsp-rust-server 'rust-analyzer)
-    )
-
-  (use-package rustic
-    :requires(lsp-mode company company-lsp)
-    :after(company company-lsp)
-    :init
-    :config
-    (setq rustic-rustfmt-bin "~/programming/tools/rust/cargo/bin/rustfmt")
-    (setq lsp-rust-analyzer-server-command '("~/programming/tools/rust/cargo/bin/rust-analyzer"))
-    (setq rustic-lsp-server 'rust-analyzer)
-    (setq tab-width 4)
-    (setq rustic-format-on-save t)
-    (setq rustic-format-trigger 'on-save)
-    )
-
-  ;;(add-hook 'rustic-mode-hook #'racer-mode)
-  ;;(add-hook 'racer-mode-hook #'eldoc-mode)
-
-  (add-hook 'rust-mode-hook 'company-mode)
-
 #+END_SRC
 ** Dart
 #+BEGIN_SRC emacs-lisp

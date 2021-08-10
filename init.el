@@ -39,7 +39,7 @@
 (straight-use-package 'use-package)
 (straight-use-package 'org-contrib)
 (setq straight-use-package-by-default t)
-
+(setq org-roam-v2-ack t)
 ;; (unless (package-installed-p 'use-package)
 ;;   (package-refresh-contents)
 ;;   (package-install 'use-package))
