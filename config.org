@@ -375,7 +375,7 @@ Remove unnecessary stuff
   (use-package dashboard
     :if (< (length command-line-args) 2)
     :config
-  
+
     (dashboard-setup-startup-hook)
     (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
     ;; burasi kirik
@@ -499,13 +499,15 @@ Remove unnecessary stuff
 ** Git handler
 #+BEGIN_SRC emacs-lisp
   (use-package magit
-    :config
-    (setq magit-push-always-verify 1)
-    :bind ("C-x g" . magit-status))
-(custom-set-variables
- '(ediff-diff-options "-w")
- '(ediff-split-window-function (quote split-window-horizontally))
- '(ediff-window-setup-function (quote ediff-setup-windows-plain)))
+        :config
+        (setq magit-push-always-verify 1)
+        ;; (setq transient-default-level 6) ;; By default it is 4
+        (transient-set-default-level 'magit:--signoff 1)
+        :bind ("C-x g" . magit-status))
+    (custom-set-variables
+     '(ediff-diff-options "-w")
+     '(ediff-split-window-function (quote split-window-horizontally))
+     '(ediff-window-setup-function (quote ediff-setup-windows-plain)))
 #+END_SRC
 * Async
 #+BEGIN_SRC emacs-lisp
