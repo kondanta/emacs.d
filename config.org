@@ -2,7 +2,7 @@
 ** Whoami
 #+BEGIN_SRC emacs-lisp
   (setq user-full-name "Taylan Doğan"
-	user-mail-address "doganntaylan@gmail.com")
+	user-mail-address "git@taylandogan.info")
 #+END_SRC
 ** Remove UI Elements
 Remove unnecessary stuff
@@ -139,11 +139,6 @@ Remove unnecessary stuff
 #+END_SRC
 ** Theme
 #+BEGIN_SRC emacs-lisp
-  ;;      (use-package gruvbox-theme
-  ;;	:init (progn (load-theme 'gruvbox-dark-hard t t)
-  ;;		     (enable-theme 'gruvbox-dark-hard))
-  ;;	:defer t
-  ;;	:ensure t)
   (use-package srcery-theme
     :init (progn (load-theme 'srcery t)
 		 (enable-theme 'srcery))
@@ -165,7 +160,8 @@ Remove unnecessary stuff
 #+END_SRC
 ** Fonts
 #+BEGIN_SRC emacs-lisp
-(set-face-attribute 'default nil :font "Sarasa Term Slab CL")
+;;  (set-face-attribute 'default nil :font "Sarasa Term Slab CL")
+  (set-face-attribute 'default nil :font "Iosevka Term Slab Nerd Font")
 #+END_SRC
 
 * Utils
@@ -256,521 +252,6 @@ Remove unnecessary stuff
   (global-set-key (kbd "<S-return>") 'term)
 #+END_SRC
 
-* Org
-** Configs
-#+BEGIN_SRC emacs-lisp
-  (setq org-ellipsis "..↴")
-  (setq org-src-fontify-natively t)
-  (setq org-src-tab-acts-natively t)
-  (setq org-confirm-babel-evaluate nil)
-  (setq org-export-with-smart-quotes t)
-  (setq org-support-shift-select 'always)
-  (setq org-enforce-todo-dependencies t)
-  (add-hook 'org-mode 'org-indent-mode)
-
-  ;; using <S automatically generates #+BEGIN_SRC block
-  (setq org-src-window-setup 'current-window)
-  (add-to-list 'org-structure-template-alist
-	       '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
-
-  (setq org-src-window-setup 'current-window)
-
-  (setq org-directory "~/.syncthing/emacs/org-roam")
-  (defun org-file-path (filename)
-    (concat (file-name-as-directory org-directory) filename)
-    )
-  (setq org-index-file (org-file-path "400-projects/tasks.org"))
-  (setq org-archive-location (concat
-			      (org-file-path "archive.org") "::* From %s"))
-#+END_SRC
-** Bullets
-#+BEGIN_SRC emacs-lisp
-  ;; Bullet mode
-  (use-package org-bullets
-    :config
-    (add-hook 'org-mode-hook (lambda() (org-bullets-mode))))
-#+END_SRC
-** Mark it done and archive
-#+BEGIN_SRC emacs-lisp
-	(add-to-list 'auto-mode-alist '("\\.txt$" . org-mode))
-	;; storing todos in separate files
-	(setq org-agenda-files (list "~/.syncthing/emacs/org-roam/400-projects/tasks.org"
-				     ))
-	;; when task done, put it into archive
-	(defun kon/mark-done-and-archive ()
-	  "mark task done and archive it"
-	  (interactive)
-	  (org-todo 'done)
-	  (org-archive-subtree))
-	(define-key org-mode-map (kbd "C-c C-x C-s") 'kon/mark-done-and-archive)
-#+END_SRC
-** Log
-#+BEGIN_SRC emacs-lisp
-  ;; log the archive time
-  (setq org-log-done 'time)
-  (setq org-deadline-warning-days 7)
-  (setq org-agenda-show-all-dates t)
-  (setq org-clock-out-when-done t)
-  (setq org-clock-in-resume t)
-  (setq org-clock-persist t)
-  (setq org-clock-idle-time nil)
-  (setq org-clock-continuously nil)
-#+END_SRC
-** Effort Estimation
-#+BEGIN_SRC emacs-lisp
-  ;; Effort estimation
-  (defun my/org-mode-ask-effort ()
-    "Ask for an effort estimate when clocking in."
-    (unless (org-entry-get (point) "Effort")
-      (let ((effort
-	     (completing-read
-	      "Effort: "
-	      (org-entry-get-multivalued-property (point) "Effort"))))
-	(unless (equal effort "")
-	  (org-set-property "Effort" effort)))))
-  (add-hook 'org-clock-in-prepare-hook
-	    'my/org-mode-ask-effort)
-#+END_SRC
-** Quick Access Files
-#+BEGIN_SRC emacs-lisp
-  (defun kon/open-index ()
-    (interactive)
-    (find-file org-index-file)
-    (flycheck-mode -1)
-    (end-of-buffer)
-    )
-  (defun kon/open-personal ()
-    (interactive)
-    (find-file "~/.syncthing/emacs/org/personal.org")
-    (flycheck-mode -1)
-    (end-of-buffer)
-    )
-  (defun kon/open-journal ()
-    (interactive)
-    (find-file "~/.syncthing/emacs/org/journal.org")
-    (flycheck-mode -1)
-    (end-of-buffer)
-    )
-  (defun kon/open-work ()
-    (interactive)
-    (find-file "~/.syncthing/emacs/org/work.org")
-    (flycheck-mode -1)
-    (end-of-buffer)
-    )
-#+END_SRC
-** Quick Capture a Task
-#+BEGIN_SRC emacs-lisp
-  ;; capture todo
-  (defun org-capture-todo ()
-    (interactive)
-    (org-capture :keys "t"))
-  (global-set-key (kbd "M-n") 'org-capture-todo)
-  (add-hook 'gfm-mode-hook (lambda ()(local-set-key (kbd "M-n") 'org-capture-todo)))
-  (add-hook 'haskell-mode-hook (lambda ()(local-set-key (kbd "M-n") 'org-capture-todo)))
-
-  ;; Custom todo keywords
-  (setq org-todo-keywords
-	'((sequence ;; development stuff
-	   "BACKLOG(b@/!)" "PENDING(p@/!)" "IN_PROGRESS(i@/!)" "ON_HOLD(h@/!)" "IN_REVIEW(r@/!)"  "|" "DONE(x)" "CANCELLED(c@/!)")
-	  ;; Meetings
-	  (sequence "UP_COMING(u@/!)" "IN_MEETING(m@/!)" "|" "DONE(x)")
-	  ;; Blog
-	  (sequence "BRAIN_STORMING(s@/!)" "UP_COMING(u@/!)" "WRITING(w@/!)" "|" "PUBLISHED(x)" "CANCELLED(c@/!)")
-	  ))
-
-  ;; https://en.wikipedia.org/wiki/X11_color_names
-  (setq org-todo-keyword-faces
-	'(("BACKLOG" . (:foreground "grey" :weight bold))
-	  ("PENDING" . (:foreground "red" :weight bold))
-	  ("IN_PROGRESS" . (:foreground "Cornflower Blue" :weight bold))
-	  ("ON_HOLD" . (:foreground "Dark Violet" :weight bold))
-	  ("IN_REVIEW" . (:foreground "Dark Cyan" :weight bold))
-	  ("BRAIN_STORMING" . (:foreground "grey" :weight bold))
-	  ("UP_COMING" . (:foreground "red" :weight bold))
-	  ("WRITING" . (:foreground "Cornflower Blue" :weight bold))
-	  ("DONE" . (:foreground "green" :weight bold))
-	  ("CANELLED" . (:foreground "green" :weight bold))
-	  ))
-
-  (setq org-use-fast-todo-selection t)
-
-#+END_SRC
-** Timeline
-#+BEGIN_SRC emacs-lisp
-  ;; Agenda timeline :/
-  (defun org-agenda-timeline-all (&optional arg)
-    (interactive "P")
-    (with-temp-buffer
-      (dolist (org-agenda-file org-agenda-files)
-	(insert-file-contents org-agenda-file nil)
-	(end-of-buffer)
-	(newline))
-      (write-file "~/.syncthing/emacs/org-roam/timeline.org")
-      (org-agenda arg "L")))
-#+END_SRC
-** Prettify Task symbols
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'org-mode-hook (lambda ()
-			     "Beautify Org Checkbox Symbol"
-			     (push '("[ ]" .  "☐") prettify-symbols-alist)
-			     (push '("[X]" . "☑" ) prettify-symbols-alist)
-			     (push '("[-]" . "❍" ) prettify-symbols-alist)
-			     (prettify-symbols-mode)))
-
-#+END_SRC
-** Agenda Stuff
-#+BEGIN_SRC emacs-lisp
-    ;; other configs
-    (setq org-agenda-tags-colmn -100)
-    (setq org-agenda-sticky nil)
-    (setq org-agenda-use-tag-inheritance t)
-    (setq org-agenda-show-log t)
-    (setq org-agenda-skip-deadline-if-done t)
-    (setq org-agenda-skip-scheduled-if-done t)
-    (setq org-use-speed-commands t)
-
-    (defun my/org-agenda-project-agenda ()
-      "Return the project headline and up to `org-agenda-max-entries' tasks."
-      (save-excursion
-	(let* ((marker (org-agenda-new-marker))
-	       (heading
-		(org-agenda-format-item "" (org-get-heading) (org-get-category) nil))
-	       (org-agenda-restrict t)
-	       (org-agenda-restrict-begin (point))
-	       (org-agenda-restrict-end (org-end-of-subtree 'invisible))
-	       ;; Find the TODO items in this subtree
-	       (list (org-agenda-get-day-entries (buffer-file-name) (calendar-current-date) :todo)))
-	  (org-add-props heading
-	      (list 'face 'defaults
-		    'done-face 'org-agenda-done
-		    'undone-face 'default
-		    'mouse-face 'highlight
-		    'org-not-done-regexp org-not-done-regexp
-		    'org-todo-regexp org-todo-regexp
-		    'org-complex-heading-regexp org-complex-heading-regexp
-		    'help-echo
-		    (format "mouse-2 or RET jump to org file %s"
-			    (abbreviate-file-name
-			     (or (buffer-file-name (buffer-base-buffer))
-				 (buffer-name (buffer-base-buffer))))))
-	    'org-marker marker
-	    'org-hd-marker marker
-	    'org-category (org-get-category)
-	    'type "tagsmatch")
-	  (concat heading "\n"
-		  (org-agenda-finalize-entries list)))))
-
-    (defun my/org-agenda-projects-and-tasks (match)
-      "Show TODOs for all `org-agenda-files' headlines matching MATCH."
-      (interactive "MString: ")
-      (let ((todo-only nil))
-	(if org-agenda-overriding-arguments
-	    (setq todo-only (car org-agenda-overriding-arguments)
-		  match (nth 1 org-agenda-overriding-arguments)))
-	(let* ((org-tags-match-list-sublevels
-		org-tags-match-list-sublevels)
-	       (completion-ignore-case t)
-	       rtn rtnall files file pos matcher
-	       buffer)
-	  (when (and (stringp match) (not (string-match "\\S-" match)))
-	    (setq match nil))
-	  (when match
-	    (setq matcher (org-make-tags-matcher match)
-		  match (car matcher) matcher (cdr matcher)))
-	  (catch 'exit
-	    (if org-agenda-sticky
-		(setq org-agenda-buffer-name
-		      (if (stringp match)
-			  (format "*Org Agenda(%s:%s)*"
-				  (or org-keys (or (and todo-only "M") "m")) match)
-			(format "*Org Agenda(%s)*" (or (and todo-only "M") "m")))))
-	    (org-agenda-prepare (concat "TAGS " match))
-	    (org-compile-prefix-format 'tags)
-	    (org-set-sorting-strategy 'tags)
-	    (setq org-agenda-query-string match)
-	    (setq org-agenda-redo-command
-		  (list 'org-tags-view `(quote ,todo-only)
-			(list 'if 'current-prefix-arg nil `(quote ,org-agenda-query-string))))
-	    (setq files (org-agenda-files nil 'ifmode)
-		  rtnall nil)
-	    (while (setq file (pop files))
-	      (catch 'nextfile
-		(org-check-agenda-file file)
-		(setq buffer (if (file-exists-p file)
-				 (org-get-agenda-file-buffer file)
-			       (error "No such file %s" file)))
-		(if (not buffer)
-		    ;; If file does not exist, error message to agenda
-		    (setq rtn (list
-			       (format "ORG-AGENDA-ERROR: No such org-file %s" file))
-			  rtnall (append rtnall rtn))
-		  (with-current-buffer buffer
-		    (unless (derived-mode-p 'org-mode)
-		      (error "Agenda file %s is not in `org-mode'" file))
-		    (save-excursion
-		      (save-restriction
-			(if org-agenda-restrict
-			    (narrow-to-region org-agenda-restrict-begin
-					      org-agenda-restrict-end)
-			  (widen))
-			(setq rtn (org-scan-tags 'my/org-agenda-project-agenda matcher todo-only))
-			(setq rtnall (append rtnall rtn))))))))
-	    (if org-agenda-overriding-header
-		(insert (org-add-props (copy-sequence org-agenda-overriding-header)
-			    nil 'face 'org-agenda-structure) "\n")
-	      (insert "Headlines with TAGS match: ")
-	      (add-text-properties (point-min) (1- (point))
-				   (list 'face 'org-agenda-structure
-					 'short-heading
-					 (concat "Match: " match)))
-	      (setq pos (point))
-	      (insert match "\n")
-	      (add-text-properties pos (1- (point)) (list 'face 'org-warning))
-	      (setq pos (point))
-	      (unless org-agenda-multi
-		(insert "Press `C-u r' to search again with new search string\n"))
-	      (add-text-properties pos (1- (point)) (list 'face 'org-agenda-structure)))
-	    (org-agenda-mark-header-line (point-min))
-	    (when rtnall
-	      (insert (mapconcat 'identity rtnall "\n") ""))
-	    (goto-char (point-min))
-	    (or org-agenda-multi (org-agenda-fit-window-to-buffer))
-	    (add-text-properties (point-min) (point-max)
-				 `(org-agenda-type tags
-						   org-last-args (,todo-only ,match)
-						   org-redo-cmd ,org-agenda-redo-command
-						   org-series-cmd ,org-cmd))
-	    (org-agenda-finalize)
-	    (setq buffer-read-only t)))))
-
-    (defvar my/org-agenda-contexts
-      '((tags-todo "reading")
-	(tags-todo "work")
-	(tags-todo "writing")
-	(tags-todo "home")
-	(tags-todo "meeting"))
-      "Usual list of contexts.")
-    (defun my/org-agenda-skip-scheduled ()
-      (org-agenda-skip-entry-if 'scheduled 'deadline 'regexp "\n]+>"))
-    (setq org-agenda-custom-commands
-	  `(("a" "Agenda"
-	     ((agenda "" ((org-agenda-span 2)))
-	      ;; Unscheduled
-	      (tags-todo "+TODO=\"BACKLOG\""
-			 ((org-agenda-skip-function 'my/org-agenda-skip-scheduled)
-			  (org-agenda-overriding-header "Unscheduled TODO entries: ")
-			  (org-agenda-sorting-strategy '(priority-down effort-up tag-up category-keep))))
-	      ;; Active projects
-	      (tags "+project-someday-TODO=\"DONE\"-TODO=\"SOMEDAY\"-inactive"
-		    ((org-tags-exclude-from-inheritance '("project"))
-		     (org-agenda-overriding-header "Projects: ")
-		     (org-agenda-sorting-strategy '(priority-down tag-up category-keep effort-down))))
-	      ))
-	    ("f" tags-todo "focus-TODO=\"DONE\"-TODO=\"CANCELLED\"")
-	    ("b" todo ""
-	     ((org-agenda-files '( "~/.syncthing/emacs/org-roam/400-projects/projects.org"
-				   "~/.syncthing/emacs/org-roam/400-projects/tasks.org"
-				     ))))
-	    ("x" "Column view" todo ""  ; Column view
-	     ((org-agenda-prefix-format "")
-	      (org-agenda-cmp-user-defined 'my/org-sort-agenda-items-todo)
-	      (org-agenda-view-columns-initially t)
-	      ))
-	    ;; Weekly review
-	    ("w" "Weekly review" agenda ""
-	     ((org-agenda-span 7)
-	      (org-agenda-log-mode 1)) "~/.syncthing/emacs/org-roam/999-daily/this-week.org")
-	    ("W" "Weekly review sans routines" agenda ""
-	     ((org-agenda-span 7)
-	      (org-agenda-log-mode 1)
-	      (org-agenda-tag-filter-preset '("-routine"))) "~/.syncthing/emacs/org-roam/999-daily/this-week-nonroutine.org")
-	    ("2" "Bi-weekly review" agenda "" ((org-agenda-span 14) (org-agenda-log-mode 1)))
-	    ("5" "Quick tasks" tags-todo "EFFORT>=\"0:05\"&EFFORT<=\"0:30\"")
-	    ("0" "Unestimated tasks" tags-todo "EFFORT=\"\"")
-	    ("gw" "Work" tags-todo "work"
-	     ((org-agenda-view-columns-initially t)))
-	    ("gr" "Writing" tags-todo "writing"
-	     ((org-agenda-view-columns-initially t)))
-	    ("gp" "Reading" tags-todo "reading"
-	     ((org-agenda-view-columns-initially t)))
-	    ("gh" "Home" tags-todo "home"
-	     ((org-agenda-view-columns-initially t)))
-	    ("gm" "Meeting" tags-todo "meeting"
-	     ((org-agenda-view-columns-initially t)))
-	    ("c" "Top 3 by context"
-	     ,my/org-agenda-contexts
-	     ((org-agenda-sorting-strategy '(priority-up effort-down))
-	      (org-agenda-max-entries 3)))
-	    ("C" "All by context"
-	     ,my/org-agenda-contexts
-	     ((org-agenda-sorting-strategy '(priority-down effort-down))
-	      (org-agenda-max-entries nil)))
-	    ("9" "Unscheduled top 3 by context"
-	     ,my/org-agenda-contexts
-	     ((org-agenda-skip-function 'my/org-agenda-skip-scheduled)
-	      (org-agenda-sorting-strategy '(priority-down effort-down))
-	      (org-agenda-max-entries 3)))
-	    ("(" "All unscheduled by context"
-	     ,my/org-agenda-contexts
-	     ((org-agenda-skip-function 'my/org-agenda-skip-scheduled)
-	      (org-agenda-sorting-strategy '(priority-down effort-down))
-	      ))
-	    ("d" "Timeline for today" ((agenda "" ))
-	     ((org-agenda-ndays 1)
-	      (org-agenda-show-log t)
-	      (org-agenda-log-mode-items '(clock closed))
-	      (org-agenda-clockreport-mode t)
-	      (org-agenda-entry-types '())))
-	    ("." "Waiting for" todo "ON_HOLD")
-	    ("u" "Unscheduled tasks" tags-todo "-someday-TODO=\"PENDING\"-TODO=\"DELEGATED\"-TODO=\"ON_HOLD\"-project-cooking-routine"
-	     ((org-agenda-skip-function 'my/org-agenda-skip-scheduled)
-	      (org-agenda-view-columns-initially nil)
-	      (org-tags-exclude-from-inheritance '("project"))
-	      (org-agenda-overriding-header "Unscheduled TODO entries: ")
-	      (org-columns-default-format "%50ITEM %TODO %3PRIORITY %Effort{:} %TAGS")
-	      (org-agenda-sorting-strategy '(todo-state-up priority-down effort-up tag-up category-keep))))
-	    ("s" "Someday" tags-todo "TODO=\"SOMEDAY\""
-	     ((org-agenda-skip-function 'my/org-agenda-skip-scheduled)
-	      (org-agenda-view-columns-initially nil)
-	      (org-tags-exclude-from-inheritance '("project"))
-	      (org-agenda-overriding-header "Someday: ")
-	      (org-columns-default-format "%50ITEM %TODO %3PRIORITY %Effort{:} %TAGS")
-	      (org-agenda-sorting-strategy '(todo-state-up priority-down effort-up tag-up category-keep))))
-	    ("P" "By priority"
-	     ((tags-todo "+PRIORITY=\"A\"")
-	      (tags-todo "+PRIORITY=\"B\"")
-	      (tags-todo "+PRIORITY=\"\"")
-	      (tags-todo "+PRIORITY=\"C\""))
-	     ((org-agenda-prefix-format "%-10c %-10T %e ")
-	      (org-agenda-sorting-strategy '(priority-down tag-up category-keep effort-down))))
-	    ("pp" tags "+project-someday-TODO=\"DONE\"-TODO=\"SOMEDAY\"-inactive"
-	     ((org-tags-exclude-from-inheritance '("project"))
-	      (org-agenda-sorting-strategy '(priority-down tag-up category-keep effort-down))))
-	    ("p." tags "+project-TODO=\"DONE\""
-	     ((org-tags-exclude-from-inheritance '("project"))
-	      (org-agenda-sorting-strategy '(priority-down tag-up category-keep effort-down))))
-	    ("i" tags-todo "TODO=\"IN_PROGRESS\"")
-	    ("b" tags-todo "TODO=\"BACKLOG\"")
-	    ("bs" tags-todo "TODO=\"BRAIN_STORMING\"")
-
-	    ("2" "List projects with tasks" my/org-agenda-projects-and-tasks
-	     "+PROJECT"
-	     ((org-agenda-max-entries 3)))))
-    (define-key global-map "\C-ca" 'org-agenda)
-    (bind-key "<apps> a" 'org-agenda)
-  #+END_SRC
-** Org Roam
-#+BEGIN_SRC emacs-lisp
-  (use-package org-roam
-    :hook
-    (after-init . org-roam-setup)
-    :custom
-    (org-roam-directory "~/.syncthing/emacs/org-roam")
-    :init
-    :bind (("C-c n l" . org-roam-buffer-toggle)
-	   ("C-c n f" . org-roam-node-file)
-	   ("C-c n g" . org-roam-graph)
-	   ("C-c n c" . org-roam-capture)
-	   ("C-c n b" . org-roam-switch-to-buffer)
-	   ("C-c n u" . org-roam-unlinked-references)
-	   ("C-c n i" . org-roam-node-insert))
-	   :config
-	   (setq org-roam-capture-templates
-		 '(("l" "Literature Notes" plain (function org-roam--capture-get-point)
-		    "%?"
-		    :file-name "100-literature_notes/${slug}"
-		    :head "#+TITLE: ${title}
-      ,#+hugo_slug: ${slug}
-      ,#+setupfile:./hugo_setup.org\n"
-		    :unnarrowed t)
-		   ("p" "Permanent Notes" plain (function org-roam--capture-get-point)
-		    "%?"
-		    :file-name "300-permanent_notes/${slug}"
-		    :head "#+TITLE: ${title}
-    ,#+CATEGORY: Permanent Notes
-    ,#+hugo_slug: ${slug}
-    ,#+setupfile:./hugo_setup.org\n"
-		    :unnarrowed t)
-		   ("P" "project" plain (function org-roam--capture-get-point)
-		    "%?"
-		    :file-name "800-projects/${slug}"
-		    :head "#+TITLE: ${title}
-      ,#+CATEGORY: Project
-      ,#+hugo_slug: ${slug}
-      ,#+setupfile:./hugo_setup.org\n"
-		    :unnarrowed t)
-		   ("b" "inbox" plain (function org-roam--capture-get-point)
-		    "%?"
-		    :file-name "000-inbox/${slug}"
-		    :head "#+TITLE: ${title}
-      ,#+hugo_slug: ${slug}
-      ,#+setupfile:./hugo_setup.org\n"
-		    :unnarrowed t)
-		   ("s" "plain notes" plain (function org-roam--capture-get-point)
-		    "%?"
-		    :file-name "${slug}"
-		    :head " #+TITLE: ${title}
-      ,#+setupfile: ./hugo_setup.org
-      ,#+hugo_slug: ${slug}\n"
-		    :unnarrowed t)))
-	   (setq org-roam-capture-ref-templates
-		 '(("r" "ref" plain (function org-roam-capture--get-point)
-		    "%?"
-		    :file-name "100-literature_notes/${slug}"
-		    :head "#+TITLE: ${title}
-      ,#+roam_key: ${ref}
-      ,#+hugo_slug: ${slug}
-      ,#+roam_tags: website
-      ,#+setupfile:./hugo_setup.org
-	      - source :: ${ref}"
-		    :unnarrowed t))))
-    (setq org-roam-directory "~/.syncthing/emacs/org-roam")
-    ;; (add-hook 'after-init-hook 'org-mode)
-    (add-hook 'after-init-hook 'org-roam-setup)
-  
-    ;; for org-roam-buffer-toggle
-    ;; Use side-window like V1
-    ;; This can take advantage of slots available with it
-    (add-to-list 'display-buffer-alist
-		 '("\\*org-roam\\*"
-		   (display-buffer-in-side-window)
-		   (side . right)
-		   (slot . 0)
-		   (window-width . 0.25)
-		   (preserve-size . (t nil))
-		   (window-parameters . ((no-other-window . t)
-					 (no-delete-other-windows . t)))))
-  
-#+END_SRC
-*** Deft
-#+BEGIN_SRC emacs-lisp
-  (use-package deft
-    :after org
-    :bind
-    ("C-c n d" . deft)
-    :custom
-    (deft-recursive t)
-    (deft-use-filter-string-for-filename t)
-    (deft-default-extension "org")
-    (deft_directory "~/.syncthing/emacs/org-roam/"))
-(setq deft-directory "~/.syncthing/emacs/org-roam")
-#+END_SRC
-*** Org Journal
-#+BEGIN_SRC emacs-lisp
-  (use-package org-journal
-    :bind
-    ("C-c n j" . org-journal-new-entry)
-    ("C-c n t" . org-journal-today)
-    :custom
-    (org-journal-dir "~/.syncthing/emacs/org-roam/999-daily")
-    (org-journal-date-prefix "#+TITLE: ")
-    (org-journal-file-format "%Y-%m-%d.org")
-    (org-journal-date-format "%A, %d %B %Y"))
-  (defun org-journal-today ()
-    (interactive)
-    (org-journal-new-entry t))
-  (setq org-journal-enable-agenda-integration t)
-#+END_SRC
 * Which-Key
 ** See key shortcuts
 #+BEGIN_SRC emacs-lisp
@@ -1041,44 +522,6 @@ Remove unnecessary stuff
     (global-set-key (kbd "<f5>") 'projectile-compile-project)
 #+END_SRC
 * Languages
-** GO
-#+BEGIN_SRC emacs-lisp
-  (use-package go-mode
-    :hook (go-mode . lsp)
-    :requires(lsp-mode)
-    :config
-    (defun my-golang-setting ()
-      (local-set-key (kbd "C-c C-c d") 'godef-jump)
-      (local-set-key (kbd "C-c C-c D") 'godef-jump-other-window)
-      (local-set-key (kbd "C-c C-c q") 'godef-describe)
-      (local-set-key (kbd "C-c C-c R") 'pop-tag-mark) ;; return to the place you use godef-jump
-      (local-set-key (kbd "C-c C-c r") 'xref-find-references)
-      )
-    (setq gofmt-command "goimports")
-    (add-hook 'go-mode-hook 'flycheck-mode)
-    (add-hook 'go-mode-hook 'my-golang-setting)
-    (add-hook 'before-save-hook 'gofmt-before-save)
-    )
-#+END_SRC
-** Dart
-#+BEGIN_SRC emacs-lisp
-  (use-package dart-mode
-    :hook (dart-mode . lsp)
-    :requires(lsp-mode)
-    :config
-    (setq dart-sdk-path "/home/kondanta/tools/flutter/bin/cache/dart-sdk/")
-    ;;(setq dart-sdk-path "/opt/dart-sdk-dev/")
-    (setq dart-format-path "/opt/dart-sdk-dev/bin/dartfmt")
-    ;;(setq dart-executable-path "/opt/dart-sdk-dev/bin/dart")
-    (setq dart-executable-path "/home/kondanta/tools/flutter/bin/dart")
-    (setq dart-analysis-server-snapshot-path "/opt/dart-sdk-dev/bin/snapshots/analysis_server.dart.snapshot")
-    ;;(setq dart-analysis-server-snapshot-path "/home/kondanta/tools/flutter/bin/cache/dart-sdk/bin/snapshots/analysis_server.dart.snapshot")
-    (setq dart-format-on-save t)
-    ;;    problematics
-    (setq dart-debug t)
-    (setq dart-enable-analysis-server t)
-    (add-hook 'dart-mode-hook 'flycheck-mode))
-#+END_SRC
 ** Yaml
 #+BEGIN_SRC emacs-lisp
   (use-package yaml-mode)
@@ -1096,7 +539,93 @@ Remove unnecessary stuff
      '(terraform-indent-level 4))
     (add-hook 'terraform-mode-hook 'terraform-format-on-save-mode))
 #+END_SRC
-* Discord Rich Presence
+* Transparency
 #+BEGIN_SRC emacs-lisp
-(use-package elcord)
+(set-frame-parameter (selected-frame)'alpha '(100 . 100))
+(add-to-list 'default-frame-alist'(alpha . (100 . 100)))
+#+END_SRC
+* * Org
+** Configs
+#+BEGIN_SRC emacs-lisp
+  (setq org-ellipsis "..↴")
+  (setq org-src-fontify-natively t)
+  (setq org-src-tab-acts-natively t)
+  (setq org-confirm-babel-evaluate nil)
+  (setq org-export-with-smart-quotes t)
+  (setq org-support-shift-select 'always)
+  (setq org-enforce-todo-dependencies t)
+  (add-hook 'org-mode 'org-indent-mode)
+
+  ;; using <S automatically generates #+BEGIN_SRC block
+  (setq org-src-window-setup 'current-window)
+  (add-to-list 'org-structure-template-alist
+	       '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
+
+  (setq org-src-window-setup 'current-window)
+
+  (setq org-directory "~/Documents/notes/org-roam")
+  (defun org-file-path (filename)
+    (concat (file-name-as-directory org-directory) filename)
+    )
+  (setq org-index-file (org-file-path "400-projects/tasks.org"))
+  (setq org-archive-location (concat
+			      (org-file-path "archive.org") "::* From %s"))
+#+END_SRC
+** Bullets
+#+BEGIN_SRC emacs-lisp
+  ;; Bullet mode
+  (use-package org-bullets
+    :config
+    (add-hook 'org-mode-hook (lambda() (org-bullets-mode))))
+#+END_SRC
+** Mark it done and archive
+#+BEGIN_SRC emacs-lisp
+	(add-to-list 'auto-mode-alist '("\\.txt$" . org-mode))
+	;; storing todos in separate files
+	(setq org-agenda-files (list "~/Documents/notes/org-roam"
+				     ))
+	;; when task done, put it into archive
+	(defun kon/mark-done-and-archive ()
+	  "mark task done and archive it"
+	  (interactive)
+	  (org-todo 'done)
+	  (org-archive-subtree))
+	(define-key org-mode-map (kbd "C-c C-x C-s") 'kon/mark-done-and-archive)
+#+END_SRC
+** Log
+#+BEGIN_SRC emacs-lisp
+  ;; log the archive time
+  (setq org-log-done 'time)
+  (setq org-deadline-warning-days 7)
+  (setq org-agenda-show-all-dates t)
+  (setq org-clock-out-when-done t)
+  (setq org-clock-in-resume t)
+  (setq org-clock-persist t)
+  (setq org-clock-idle-time nil)
+  (setq org-clock-continuously nil)
+#+END_SRC
+** Effort Estimation
+#+BEGIN_SRC emacs-lisp
+  ;; Effort estimation
+  (defun my/org-mode-ask-effort ()
+    "Ask for an effort estimate when clocking in."
+    (unless (org-entry-get (point) "Effort")
+      (let ((effort
+	     (completing-read
+	      "Effort: "
+	      (org-entry-get-multivalued-property (point) "Effort"))))
+	(unless (equal effort "")
+	  (org-set-property "Effort" effort)))))
+  (add-hook 'org-clock-in-prepare-hook
+	    'my/org-mode-ask-effort)
+#+END_SRC
+** Prettify Task symbols
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-mode-hook (lambda ()
+			     "Beautify Org Checkbox Symbol"
+			     (push '("[ ]" .  "☐") prettify-symbols-alist)
+			     (push '("[X]" . "☑" ) prettify-symbols-alist)
+			     (push '("[-]" . "❍" ) prettify-symbols-alist)
+			     (prettify-symbols-mode)))
+
 #+END_SRC
