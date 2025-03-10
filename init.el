@@ -38,16 +38,11 @@
 ;; (unless package-archive-contents
 ;;   (package-refresh-contents))
 (straight-use-package 'use-package)
-(straight-use-package 'org-contrib)
+;; (straight-use-package 'org-contrib)
 (setq straight-use-package-by-default t)
-(setq org-roam-v2-ack t)
 ;; (unless (package-installed-p 'use-package)
 ;;   (package-refresh-contents)
 ;;   (package-install 'use-package))
-
-;; (unless (package-installed-p 'spacemacs-theme)
-;;   (package-refresh-contents)
-;;   (package-install 'spacemacs-theme))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;config.org linker. For manipulating config in a nice way.
@@ -93,9 +88,8 @@
  '(org-tags-column -80)
  '(package-selected-packages
    '(json-mode terraform-mode all-the-icons exec-path-from-shell
-	       go-autocomplete markdown-mode dart-mode move-text
-	       magit-gitflow gruvbox-theme gruvbox
-	       gruvbox-dark-hard-theme gruvbox-dark-hard cmake-mode
+	       go-autocomplete markdown-mode move-text
+	       magit-gitflow cmake-mode
 	       company-go flycheck-gometalinter irony-eldoc magit
 	       expand-region mark-multiple dockerfile-mode
 	       docker-compose-mode yaml-mode yasnippet
