@@ -1,10 +1,10 @@
 auto-save-list/
-backup/
+backup*
 backups/
 elpa/
 ido.last
 projectile*
-recentf
+recent*
 smex*
 transient/
 config.el
