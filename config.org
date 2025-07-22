@@ -602,3 +602,36 @@ Remove unnecessary stuff
 			     (prettify-symbols-mode)))
 
 #+END_SRC
+* V-MOCE Stack
+#+BEGIN_SRC emacs-lisp
+  (use-package vertico
+    :init (vertico-mode)
+    )
+
+  (use-package orderless
+    :custom
+    (completion-styles '(orderless))
+    (completion-category-defaults nil)
+    (completion-category-overrides '((file (styles partial-completion))))
+    )
+
+  (use-package marginalia
+    :init (marginalia-mode))
+
+  (use-package consult
+    :bind (("C-x b" . consult-buffer)
+    	 ([remap execute-extended-command] . consult-M-x)
+    	 ("C-s" . consult-line))
+    )
+
+  (use-package embark
+    :bind (("C-." . embark-act)
+  	 ("C-;" . embark-dwim)
+  	 )
+    :init (setq prefix-help-command #'embark-prefix-help-command)
+    )
+
+  (use-package embark-consult
+    :after (embark consult))
+
+#+END_SRC
