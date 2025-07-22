@@ -526,7 +526,10 @@ Remove unnecessary stuff
 * Languages
 ** Yaml
 #+BEGIN_SRC emacs-lisp
-  (use-package yaml-mode)
+  (use-package yaml-mode
+    :mode "\\.ya?ml\\'"
+    :hook (yaml-mode . lsp-deferred)
+    )
 #+END_SRC
 ** Docker
 #+BEGIN_SRC emacs-lisp
@@ -536,6 +539,8 @@ Remove unnecessary stuff
 ** Terraform
 #+BEGIN_SRC emacs-lisp
   (use-package terraform-mode
+    :ensure t
+    :hook (terraform-mode . lsp-deferred)
     :config
     (custom-set-variables
      '(terraform-indent-level 4))
