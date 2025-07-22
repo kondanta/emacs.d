@@ -1,186 +1,400 @@
-* Minor Settings
-** Whoami
-#+BEGIN_SRC emacs-lisp
-  (setq user-full-name "Taylan Doğan"
-	user-mail-address "git@taylandogan.info")
-#+END_SRC
-** Remove UI Elements
-Remove unnecessary stuff
-#+BEGIN_SRC emacs-lisp
-  ;; the blinking cursor is nothing, but an annoyance
-  (blink-cursor-mode -1)
-  (scroll-bar-mode -1)
+#+title: Emacs Configuration
+#+author: Taylan Doğan
+#+property: header-args:emacs-lisp :tangle +(expand-file-name "config.el" user-emacs-directory)
+#+begin_src emacs-lisp :tangle (expand-file-name "config.el" user-emacs-directory)
+;;; config.el --- My Personal Emacs Configuration      -*- lexical-binding: t; -*-
+
+;;; Commentary:
+
+;; This file is tangled from my config.org.  It contains all my personal
+;; settings, package configurations, and custom functions.
+
+;;; Code:
+#+end_src
+* 1. Core Settings
+This section contains fundamental UI and behaviour tweaks that don't require external packages.
+
+** User Information
+#+begin_src emacs-lisp
+(setq user-full-name "Taylan Doğan"
+      user-mail-address "git@taylandogan.info")
+#+end_src
+
+** UI Tweaks
+#+begin_src emacs-lisp
+  ;; Disable annoying UI elements
   (menu-bar-mode -1)
-  ;; shows matching paren
-  (show-paren-mode 1)
-  ;; auto add end paren
-  (electric-pair-mode 1)
   (tool-bar-mode -1)
-#+END_SRC
-** Beautify Ui
-#+BEGIN_SRC emacs-lisp
-  (when (version<= "26.0.50" emacs-version )
-  (global-display-line-numbers-mode))
-  (column-number-mode t)
+  (scroll-bar-mode -1)
+  (blink-cursor-mode -1)
+
+  ;; More useful UI elements
+  (show-paren-mode 1)       ;; Highlight matching parentheses
+  (electric-pair-mode 1)    ;; Auto-insert closing parentheses
+  (column-number-mode 1)    ;; Show column number in the mode line
+  (global-display-line-numbers-mode 1) ;; Show line numbers globally
+  (global-prettify-symbols-mode 1) ;; Use nice symbols for things like 'lambda'
   (size-indication-mode t)
-#+END_SRC
-** Warning File Size
-#+BEGIN_SRC emacs-lisp
-  (setq large-file-warning-threshold 100000000)
-#+END_SRC
-** Disable Startup Screen
-#+BEGIN_SRC emacs-lisp
+
+  ;; Other UI settings
   (setq inhibit-startup-screen t)
-#+END_SRC
-** Disable Bell Sound
-#+BEGIN_SRC emacs-lisp
   (setq ring-bell-function 'ignore)
-#+END_SRC
-** Nice Scrolling
-#+BEGIN_SRC emacs-lisp
-  (setq scroll-margin 0
-	scroll-conservatively 100000
-	scroll-preserve-screen-position 1)
-  (setq scroll-conservatively 100)
-#+END_SRC
-** Enable Y/N Answers
-#+BEGIN_SRC emacs-lisp
   (fset 'yes-or-no-p 'y-or-n-p)
-#+END_SRC
-** Newest Byte Code
-#+BEGIN_SRC emacs-lisp
-  (setq load-prefer-newer t)
-#+END_SRC
-** Newline After End of File
-#+BEGIN_SRC emacs-lisp
-  (setq require-final-newline t)
-#+END_SRC
-** Encoding
-#+BEGIN_SRC emacs-lisp
-  ;; revert buffers automatically when underlying files are changed externally
-  (global-auto-revert-mode t)
-  (prefer-coding-system 'utf-8)
-  (set-default-coding-systems 'utf-8)
-  (set-terminal-coding-system 'utf-8)
-  (set-keyboard-coding-system 'utf-8)
-  (when (display-graphic-p)
-    (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
-#+END_SRC
-** Smart Tab
-#+BEGIN_SRC emacs-lisp
-  (setq tab-always-indent 'complete)
-#+END_SRC
-** Highlight Current Line
-#+BEGIN_SRC emacs-lisp
-(when window-system (add-hook 'prog-mode-hook 'hl-line-mode))
-#+END_SRC
-** Better Symbols
-#+BEGIN_SRC emacs-lisp
-  (when window-system
-    (use-package pretty-mode
-      :ensure t
-      :config
-      (add-hook 'prog-mode-hook 'turn-on-pretty-mode)))
-#+END_SRC
-** Backups
-#+BEGIN_SRC emacs-lisp
-  ;; I don't want this.
-  (setq auto-save-default nil)
-  ;; Write backups to ~/.emacs.d/backup/
-  (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
-	backup-by-copying      t  ; Don't de-link hard links
-	version-control        t  ; Use version numbers on backups
-	delete-old-versions    t  ; Automatically delete excess backups:
-	kept-new-versions      20 ; how many of the newest versions to keep
-	      kept-old-versions      5) ; and how many of the old
-#+END_SRC
-** Meaningfull File Names
-#+BEGIN_SRC emacs-lisp
   (setq frame-title-format
-	'((:eval (if (buffer-file-name)
-		     (abbreviate-file-name (buffer-file-name))
-		   "%b"))))
-#+END_SRC
-** Delete Selection Mode
-#+BEGIN_SRC emacs-lisp
-  (delete-selection-mode t)
-#+END_SRC
-** Enable Subword with M-f
-#+BEGIN_SRC emacs-lisp
-  (global-subword-mode 1)
-#+END_SRC
-** Time
-#+BEGIN_SRC emacs-lisp
+        '((:eval (if (buffer-file-name)
+                     (abbreviate-file-name (buffer-file-name))
+                   "%b"))))
+
+  ;; Disable transparency
+  (set-frame-parameter (selected-frame)'alpha '(100 . 100))
+  (add-to-list 'default-frame-alist'(alpha . (100 . 100)))
+
+  ;; Highlight current line
+  (when window-system (add-hook 'prog-mode-hook 'hl-line-mode))
+
+  ;; Prettify symbols in programming modes
+  (add-hook 'prog-mode-hook #'prettify-symbols-mode)
+
+  ;; Display the time in the mode line in 24-hour format
   (setq display-time-24hr-format t)
   (display-time-mode 1)
-#+END_SRC
-** Remove C-z
-#+BEGIN_SRC emacs-lisp
-  (global-unset-key (kbd "C-z"))
-#+END_SRC
-** Set specpdl size
-#+BEGIN_SRC emacs-lisp
-  (setq max-specpdl-size 32000)
+  #+end_src
+
+** Behavior and Editing
+#+begin_src emacs-lisp
+  (setq load-prefer-newer t)
+  (setq require-final-newline t)
   (setq debug-on-error t)
-#+END_SRC
-** Comment Line
-#+BEGIN_SRC emacs-lisp
-  (defun comment-or-uncomment-region-or-line ()
-    "Comments or uncomments the region or the current line if there's no active region."
-    (interactive)
-    (let (beg end)
-      (if (region-active-p)
-	  (setq beg (region-beginning) end (region-end))
-	(setq beg (line-beginning-position) end (line-end-position)))
-      (comment-or-uncomment-region beg end)
-      (next-line)))
+  (setq tab-always-indent 'complete)
+  (global-subword-mode 1)
+  (delete-selection-mode 1)
 
-(global-set-key (kbd "C-?") 'comment-or-uncomment-region-or-line) ;; Ctrl+shift+/
-#+END_SRC
-** Theme
-#+BEGIN_SRC emacs-lisp
+  ;; Increase stack depth to prevent errors with complex packages
+  (setq max-specpdl-size 32000)
+
+  ;; Set a high threshold for large files
+  (setq large-file-warning-threshold 100000000)
+
+  ;; Nice scrolling settings
+  (setq scroll-margin 8
+        scroll-conservatively 101
+        scroll-preserve-screen-position t)
+
+  ;; Automatically revert buffers when files change on disk
+  (global-auto-revert-mode 1)
+#+end_src
+
+** Encoding
+#+begin_src emacs-lisp
+(set-language-environment "UTF-8")
+(prefer-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+#+end_src
+
+** Backups
+#+begin_src emacs-lisp
+(setq backup-directory-alist '(("." . "~/.emacs.d/backups/"))
+      backup-by-copying t      ; Don't de-link hard links
+      version-control t        ; Use version numbers on backups
+      delete-old-versions t    ; Automatically delete excess backups
+      kept-new-versions 20     ; How many of the newest versions to keep
+      kept-old-versions 5      ; and how many of the old
+      auto-save-default nil    ; I don't want auto-save files
+      create-lockfiles nil)    ; or lockfiles
+#+end_src
+
+* 2. Packages
+This section configures all external packages using use-package.
+** Foundational Packages
+#+begin_src emacs-lisp
+  ;; Ensure GUI emacs inherits the hsell's PATH
+  (use-package exec-path-from-shell
+    :init
+    (when (memq window-system '(mac ns x))
+      (exec-path-from-shell-initialize)))
+
+  ;; Asynchronous operations for perf
+  (use-package async
+    :init (dired-async-mode 1))
+#+end_src
+** Theme & Aesthetics
+#+begin_src emacs-lisp
   (use-package srcery-theme
-    :init (progn (load-theme 'srcery t)
-		 (enable-theme 'srcery))
-    :defer t
-    :ensure t
-    )
-#+END_SRC
-** Find References
- #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-c C-c r") 'xref-find-references)
- #+END_SRC
-** Cycle Spacing
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "M-SPC") 'cycle-spacing)
-#+END_SRC
-** Newline with indentation
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "RET") 'newline-and-indent)
-#+END_SRC
-** Fonts
-#+BEGIN_SRC emacs-lisp
-;;  (set-face-attribute 'default nil :font "Sarasa Term Slab CL")
-  (set-face-attribute 'default nil :font "Iosevka Term Slab Nerd Font")
-#+END_SRC
+    :config
+    (load-theme 'srcery t))
 
-* Utils
-** Selection
-#+BEGIN_SRC emacs-lisp
-  (use-package mark-multiple
-    :bind ("C-c q" . 'mark-next-like-this))
+  (use-package all-the-icons
+    :if (display-graphic-p)
+    :config
+    (set-fontset-font t 'unicode "Symbol Nerd Font" nil 'prepend))
+
+  (use-package dashboard
+    :if (< (length command-line-args) 2)
+    :config
+    (dashboard-setup-startup-hook)
+    (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+    (setq dashboard-center-content t)
+    (setq dashboard-items '((recents   . 7)
+                            (bookmarks . 3)
+                            (projects  . 7)
+                            (registers . 3))))
+
+  (use-package spaceline
+    :config
+    (require 'spaceline-config)
+    (setq powerline-default-separator 'arrow)
+    (spaceline-spacemacs-theme))
+
+  ;; Hide minor mode names from the modeline
+  (use-package diminish
+    :config
+    (diminish 'which-key-mode)
+    (diminish 'subword-mode)
+    (diminish 'rainbow-mode)
+    (diminish 'rainbow-delimiters-mode)
+    (diminish 'flycheck-mode)
+    (diminish 'abbrev-mode)
+    (diminish 'yas-minor-mode))
+
+  ;; Set the default font family and size
+  (set-face-attribute 'default nil
+  		    :font "Iosevka Term Slab Nerd Font"
+  		    :height 200)
+#+end_src
+** Completion (V-MOCE + Corfu)
+This is the modern stack for completion, search, and in-buffer completion UI.
+#+begin_src emacs-lisp
+;; Completion UI
+(use-package vertico
+  :init (vertico-mode))
+
+;; Completion Style
+(use-package orderless
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles . (partial-completion)))))
+  )
+
+;; Annotations in the minibuffer
+(use-package marginalia
+  :init (marginalia-mode))
+
+;; Enhanced commands (M-x, C-x b, C-s)
+(use-package consult
+  :demand t ;; Load immediately to ensure aliases are defined
+  :bind (("C-x b" . consult-buffer)
+         ("C-s" . consult-line)))
+
+;; Contextual actions
+(use-package embark
+  :bind (("C-." . embark-act)
+         ("C-;" . embark-dwim)))
+
+(use-package embark-consult
+  :after (embark consult))
+
+;; In-buffer completion UI
+(use-package corfu
+  :custom
+  (corfu-auto t)
+  (corfu-cycle t)
+  (corfu-auto-delay 0.2)
+  :init
+  (global-corfu-mode))
+#+end_src
+
+** General Editing Enhancements
+#+begin_src emacs-lisp
+  (use-package which-key
+    :init (which-key-mode))
+
+  (use-package rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
+
+  (use-package rainbow-mode
+    :hook (prog-mode . rainbow-mode))
+
+  (use-package avy
+    :bind ("M-s" . avy-goto-char))
 
   (use-package expand-region
     :bind ("C-q" . er/expand-region))
-#+END_SRC
-** Change Word
-#+BEGIN_SRC emacs-lisp
+
+  (use-package mark-multiple
+    :bind ("C-c q" . 'mark-next-like-this))
+
+  (use-package move-text
+    :config (move-text-default-bindings))
+#+end_src
+
+** Development (LSP, Magit, etc.)
+#+begin_src emacs-lisp
+      ;; Snippets
+      (use-package yasnippet
+        :init (yas-global-mode 1))
+
+      (use-package yasnippet-snippets)
+
+      ;; Completion backends
+      (use-package cape
+        :after yasnippet
+        :init
+        (add-to-list 'completion-at-point-functions #'cape-file)
+        (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+        (add-to-list 'completion-at-point-functions #'cape-yasnippet))
+
+      ;; On-the-fly syntax checking
+      (use-package flycheck
+        :init (global-flycheck-mode))
+
+      ;; Language Server Protocol
+      (use-package lsp-mode
+        :commands (lsp lsp-deferred)
+        :hook ((prog-mode . (lambda()
+    			  (unless (derived-mode-p 'emacs-lisp-mode)
+  			    (lsp-deferred))))
+      	 (lsp-mode . lsp-enable-which-key-integration))
+        :custom
+        (lsp-completion-provider :capf) ;; Use Corfu
+        (lsp-prefer-flymake nil)
+        (lsp-yaml-schemas-enable t))
+
+      (use-package lsp-ui
+        :after lsp-mode
+        :custom
+        (lsp-ui-doc-position 'at-point)
+        (lsp-ui-doc-show-with-cursor t)
+        (lsp-ui-doc-delay 0.5))
+
+
+      ;; Git integration
+      (use-package magit
+        :bind ("C-x g" . magit-status))
+
+      ;; Project management
+      (use-package projectile
+        :init (projectile-mode 1)
+        :bind (:map projectile-mode-map
+                    ("C-c p" . projectile-command-map)))
+#+end_src
+
+** Language-specific Packages
+#+begin_src emacs-lisp
+  (use-package yaml-mode
+    :mode "\\.ya?ml\\'"
+    :hook (yaml-mode . lsp-deferred))
+
+  (use-package dockerfile-mode
+    :mode "Dockerfile")
+
+  (use-package docker-compose-mode)
+
+  (use-package terraform-mode
+    :hook (terraform-mode . lsp-deferred)
+    :config
+    (add-hook 'terraform-mode-hook #'terraform-format-on-save-mode))
+#+end_src
+
+* 3. Custom Functions and Keybindings
+#+begin_src emacs-lisp
+  ;; Unset C-z
+  (global-unset-key (kbd "C-z"))
+
+  ;; Remap other-window (C-x o) to use switch-window
+  (use-package switch-window
+    :bind ([remap other-window] . switch-window)
+    :config
+    (setq switch-window-increase 4)
+    (setq switch-window-threshold 2)
+    (setq switch-window-shortcut-style 'qwerty)
+    (setq switch-window-qwerty-shortcuts ' ("h" "j" "k" "l" "a" "s" "d")))
+
+  ;; Edit and reload config
+  (defun my-config-visit ()
+    (interactive)
+    (find-file (expand-file-name "config.org" user-emacs-directory)))
+
+  (defun my-config-reload ()
+    (interactive)
+    (org-babel-load-file (expand-file-name "config.org" user-emacs-directory)))
+
+  (global-set-key (kbd "C-c e") #'my-config-visit)
+  (global-set-key (kbd "C-c r") #'my-config-reload)
+
+  ;; Comment region or line
+  (defun my-comment-or-uncomment-line ()
+    "Comment or uncomment the current line or region."
+    (interactive)
+    (let ((beg (if (region-active-p) (region-beginning) (line-beginning-position)))
+          (end (if (region-active-p) (region-end) (line-end-position))))
+      (comment-or-uncomment-region beg end)))
+
+  (global-set-key (kbd "C-?") #'my-comment-or-uncomment-line)
+
+  ;; Open terminal
+  (global-set-key (kbd "<S-return>") 'term)
+
+  ;; Window splitting
+  (defun my-split-vertical ()
+    (interactive)
+    (split-window-below)
+    (balance-windows)
+    (other-window 1))
+
+  (defun my-split-horizontal ()
+    (interactive)
+    (split-window-right)
+    (balance-windows)
+    (other-window 1))
+
+  (global-set-key (kbd "C-c j") 'my-split-vertical)
+  (global-set-key (kbd "C-c l") 'my-split-horizontal)
+
+
+
+  ;; Custom kill/copy functions
+  (defun my-kill-word-at-point ()
+    "Kill the word at point."
+    (interactive)
+    (let ((bounds (bounds-of-thing-at-point 'word)))
+      (when bounds
+        (kill-region (car bounds) (cdr bounds)))))
+
+  (defun my-kill-word-backward ()
+    (interactive)
+    (backward-word)
+    (kill-word 1))
+
+  (defun my-copy-line()
+    (interactive)
+    (save-excursion
+      (kill-new
+       (buffer-substring
+        (point-at-bol)
+        (point-at-eol)))))
+
+  (global-set-key (kbd "C-c w") 'my-kill-word-at-point)
+  (global-set-key (kbd "C-c d") 'my-kill-word-backward)
+  (global-set-key (kbd "C-c y y") 'my-copy-line)
+
+  ;; For code navigation
+  (global-set-key (kbd "C-c C-c r") 'xref-find-references)
+
+  ;; For whitespace management
+  (global-set-key (kbd "M-SPC") 'cycle-spacing)
+
+  ;; For consistent newlines
+  (global-set-key (kbd "RET") 'newline-and-indent)
+  ;; Kill the word at point
   (defun my-kill-thing-at-point (thing)
     "Kill the `thing-at-point' for the specified kind of THING."
     (let ((bounds (bounds-of-thing-at-point thing)))
       (if bounds
-	  (kill-region (car bounds) (cdr bounds))
-	(error "No %s at point" thing))))
+          (kill-region (car bounds) (cdr bounds))
+        (error "No %s at point" thing))))
 
   (defun my-kill-word-at-point ()
     "Kill the word at point."
@@ -188,467 +402,150 @@ Remove unnecessary stuff
     (my-kill-thing-at-point 'word))
 
   (global-set-key (kbd "C-c w") 'my-kill-word-at-point)
-#+END_SRC
-** Delete Word
-#+BEGIN_SRC emacs-lisp
-  (defun kw ()
+
+  ;; Kill the word before point
+  (defun my-kill-word-backward ()
     (interactive)
     (backward-word)
     (kill-word 1))
-  (global-set-key (kbd "C-c d") 'kw)
-#+END_SRC
-** Copy Line
-#+BEGIN_SRC emacs-lisp
-  (defun copy-line()
+  (global-set-key (kbd "C-c d") 'my-kill-word-backward)
+
+  ;; Copy the current line
+  (defun my-copy-line()
     (interactive)
     (save-excursion
       (kill-new
-      (buffer-substring
-       (point-at-bol)
-       (point-at-eol)))))
-  (global-set-key (kbd "C-c y y") 'copy-line)
-#+END_SRC
-** Move Text Up/Down
-#+BEGIN_SRC emacs-lisp
-  (use-package move-text)
-  (move-text-default-bindings)
-#+END_SRC
-** Kill Current Buffer
-#+BEGIN_SRC emacs-lisp
-  (defun kill-current-buffer ()
+       (buffer-substring
+        (point-at-bol)
+        (point-at-eol)))))
+  (global-set-key (kbd "C-c y y") 'my-copy-line)
+
+  ;; Kill the current buffer without prompting
+  (defun my-kill-current-buffer ()
     "Kills the current buffer."
     (interactive)
     (kill-buffer (current-buffer)))
-  (global-set-key (kbd "C-x k") 'kill-current-buffer)
-  (setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
-#+END_SRC
-** Exec-path-from-shell
-#+BEGIN_SRC emacs-lisp
-  (use-package exec-path-from-shell
-    :init
-    (when (memq window-system '(mac ns x))
-      (exec-path-from-shell-initialize)))
-   ;; (let ((
-   ;;       path (shell-command-to-string ". ~/.bashrc; echo -n $PATH")))    (setenv "PATH" path)
-   ;;    (setq exec-path
-   ;;  	(append
-   ;;  	 (split-string-and-unquote path ":")
-   ;;  	 exec-path)))
-#+END_SRC
-** MAC CMD to ALT binder
-#+BEGIN_SRC emacs-lisp
-(when (eq system-type 'darwin)
-  (setq mac-command-modifier nil)
-  (setq mac-option-modifier 'meta))
-#+END_SRC
-** Prettify Symbols
-#+BEGIN_SRC emacs-lisp
-  (global-prettify-symbols-mode 1)
-#+END_SRC
+  (global-set-key (kbd "C-x k") 'my-kill-current-buffer)
 
-* Terminal
-** Specifiying the terminal
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "<S-return>") 'term)
-#+END_SRC
+  ;; --- Packages for Editing ---
 
-* Which-Key
-** See key shortcuts
-#+BEGIN_SRC emacs-lisp
-  (use-package which-key
-    :init
-    (which-key-mode))
-#+END_SRC
-
-* Buffers
-** Enable IBuffer
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-x b") 'ibuffer)
-#+END_SRC
-** Enable Expert Mode
-#+BEGIN_SRC emacs-lisp
-  (setq ibuffer-expert t)
-#+END_SRC
-* Avy
-** Qutebrowser's f functionality
-#+BEGIN_SRC emacs-lisp
-  (use-package avy
-    :bind
-    ("M-s" . avy-goto-char))
-#+END_SRC
-* Config Edit/Reload
-** Edit
-#+BEGIN_SRC emacs-lisp
-  (defun config-visit ()
-    (interactive)
-    (find-file "~/.emacs.d/config.org"))
-  (global-set-key (kbd "C-c e") 'config-visit)
-#+END_SRC
-** Reload
-#+BEGIN_SRC emacs-lisp
-  (defun config-reload ()
-    (interactive)
-    (org-babel-load-file (expand-file-name "~/.emacs.d/config.org")))
-  (global-set-key (kbd "C-c r") 'config-reload)
-#+END_SRC
-
-* Rainbow
-** Coloring #'s
-#+BEGIN_SRC emacs-lisp
-  (use-package rainbow-mode
-    :init (add-hook 'prog-mode-hook 'rainbow-mode))
-#+END_SRC
-** Color Each Paren
-#+BEGIN_SRC emacs-lisp
-  (use-package rainbow-delimiters
-    :init
-    (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
-    )
-#+END_SRC
-* Switching Windows
-#+BEGIN_SRC emacs-lisp
-  (use-package switch-window
-    :ensure t
+  ;; For moving lines up and down
+  (use-package move-text
     :config
-    (setq switch-window-input-style 'minibuffer)
-    (setq switch-window-increase 4)
-    (setq switch-window-threshold 2)
-  ;;optionals
-    (setq switch-window-shortcut-style 'qwerty)
-    (setq switch-window-qwerty-shortcuts
-	  ' ("h" "j" "k" "l" "a" "s" "d"))
-    :bind
-    ([remap other-window] . switch-window))
-#+END_SRC
-** Splitting Settings
-#+BEGIN_SRC emacs-lisp
-  (defun split-vertical ()
-    (interactive)
-    (split-window-below)
-    (balance-windows)
-    (other-window 1))
-  (global-set-key (kbd "C-c j") 'split-vertical)
+    (move-text-default-bindings))
+#+end_src
+** Auto-tangle configuration on save
+#+begin_src emacs-lisp
+(defun my/tangle-config-on-save ()
+  "Automatically tangle the config.org file when it is saved."
+  (when (string-equal (buffer-file-name)
+                      (expand-file-name "config.org" user-emacs-directory))
+    (let ((org-confirm-babel-evaluate nil))
+      (org-babel-tangle))))
 
-  (defun split-horizon()
-   (interactive)
-    (split-window-right)
-    (balance-windows)
-    (other-window 1))
-  (global-set-key (kbd "C-c l") 'split-horizon)
-#+END_SRC
-* Dashboard
-** Icons
- #+BEGIN_SRC emacs-lisp
-   (use-package all-the-icons
-     )
- #+END_SRC
-** Opening Screen
-#+BEGIN_SRC emacs-lisp
-  (use-package dashboard
-    :if (< (length command-line-args) 2)
-    :config
+(add-hook 'after-save-hook #'my/tangle-config-on-save)
+** Toggle LSP Documentation
+#+begin_src emacs-lisp
+(defun my/toggle-lsp-ui-doc ()
+  "Show or hide the lsp-ui documentation popup."
+  (interactive)
+  (if (lsp-ui-doc--frame-visible-p)
+      (lsp-ui-doc-hide)
+    (lsp-ui-doc-show)))
 
-    (dashboard-setup-startup-hook)
-    (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-    ;; burasi kirik
-    (setq dashboard-footer-icon (all-the-icons-octicon "dashboard"
-						       :height 1.1
-						       :v-adjust -0.05
-						       :face 'font-lock-keyword-face))
-    (setq dashboard-set-navigator t)
-    (setq dashboard-center-content t)
-    (setq show-week-agenda-p t)
-    (setq dashboard-items '((recents  . 7)
-			    (bookmarks . 3)
-			    (projects . 7)
-			    (registers . 3))))
-#+END_SRC
-* Footer
-** Arrow
-#+BEGIN_SRC emacs-lisp
-  (use-package spaceline
-    :config
-    (require 'spaceline-config)
-    (setq spaceline-buffer-encoding-abbrev-p nil)
-    (setq spaceline-line-column-p nil)
-    (setq spaceline-line-p nil)
-    (setq powerline-default-separator (quote arrow))
-    (spaceline-spacemacs-theme))
-#+END_SRC
-** Remove Minor Mods
-#+BEGIN_SRC emacs-lisp
-  (use-package diminish
-    :init
-    (eval-after-load "which-key" '(diminish 'which-key-mode))
-    (eval-after-load "subword" '(diminish 'subword-mode))
-    (eval-after-load "rainbow" '(diminish 'rainbow-mode))
-    (eval-after-load "rainbow-delimiters" '(diminish 'rainbow-delimiters-mode))
-    (eval-after-load "text-scale" '(diminish 'text-scale-mode))
-    (eval-after-load "irony" '(diminish 'irony-mode))
-    (eval-after-load "abbrev" '(diminish 'abbrev-mode))
-    (eval-after-load "racer" '(diminish 'racer-mode))
-    (eval-after-load "yas-minor" '(diminish 'yas-minor-mode))
-    (eval-after-load "yas" '(diminish 'yas))
-    (eval-after-load "tern" '(diminish 'tern-mode))
-    (eval-after-load "flycheck" (diminish 'flycheck))
-    (eval-after-load "FlyC" (diminish 'FlyC))
-    (eval-after-load "Rbow" (diminish 'Rbow))
-    )
-#+END_SRC
-* Flycheck
-#+BEGIN_SRC emacs-lisp
-  (use-package flycheck
-    :init (global-flycheck-mode))
-#+END_SRC
-* IntelliSense
-** LSP
-#+BEGIN_SRC emacs-lisp
-  (use-package lsp-mode
-    :hook(lsp-mode . lsp-enable-which-key-integration)
-    :commands (lsp lsp-deferred)
-    :custom
-    (lsp-prefer-flymake nil)
-    (setq lsp-completion-provider :capf)
-    :config
-    (define-key lsp-mode-map (kbd "C-c C-l") lsp-command-map)
-    (setq lsp-auto-configure t)
-    (setq lsp-execute-code-action t)
-    )
+;; Bind the toggle function to "C-c h d" (Control-c, h, then d)
+(global-set-key (kbd "C-c h d") #'my/toggle-lsp-ui-doc)
+#+end_src
 
-  (use-package lsp-ui
-    :custom
-    (lsp-ui-doc-enable t)
-    (lsp-ui-doc-header t)
-    (lsp-ui-doc-include-signature t)
-    (lsp-ui-doc-position 'at-point) ;; or 'top
-    (lsp-ui-doc-border (face-foreground 'default))
-    (lsp-ui-sideline-enable t)
-    (lsp-ui-sidline-ignore-duplicate t)
-    (lsp-ui-sideline-show-code-actions t)
-    (lsp-ui-sideline-code-actions-prefix " ")
-    (lsp-ui-peek t)
-    :config
-    (setq lsp-enable-snippet t)
-    (setq lsp-ui-doc-use-webkit t)
-    (defadvice lsp-ui-imenu (after hide-lsp-ui-imenu-mode-line activate)
-      (setq mode-line-format nil)))
-#+END_SRC
-** Yasnippet
-#+BEGIN_SRC emacs-lisp
-  (use-package yasnippet
-    :ensure t
-    :init
-    (yas-global-mode 1)
-    :config
-    (use-package yasnippet-snippets
-      :ensure t)
-    (setq lsp-enable-snippet t)
-    )
-  (defun my/tab-indent-or-expand ()
-    "Indent or expand snippet."
-    (interactive)
-    (if (yas-expand)
-        t
-      (indent-for-tab-command)
-      )
-    )
-  (add-hook 'prog-mode-hook
-  	  (lambda()
-  	    (local-set-key (kbd "<tab>") #'my/tab-indent-or-expand)))
-  ;; (global-set-key (kbd "<tab>") 'my/tab-indent-or-expand))
+* 4. Org Mode
+This section configures Org Mode and related packages.
 
-#+END_SRC
-* Magit
-** Git handler
-#+BEGIN_SRC emacs-lisp
-  (use-package magit
-        :config
-        (setq magit-push-always-verify 1)
-        ;; (setq transient-default-level 6) ;; By default it is 4
-        (transient-set-default-level 'magit:--signoff 1)
-        :bind ("C-x g" . magit-status))
-    (custom-set-variables
-     '(ediff-diff-options "-w")
-     '(ediff-split-window-function (quote split-window-horizontally))
-     '(ediff-window-setup-function (quote ediff-setup-windows-plain)))
-#+END_SRC
-* Async
-#+BEGIN_SRC emacs-lisp
-  (use-package async
-    :init (dired-async-mode 1))
-#+END_SRC
-* Projectile
-#+BEGIN_SRC emacs-lisp
-    (use-package projectile
-      :init
-      (projectile-mode 1)
-      (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-  )
-    (global-set-key (kbd "<f5>") 'projectile-compile-project)
-#+END_SRC
-* Languages
-** Yaml
-#+BEGIN_SRC emacs-lisp
-  (use-package yaml-mode
-    :mode "\\.ya?ml\\'"
-    :hook (yaml-mode . lsp-deferred)
-    )
-#+END_SRC
-** Docker
-#+BEGIN_SRC emacs-lisp
-  (use-package docker-compose-mode)
-  (use-package dockerfile-mode)
-#+END_SRC
-** Terraform
-#+BEGIN_SRC emacs-lisp
-  (use-package terraform-mode
-    :ensure t
-    :hook (terraform-mode . lsp-deferred)
-    :config
-    (custom-set-variables
-     '(terraform-indent-level 4))
-    (add-hook 'terraform-mode-hook 'terraform-format-on-save-mode))
-#+END_SRC
-* Transparency
-#+BEGIN_SRC emacs-lisp
-(set-frame-parameter (selected-frame)'alpha '(100 . 100))
-(add-to-list 'default-frame-alist'(alpha . (100 . 100)))
-#+END_SRC
-* * Org
-** Configs
-#+BEGIN_SRC emacs-lisp
-  (setq org-ellipsis "..↴")
-  (setq org-src-fontify-natively t)
-  (setq org-src-tab-acts-natively t)
-  (setq org-confirm-babel-evaluate nil)
-  (setq org-export-with-smart-quotes t)
-  (setq org-support-shift-select 'always)
-  (setq org-enforce-todo-dependencies t)
-  (add-hook 'org-mode 'org-indent-mode)
+** Easy Templates for Source Blocks
+#+begin_src emacs-lisp
+(require 'org-tempo)
+(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+(add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+(add-to-list 'org-structure-template-alist '("py" . "src python"))
+(add-to-list 'org-structure-template-alist '("js" . "src js"))
+#+end_src
 
-  ;; using <S automatically generates #+BEGIN_SRC block
-  (setq org-src-window-setup 'current-window)
-  (add-to-list 'org-structure-template-alist
-	       '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
+** General Org Settings
+#+begin_src emacs-lisp
+(setq org-ellipsis " ⤵"
+      org-src-fontify-natively t
+      org-src-tab-acts-natively t
+      org-confirm-babel-evaluate nil
+      org-export-with-smart-quotes t
+      org-support-shift-select 'always
+      org-enforce-todo-dependencies t
+      org-directory "~/Documents/notes/org-roam"
+      org-archive-location (concat org-directory "/archive.org::* From %s"))
 
-  (setq org-src-window-setup 'current-window)
+(setq org-agenda-files (list org-directory))
+(add-hook 'org-mode-hook 'org-indent-mode)
+#+end_src
 
-  (setq org-directory "~/Documents/notes/org-roam")
-  (defun org-file-path (filename)
-    (concat (file-name-as-directory org-directory) filename)
-    )
-  (setq org-index-file (org-file-path "400-projects/tasks.org"))
-  (setq org-archive-location (concat
-			      (org-file-path "archive.org") "::* From %s"))
-#+END_SRC
-** Bullets
-#+BEGIN_SRC emacs-lisp
-  ;; Bullet mode
-  (use-package org-bullets
-    :config
-    (add-hook 'org-mode-hook (lambda() (org-bullets-mode))))
-#+END_SRC
-** Mark it done and archive
-#+BEGIN_SRC emacs-lisp
-	(add-to-list 'auto-mode-alist '("\\.txt$" . org-mode))
-	;; storing todos in separate files
-	(setq org-agenda-files (list "~/Documents/notes/org-roam"
-				     ))
-	;; when task done, put it into archive
-	(defun kon/mark-done-and-archive ()
-	  "mark task done and archive it"
-	  (interactive)
-	  (org-todo 'done)
-	  (org-archive-subtree))
-	(define-key org-mode-map (kbd "C-c C-x C-s") 'kon/mark-done-and-archive)
-#+END_SRC
-** Log
-#+BEGIN_SRC emacs-lisp
-  ;; log the archive time
-  (setq org-log-done 'time)
-  (setq org-deadline-warning-days 7)
-  (setq org-agenda-show-all-dates t)
-  (setq org-clock-out-when-done t)
-  (setq org-clock-in-resume t)
-  (setq org-clock-persist t)
-  (setq org-clock-idle-time nil)
-  (setq org-clock-continuously nil)
-#+END_SRC
-** Effort Estimation
-#+BEGIN_SRC emacs-lisp
-  ;; Effort estimation
-  (defun my/org-mode-ask-effort ()
-    "Ask for an effort estimate when clocking in."
-    (unless (org-entry-get (point) "Effort")
-      (let ((effort
-	     (completing-read
-	      "Effort: "
-	      (org-entry-get-multivalued-property (point) "Effort"))))
-	(unless (equal effort "")
-	  (org-set-property "Effort" effort)))))
-  (add-hook 'org-clock-in-prepare-hook
-	    'my/org-mode-ask-effort)
-#+END_SRC
-** Prettify Task symbols
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'org-mode-hook (lambda ()
-			     "Beautify Org Checkbox Symbol"
-			     (push '("[ ]" .  "☐") prettify-symbols-alist)
-			     (push '("[X]" . "☑" ) prettify-symbols-alist)
-			     (push '("[-]" . "❍" ) prettify-symbols-alist)
-			     (prettify-symbols-mode)))
+** Org Bullets & Symbols
+#+begin_src emacs-lisp
+(use-package org-bullets
+  :hook (org-mode . org-bullets-mode))
 
-#+END_SRC
-* V-MOCE Stack
-#+BEGIN_SRC emacs-lisp
-  (use-package vertico
-    :init (vertico-mode)
-    )
+(add-hook 'org-mode-hook (lambda ()
+  "Beautify Org Checkbox Symbol"
+  (push '("[ ]" .  "☐") prettify-symbols-alist)
+  (push '("[X]" . "☑" ) prettify-symbols-alist)
+  (push '("[-]" . "❍" ) prettify-symbols-alist)
+  (prettify-symbols-mode)))
+#+end_src
 
-  (use-package orderless
-    :custom
-    (completion-styles '(orderless))
-    (completion-category-defaults nil)
-    (completion-category-overrides '((file (styles partial-completion))))
-    )
+** Org Clocking and Task Management
+#+begin_src emacs-lisp
+;; Log when a task is marked DONE
+(setq org-log-done 'time)
+(setq org-deadline-warning-days 7)
+(setq org-agenda-show-all-dates t)
 
-  (use-package marginalia
-    :init (marginalia-mode))
+;; Clocking settings
+(setq org-clock-out-when-done t)
+(setq org-clock-in-resume t)
+(setq org-clock-persist t)
+(setq org-clock-idle-time nil)
+(setq org-clock-continuously nil)
 
-  (use-package consult
-    :bind (("C-x b" . consult-buffer)
-    	 ([remap execute-extended-command] . consult-M-x)
-    	 ("C-s" . consult-line))
-    )
+;; Custom function to mark done and archive
+(defun kon/mark-done-and-archive ()
+  "Mark task done and archive it."
+  (interactive)
+  (org-todo 'done)
+  (org-archive-subtree))
 
-  (use-package embark
-    :bind (("C-." . embark-act)
-  	 ("C-;" . embark-dwim)
-  	 )
-    :init (setq prefix-help-command #'embark-prefix-help-command)
-    )
+(define-key org-mode-map (kbd "C-c C-x C-s") 'kon/mark-done-and-archive)
 
-  (use-package embark-consult
-    :after (embark consult))
+;; Custom function to ask for effort when clocking in
+(defun my/org-mode-ask-effort ()
+  "Ask for an effort estimate when clocking in."
+  (unless (org-entry-get (point) "Effort")
+    (let ((effort
+           (completing-read
+            "Effort: "
+            (org-entry-get-multivalued-property (point) "Effort"))))
+      (unless (equal effort "")
+        (org-set-property "Effort" effort)))))
 
-#+END_SRC
-* Corfu + Capte
-#+BEGIN_SRC emacs-lisp
-  (use-package corfu
-    :straight t
-    :custom
-    (corfu-auto t) ;; enable auto popup
-    (corfu-cycle t) ;; cycle candidates
-    (corfu-auto-delay 0.2)
-    :init
-    (global-corfu-mode)
-    )
+(add-hook 'org-clock-in-prepare-hook 'my/org-mode-ask-effort)
+#+end_src
 
-  (use-package cape
-    :straight t
-    :init
-    (add-to-list 'completion-at-point-functions #'cape-file)
-    (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-    (add-to-list 'completion-at-point-functions #'cape-yasnippet)
-    )
-#+END_SRC
+* 5. Platform Specific
+I stopped using mac already but, just in case :)
+#+begin_src emacs-lisp
+  (when (eq system-type 'darwin)
+    (setq mac-command-modifier nil)
+    (setq mac-option-modifier 'meta))
+#+end_src
+
+* 6. File Footer
+#+begin_src emacs-lisp
+(provide 'config)
+
+;;; config.el ends here
+#+end_src
