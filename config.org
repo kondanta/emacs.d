@@ -413,10 +413,6 @@ Remove unnecessary stuff
     (define-key lsp-mode-map (kbd "C-c C-l") lsp-command-map)
     (setq lsp-auto-configure t)
     (setq lsp-execute-code-action t)
-    (setq lsp-rust-analyzer-use-client-watching t)
-    (setq lsp-rust-analyzer-inlay-face t)
-    (setq lsp-rust-analyzer-server-display-inlay-hints t)
-    (setq lsp-rust-analyzer-use-client-watching t)
     )
 
   (use-package lsp-ui
@@ -424,7 +420,7 @@ Remove unnecessary stuff
     (lsp-ui-doc-enable t)
     (lsp-ui-doc-header t)
     (lsp-ui-doc-include-signature t)
-    (lsp-ui-doc-position 'top)
+    (lsp-ui-doc-position 'at-point) ;; or 'top
     (lsp-ui-doc-border (face-foreground 'default))
     (lsp-ui-sideline-enable t)
     (lsp-ui-sidline-ignore-duplicate t)
@@ -432,7 +428,7 @@ Remove unnecessary stuff
     (lsp-ui-sideline-code-actions-prefix " ")
     (lsp-ui-peek t)
     :config
-    (setq lsp-enable-snippet nil)
+    (setq lsp-enable-snippet t)
     (setq lsp-ui-doc-use-webkit t)
     (defadvice lsp-ui-imenu (after hide-lsp-ui-imenu-mode-line activate)
       (setq mode-line-format nil)))
@@ -447,15 +443,19 @@ Remove unnecessary stuff
     (use-package yasnippet-snippets
       :ensure t)
     (setq lsp-enable-snippet t)
-    (defun my/tab-indent-or-expand ()
-      "Indent or expand snippet."
-      (interactive)
-      (if (yas-expand)
-  	t
-        (indent-for-tab-command)
-        )
-      ))
-    ;; (global-set-key (kbd "<tab>") 'my/tab-indent-or-expand))
+    )
+  (defun my/tab-indent-or-expand ()
+    "Indent or expand snippet."
+    (interactive)
+    (if (yas-expand)
+        t
+      (indent-for-tab-command)
+      )
+    )
+  (add-hook 'prog-mode-hook
+  	  (lambda()
+  	    (local-set-key (kbd "<tab>") #'my/tab-indent-or-expand)))
+  ;; (global-set-key (kbd "<tab>") 'my/tab-indent-or-expand))
 
 #+END_SRC
 * Magit
