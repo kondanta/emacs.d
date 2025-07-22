@@ -260,34 +260,6 @@ Remove unnecessary stuff
     (which-key-mode))
 #+END_SRC
 
-* IDO mode
-** Enabling Ido Mode
-#+BEGIN_SRC emacs-lisp
-  (setq ido-enable-flex-matching nil)
-  (setq ido-create-new-buffer 'always)
-  (setq ido-everywhere t)
-  (ido-mode 1)
-#+END_SRC
-** Enable Vertical Mode
-#+BEGIN_SRC emacs-lisp
-    (use-package ido-vertical-mode
-      :init
-      (ido-vertical-mode 1))
-    (setq
-	  do-vetical-define-keys 'C-n-and-C-p-only)
-#+END_SRC
-** Smex
-*** put latest to top
-#+BEGIN_SRC emacs-lisp
-  (use-package smex
-    :init (smex-initialize)
-    :bind
-    ("M-x" . smex))
-#+END_SRC
-** Switch Buffers
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-x C-b") 'ido-switch-buffer)
-#+END_SRC
 * Buffers
 ** Enable IBuffer
 #+BEGIN_SRC emacs-lisp
@@ -422,12 +394,6 @@ Remove unnecessary stuff
     (eval-after-load "FlyC" (diminish 'FlyC))
     (eval-after-load "Rbow" (diminish 'Rbow))
     )
-#+END_SRC
-* Swiper
-** Searcher
-#+BEGIN_SRC emacs-lisp
-  (use-package swiper
-    :bind ("C-s" . swiper))
 #+END_SRC
 * Flycheck
 #+BEGIN_SRC emacs-lisp
