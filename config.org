@@ -401,31 +401,6 @@ Remove unnecessary stuff
     :init (global-flycheck-mode))
 #+END_SRC
 * IntelliSense
-** AutoComplete
-#+BEGIN_SRC emacs-lisp
-  ;; (use-package auto-complete)
-  ;; (ac-config-default)
-  ;; (global-auto-complete-mode t)
-  ;; (add-to-list 'ac-modes 'rustic)
-  ;; (add-hook 'auto-complete #'rustic)
-
-  ;; (use-package racer :requires (lsp-mode))
-
-  (use-package company)
-  (use-package company-quickhelp)
-
-  ;; (use-package company-lsp
-  ;;   :requires(lsp)
-  ;;   :after(lsp)
-  ;;   )
-  (push 'company-lsp company-backends)
-  (with-eval-after-load 'rustic
-    ;; tell company to complete on tabs instead of sitting there like a moron
-    (define-key rustic-mode-map (kbd "TAB") #'company-indent-or-complete-common)
-    )
-  (eval-after-load 'company
-    '(define-key company-active-map (kbd "C-c h") #'company-quickhelp-manual-begin))
-#+END_SRC
 ** LSP
 #+BEGIN_SRC emacs-lisp
   (use-package lsp-mode
@@ -433,6 +408,7 @@ Remove unnecessary stuff
     :commands (lsp lsp-deferred)
     :custom
     (lsp-prefer-flymake nil)
+    (setq lsp-completion-provider :capf)
     :config
     (define-key lsp-mode-map (kbd "C-c C-l") lsp-command-map)
     (setq lsp-auto-configure t)
@@ -460,6 +436,27 @@ Remove unnecessary stuff
     (setq lsp-ui-doc-use-webkit t)
     (defadvice lsp-ui-imenu (after hide-lsp-ui-imenu-mode-line activate)
       (setq mode-line-format nil)))
+#+END_SRC
+** Yasnippet
+#+BEGIN_SRC emacs-lisp
+  (use-package yasnippet
+    :ensure t
+    :init
+    (yas-global-mode 1)
+    :config
+    (use-package yasnippet-snippets
+      :ensure t)
+    (setq lsp-enable-snippet t)
+    (defun my/tab-indent-or-expand ()
+      "Indent or expand snippet."
+      (interactive)
+      (if (yas-expand)
+  	t
+        (indent-for-tab-command)
+        )
+      ))
+    ;; (global-set-key (kbd "<tab>") 'my/tab-indent-or-expand))
+
 #+END_SRC
 * Magit
 ** Git handler
@@ -634,4 +631,24 @@ Remove unnecessary stuff
   (use-package embark-consult
     :after (embark consult))
 
+#+END_SRC
+* Corfu + Capte
+#+BEGIN_SRC emacs-lisp
+  (use-package corfu
+    :straight t
+    :custom
+    (corfu-auto t) ;; enable auto popup
+    (corfu-cycle t) ;; cycle candidates
+    (corfu-auto-delay 0.2)
+    :init
+    (global-corfu-mode)
+    )
+
+  (use-package cape
+    :straight t
+    :init
+    (add-to-list 'completion-at-point-functions #'cape-file)
+    (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+    (add-to-list 'completion-at-point-functions #'cape-yasnippet)
+    )
 #+END_SRC
