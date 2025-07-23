@@ -296,6 +296,12 @@ This is the modern stack for completion, search, and in-buffer completion UI.
     :hook (terraform-mode . lsp-deferred)
     :config
     (add-hook 'terraform-mode-hook #'terraform-format-on-save-mode))
+  (use-package rustic
+    :hook ((rustic-mode . lsp-deferred)
+  	 (rustic-mode . prettify-symbols-mode))
+    :custom
+    (rustic-lsp-client 'lsp-mode)
+    (rustic-format-on-save t))
 #+end_src
 
 * 3. Custom Functions and Keybindings
