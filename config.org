@@ -1,6 +1,6 @@
 #+title: Emacs Configuration
 #+author: Taylan Doğan
-#+property: header-args:emacs-lisp :tangle +(expand-file-name "config.el" user-emacs-directory)
+# #+property: header-args:emacs-lisp :tangle +(expand-file-name "config.el" user-emacs-directory)
 #+begin_src emacs-lisp :tangle (expand-file-name "config.el" user-emacs-directory)
 ;;; config.el --- My Personal Emacs Configuration      -*- lexical-binding: t; -*-
 
@@ -232,53 +232,89 @@ This is the modern stack for completion, search, and in-buffer completion UI.
 
 ** Development (LSP, Magit, etc.)
 #+begin_src emacs-lisp
-      ;; Snippets
-      (use-package yasnippet
-        :init (yas-global-mode 1))
+  ;; Snippets
+  (use-package yasnippet
+    :init (yas-global-mode 1))
 
-      (use-package yasnippet-snippets)
+  (use-package yasnippet-snippets)
 
-      ;; Completion backends
-      (use-package cape
-        :after yasnippet
-        :init
-        (add-to-list 'completion-at-point-functions #'cape-file)
-        (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-        (add-to-list 'completion-at-point-functions #'cape-yasnippet))
+  ;; Completion backends
+  (use-package cape
+    :after yasnippet
+    :init
+    (add-to-list 'completion-at-point-functions #'cape-file)
+    (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+    (add-to-list 'completion-at-point-functions #'cape-yasnippet))
 
-      ;; On-the-fly syntax checking
-      (use-package flycheck
-        :init (global-flycheck-mode))
+  ;; On-the-fly syntax checking
+  (use-package flycheck
+    :init (global-flycheck-mode))
 
-      ;; Language Server Protocol
-      (use-package lsp-mode
-        :commands (lsp lsp-deferred)
-        :hook ((prog-mode . (lambda()
-    			  (unless (derived-mode-p 'emacs-lisp-mode)
-  			    (lsp-deferred))))
-      	 (lsp-mode . lsp-enable-which-key-integration))
-        :custom
-        (lsp-completion-provider :capf) ;; Use Corfu
-        (lsp-prefer-flymake nil)
-        (lsp-yaml-schemas-enable t))
+  ;; Language Server Protocol
+  (use-package lsp-mode
+    :commands (lsp lsp-deferred)
+    :hook ((prog-mode . (lambda()
+         			(unless (derived-mode-p 'emacs-lisp-mode)
+         			  (lsp-deferred))))
+         	 (lsp-mode . lsp-enable-which-key-integration))
+    :custom
+    (lsp-completion-provider :capf) ;; Use Corfu
+    (lsp-prefer-flymake nil)
+    (lsp-yaml-schemas-enable t))
 
-      (use-package lsp-ui
-        :after lsp-mode
-        :custom
-        (lsp-ui-doc-position 'at-point)
-        (lsp-ui-doc-show-with-cursor t)
-        (lsp-ui-doc-delay 0.5))
+  (use-package lsp-ui
+    :after lsp-mode
+    :custom
+    (lsp-ui-doc-position 'at-point)
+    (lsp-ui-doc-show-with-cursor t)
+    (lsp-ui-doc-delay 0.5))
 
 
-      ;; Git integration
-      (use-package magit
-        :bind ("C-x g" . magit-status))
+  ;; Git integration
+  (use-package magit
+    :bind ("C-x g" . magit-status))
 
-      ;; Project management
-      (use-package projectile
-        :init (projectile-mode 1)
-        :bind (:map projectile-mode-map
-                    ("C-c p" . projectile-command-map)))
+  ;; Project management
+  (use-package projectile
+    :init (projectile-mode 1)
+    :bind (:map projectile-mode-map
+                ("C-c p" . projectile-command-map)))
+
+  ;; Copilot LSP
+  (use-package copilot
+    :straight (:host github :repo "copilot-emacs/copilot.el"
+    		   :files ("*.el" "dist"))
+    :hook (prog-mode . copilot-mode)
+    :bind (:map copilot-completion-map
+    	    ("C-<tab>" . copilot-accept-completion)
+                ("C-c C-n" . copilot-next-completion)
+                ("C-c C-p" . copilot-previous-completion)
+                ("C-c C-d" . copilot-clear-overlay)))
+
+  ;; A new way of installing packages
+  ;;    (use-package copilot
+  ;;       :vc (:url "https://github.com/copilot-emacs/copilot.el"
+  ;; 		:rev :newest
+  ;; 		:branch :main)
+  ;; :init
+  ;; (setq copilot-server-executable "copilot-language-server")
+  ;; :bind :bind (:map copilot-completion-map
+  ;;     ("C-<tab>" . copilot-accept-completion)
+  ;;     ("C-c C-n" . copilot-next-completion)
+  ;;     ("C-c C-p" . copilot-previous-completion)
+  ;;     ("C-c C-d" . copilot-clear-overlay)))
+
+  (defun my/copilot-disable-p ()
+    "Return non-nil if Copilot should be disabled in this b
+  uffer."
+    (or (minibufferp)
+        (derived-mode-p 'org-mode)))
+
+  (add-hook 'copilot-mode-hook
+            (lambda ()
+              (when (my/copilot-disable-p)
+                (copilot-mode -1))))
+
 #+end_src
 
 ** Language-specific Packages
@@ -301,7 +337,10 @@ This is the modern stack for completion, search, and in-buffer completion UI.
   	 (rustic-mode . prettify-symbols-mode))
     :custom
     (rustic-lsp-client 'lsp-mode)
-    (rustic-format-on-save t))
+    (rustic-format-on-save nil)
+    (rustic-carg-use-last-stored-arguments t)
+    (rustic-rustfmt-bin "~/.local/share/cargo/bin/rustfmt")
+    (rustic-format-trigger 'on-save))
 #+end_src
 
 * 3. Custom Functions and Keybindings
