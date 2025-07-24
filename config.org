@@ -182,11 +182,14 @@ This is the modern stack for completion, search, and in-buffer completion UI.
 (use-package marginalia
   :init (marginalia-mode))
 
-;; Enhanced commands (M-x, C-x b, C-s)
-(use-package consult
-  :demand t ;; Load immediately to ensure aliases are defined
-  :bind (("C-x b" . consult-buffer)
-         ("C-s" . consult-line)))
+  ;; Enhanced commands (M-x, C-x b, C-s)
+  (use-package consult
+    :demand t ;; Load immediately to ensure aliases are defined
+    :bind (("C-x b" . consult-buffer)
+           ("C-s" . consult-line)
+  	 ("C-c c f" . consult-fd)
+  	 ("C-c c g" . consult-ripgrep))
+    )
 
 ;; Contextual actions
 (use-package embark
