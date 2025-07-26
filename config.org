@@ -2,22 +2,22 @@
 #+author: Taylan Doğan
 # #+property: header-args:emacs-lisp :tangle +(expand-file-name "config.el" user-emacs-directory)
 #+begin_src emacs-lisp :tangle (expand-file-name "config.el" user-emacs-directory)
-;;; config.el --- My Personal Emacs Configuration      -*- lexical-binding: t; -*-
+  ;;; config.el --- My Personal Emacs Configuration      -*- lexical-binding: t; -*-
 
-;;; Commentary:
+  ;;; Commentary:
 
-;; This file is tangled from my config.org.  It contains all my personal
-;; settings, package configurations, and custom functions.
+  ;; This file is tangled from my config.org.  It contains all my personal
+  ;; settings, package configurations, and custom functions.
 
-;;; Code:
+  ;;; Code:
 #+end_src
 * 1. Core Settings
 This section contains fundamental UI and behaviour tweaks that don't require external packages.
 
 ** User Information
 #+begin_src emacs-lisp
-(setq user-full-name "Taylan Doğan"
-      user-mail-address "git@taylandogan.info")
+  (setq user-full-name "Taylan Doğan"
+        user-mail-address "git@taylandogan.info")
 #+end_src
 
 ** UI Tweaks
@@ -58,7 +58,7 @@ This section contains fundamental UI and behaviour tweaks that don't require ext
   ;; Display the time in the mode line in 24-hour format
   (setq display-time-24hr-format t)
   (display-time-mode 1)
-  #+end_src
+#+end_src
 
 ** Behavior and Editing
 #+begin_src emacs-lisp
@@ -86,23 +86,23 @@ This section contains fundamental UI and behaviour tweaks that don't require ext
 
 ** Encoding
 #+begin_src emacs-lisp
-(set-language-environment "UTF-8")
-(prefer-coding-system 'utf-8)
-(set-default-coding-systems 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
+  (set-language-environment "UTF-8")
+  (prefer-coding-system 'utf-8)
+  (set-default-coding-systems 'utf-8)
+  (set-terminal-coding-system 'utf-8)
+  (set-keyboard-coding-system 'utf-8)
 #+end_src
 
 ** Backups
 #+begin_src emacs-lisp
-(setq backup-directory-alist '(("." . "~/.emacs.d/backups/"))
-      backup-by-copying t      ; Don't de-link hard links
-      version-control t        ; Use version numbers on backups
-      delete-old-versions t    ; Automatically delete excess backups
-      kept-new-versions 20     ; How many of the newest versions to keep
-      kept-old-versions 5      ; and how many of the old
-      auto-save-default nil    ; I don't want auto-save files
-      create-lockfiles nil)    ; or lockfiles
+  (setq backup-directory-alist '(("." . "~/.emacs.d/backups/"))
+        backup-by-copying t      ; Don't de-link hard links
+        version-control t        ; Use version numbers on backups
+        delete-old-versions t    ; Automatically delete excess backups
+        kept-new-versions 20     ; How many of the newest versions to keep
+        kept-old-versions 5      ; and how many of the old
+        auto-save-default nil    ; I don't want auto-save files
+        create-lockfiles nil)    ; or lockfiles
 #+end_src
 
 * 2. Packages
@@ -166,21 +166,21 @@ This section configures all external packages using use-package.
 ** Completion (V-MOCE + Corfu)
 This is the modern stack for completion, search, and in-buffer completion UI.
 #+begin_src emacs-lisp
-;; Completion UI
-(use-package vertico
-  :init (vertico-mode))
+  ;; Completion UI
+  (use-package vertico
+    :init (vertico-mode))
 
-;; Completion Style
-(use-package orderless
-  :custom
-  (completion-styles '(orderless basic))
-  (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles . (partial-completion)))))
-  )
+  ;; Completion Style
+  (use-package orderless
+    :custom
+    (completion-styles '(orderless basic))
+    (completion-category-defaults nil)
+    (completion-category-overrides '((file (styles . (partial-completion)))))
+    )
 
-;; Annotations in the minibuffer
-(use-package marginalia
-  :init (marginalia-mode))
+  ;; Annotations in the minibuffer
+  (use-package marginalia
+    :init (marginalia-mode))
 
   ;; Enhanced commands (M-x, C-x b, C-s)
   (use-package consult
@@ -191,22 +191,22 @@ This is the modern stack for completion, search, and in-buffer completion UI.
   	 ("C-c c g" . consult-ripgrep))
     )
 
-;; Contextual actions
-(use-package embark
-  :bind (("C-." . embark-act)
-         ("C-;" . embark-dwim)))
+  ;; Contextual actions
+  (use-package embark
+    :bind (("C-." . embark-act)
+           ("C-;" . embark-dwim)))
 
-(use-package embark-consult
-  :after (embark consult))
+  (use-package embark-consult
+    :after (embark consult))
 
-;; In-buffer completion UI
-(use-package corfu
-  :custom
-  (corfu-auto t)
-  (corfu-cycle t)
-  (corfu-auto-delay 0.2)
-  :init
-  (global-corfu-mode))
+  ;; In-buffer completion UI
+  (use-package corfu
+    :custom
+    (corfu-auto t)
+    (corfu-cycle t)
+    (corfu-auto-delay 0.2)
+    :init
+    (global-corfu-mode))
 #+end_src
 
 ** General Editing Enhancements
@@ -289,7 +289,7 @@ This is the modern stack for completion, search, and in-buffer completion UI.
     		   :files ("*.el" "dist"))
     :hook (prog-mode . copilot-mode)
     :bind (:map copilot-completion-map
-    	    ("C-<tab>" . copilot-accept-completion)
+    	      ("C-<tab>" . copilot-accept-completion)
                 ("C-c C-n" . copilot-next-completion)
                 ("C-c C-p" . copilot-previous-completion)
                 ("C-c C-d" . copilot-clear-overlay)))
@@ -485,24 +485,24 @@ This is the modern stack for completion, search, and in-buffer completion UI.
 ** Auto-tangle configuration on save
 #+begin_src emacs-lisp
 (defun my/tangle-config-on-save ()
-  "Automatically tangle the config.org file when it is saved."
-  (when (string-equal (buffer-file-name)
-                      (expand-file-name "config.org" user-emacs-directory))
-    (let ((org-confirm-babel-evaluate nil))
-      (org-babel-tangle))))
+"Automatically tangle the config.org file when it is saved."
+(when (string-equal (buffer-file-name)
+(expand-file-name "config.org" user-emacs-directory))
+(let ((org-confirm-babel-evaluate nil))
+(org-babel-tangle))))
 
 (add-hook 'after-save-hook #'my/tangle-config-on-save)
 ** Toggle LSP Documentation
 #+begin_src emacs-lisp
-(defun my/toggle-lsp-ui-doc ()
-  "Show or hide the lsp-ui documentation popup."
-  (interactive)
-  (if (lsp-ui-doc--frame-visible-p)
-      (lsp-ui-doc-hide)
-    (lsp-ui-doc-show)))
+  (defun my/toggle-lsp-ui-doc ()
+    "Show or hide the lsp-ui documentation popup."
+    (interactive)
+    (if (lsp-ui-doc--frame-visible-p)
+        (lsp-ui-doc-hide)
+      (lsp-ui-doc-show)))
 
-;; Bind the toggle function to "C-c h d" (Control-c, h, then d)
-(global-set-key (kbd "C-c h d") #'my/toggle-lsp-ui-doc)
+  ;; Bind the toggle function to "C-c h d" (Control-c, h, then d)
+  (global-set-key (kbd "C-c h d") #'my/toggle-lsp-ui-doc)
 #+end_src
 
 * 4. Org Mode
@@ -510,77 +510,77 @@ This section configures Org Mode and related packages.
 
 ** Easy Templates for Source Blocks
 #+begin_src emacs-lisp
-(require 'org-tempo)
-(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-(add-to-list 'org-structure-template-alist '("sh" . "src shell"))
-(add-to-list 'org-structure-template-alist '("py" . "src python"))
-(add-to-list 'org-structure-template-alist '("js" . "src js"))
+  (require 'org-tempo)
+  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+  (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+  (add-to-list 'org-structure-template-alist '("py" . "src python"))
+  (add-to-list 'org-structure-template-alist '("js" . "src js"))
 #+end_src
 
 ** General Org Settings
 #+begin_src emacs-lisp
-(setq org-ellipsis " ⤵"
-      org-src-fontify-natively t
-      org-src-tab-acts-natively t
-      org-confirm-babel-evaluate nil
-      org-export-with-smart-quotes t
-      org-support-shift-select 'always
-      org-enforce-todo-dependencies t
-      org-directory "~/Documents/notes/org-roam"
-      org-archive-location (concat org-directory "/archive.org::* From %s"))
+  (setq org-ellipsis " ⤵"
+        org-src-fontify-natively t
+        org-src-tab-acts-natively t
+        org-confirm-babel-evaluate nil
+        org-export-with-smart-quotes t
+        org-support-shift-select 'always
+        org-enforce-todo-dependencies t
+        org-directory "~/Documents/notes/org-roam"
+        org-archive-location (concat org-directory "/archive.org::* From %s"))
 
-(setq org-agenda-files (list org-directory))
-(add-hook 'org-mode-hook 'org-indent-mode)
+  (setq org-agenda-files (list org-directory))
+  (add-hook 'org-mode-hook 'org-indent-mode)
 #+end_src
 
 ** Org Bullets & Symbols
 #+begin_src emacs-lisp
-(use-package org-bullets
-  :hook (org-mode . org-bullets-mode))
+  (use-package org-bullets
+    :hook (org-mode . org-bullets-mode))
 
-(add-hook 'org-mode-hook (lambda ()
-  "Beautify Org Checkbox Symbol"
-  (push '("[ ]" .  "☐") prettify-symbols-alist)
-  (push '("[X]" . "☑" ) prettify-symbols-alist)
-  (push '("[-]" . "❍" ) prettify-symbols-alist)
-  (prettify-symbols-mode)))
+  (add-hook 'org-mode-hook (lambda ()
+  			   "Beautify Org Checkbox Symbol"
+  			   (push '("[ ]" .  "☐") prettify-symbols-alist)
+  			   (push '("[X]" . "☑" ) prettify-symbols-alist)
+  			   (push '("[-]" . "❍" ) prettify-symbols-alist)
+  			   (prettify-symbols-mode)))
 #+end_src
 
 ** Org Clocking and Task Management
 #+begin_src emacs-lisp
-;; Log when a task is marked DONE
-(setq org-log-done 'time)
-(setq org-deadline-warning-days 7)
-(setq org-agenda-show-all-dates t)
+  ;; Log when a task is marked DONE
+  (setq org-log-done 'time)
+  (setq org-deadline-warning-days 7)
+  (setq org-agenda-show-all-dates t)
 
-;; Clocking settings
-(setq org-clock-out-when-done t)
-(setq org-clock-in-resume t)
-(setq org-clock-persist t)
-(setq org-clock-idle-time nil)
-(setq org-clock-continuously nil)
+  ;; Clocking settings
+  (setq org-clock-out-when-done t)
+  (setq org-clock-in-resume t)
+  (setq org-clock-persist t)
+  (setq org-clock-idle-time nil)
+  (setq org-clock-continuously nil)
 
-;; Custom function to mark done and archive
-(defun kon/mark-done-and-archive ()
-  "Mark task done and archive it."
-  (interactive)
-  (org-todo 'done)
-  (org-archive-subtree))
+  ;; Custom function to mark done and archive
+  (defun kon/mark-done-and-archive ()
+    "Mark task done and archive it."
+    (interactive)
+    (org-todo 'done)
+    (org-archive-subtree))
 
-(define-key org-mode-map (kbd "C-c C-x C-s") 'kon/mark-done-and-archive)
+  (define-key org-mode-map (kbd "C-c C-x C-s") 'kon/mark-done-and-archive)
 
-;; Custom function to ask for effort when clocking in
-(defun my/org-mode-ask-effort ()
-  "Ask for an effort estimate when clocking in."
-  (unless (org-entry-get (point) "Effort")
-    (let ((effort
-           (completing-read
-            "Effort: "
-            (org-entry-get-multivalued-property (point) "Effort"))))
-      (unless (equal effort "")
-        (org-set-property "Effort" effort)))))
+  ;; Custom function to ask for effort when clocking in
+  (defun my/org-mode-ask-effort ()
+    "Ask for an effort estimate when clocking in."
+    (unless (org-entry-get (point) "Effort")
+      (let ((effort
+             (completing-read
+              "Effort: "
+              (org-entry-get-multivalued-property (point) "Effort"))))
+        (unless (equal effort "")
+          (org-set-property "Effort" effort)))))
 
-(add-hook 'org-clock-in-prepare-hook 'my/org-mode-ask-effort)
+  (add-hook 'org-clock-in-prepare-hook 'my/org-mode-ask-effort)
 #+end_src
 
 * 5. Platform Specific
@@ -593,7 +593,7 @@ I stopped using mac already but, just in case :)
 
 * 6. File Footer
 #+begin_src emacs-lisp
-(provide 'config)
+  (provide 'config)
 
-;;; config.el ends here
+  ;;; config.el ends here
 #+end_src
