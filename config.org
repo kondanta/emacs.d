@@ -58,6 +58,9 @@ This section contains fundamental UI and behaviour tweaks that don't require ext
   ;; Display the time in the mode line in 24-hour format
   (setq display-time-24hr-format t)
   (display-time-mode 1)
+
+  ;; suppress file type warnings, like missing lexical binding
+  (setq warning-suppress-types '((files)))
 #+end_src
 
 ** Behavior and Editing
