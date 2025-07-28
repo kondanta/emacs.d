@@ -58,9 +58,6 @@ This section contains fundamental UI and behaviour tweaks that don't require ext
   ;; Display the time in the mode line in 24-hour format
   (setq display-time-24hr-format t)
   (display-time-mode 1)
-
-  ;; suppress file type warnings, like missing lexical binding
-  (setq warning-suppress-types '((files)))
 #+end_src
 
 ** Behavior and Editing
@@ -165,6 +162,10 @@ This section configures all external packages using use-package.
   (set-face-attribute 'default nil
   		    :font "Iosevka Term Slab Nerd Font"
   		    :height 200)
+  
+  ;; Adding the default font to this default-frame-alist to make is usable
+  ;; inside the emacsclient as well 
+  (add-to-list 'default-frame-alist '(font . "Iosevka Term Slab Nerd Font-20"))
 #+end_src
 ** Completion (V-MOCE + Corfu)
 This is the modern stack for completion, search, and in-buffer completion UI.
