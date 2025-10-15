@@ -245,13 +245,19 @@ This is the modern stack for completion, search, and in-buffer completion UI.
 
   (use-package yasnippet-snippets)
 
+  (use-package yasnippet-capf
+    :ensure t
+    :config
+    (add-to-list 'completion-at-point-functions #'yasnippet-capf))
+
   ;; Completion backends
   (use-package cape
     :after yasnippet
-    :init
+    ;;:init
+    :config
     (add-to-list 'completion-at-point-functions #'cape-file)
     (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-    (add-to-list 'completion-at-point-functions #'cape-yasnippet))
+    (add-to-list 'completion-at-point-functions #'yasnippet-capf))
 
   ;; On-the-fly syntax checking
   (use-package flycheck
@@ -278,8 +284,8 @@ This is the modern stack for completion, search, and in-buffer completion UI.
 
 
   ;; Git integration
-  (use-package magit
-    :bind ("C-x g" . magit-status))
+  ;; (use-package magit
+  ;;  :bind ("C-x g" . magit-status))
 
   ;; Project management
   (use-package projectile
