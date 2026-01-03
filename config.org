@@ -162,7 +162,7 @@ This section configures all external packages using use-package.
   (set-face-attribute 'default nil
   		    :font "Iosevka Term Slab Nerd Font"
   		    :height 200)
-  
+
   ;; Adding the default font to this default-frame-alist to make is usable
   ;; inside the emacsclient as well 
   (add-to-list 'default-frame-alist '(font . "Iosevka Term Slab Nerd Font-20"))
@@ -239,6 +239,49 @@ This is the modern stack for completion, search, and in-buffer completion UI.
 
 ** Development (LSP, Magit, etc.)
 #+begin_src emacs-lisp
+  (use-package apheleia
+    :ensure t
+    :config
+    ;; --- 1. Async LSP Bridge ---
+    (cl-defun my/apheleia-lsp-async (&key buffer scratch callback &allow-other-keys)
+      "Format BUFFER using LSP asynchronously.
+       When LSP returns edits, apply them to SCRATCH and call CALLBACK."
+      (with-current-buffer buffer
+        (if (and (bound-and-true-p lsp-mode)
+                 (lsp-feature? "textDocument/formatting"))
+            ;; Send the request asynchronously
+            (lsp-request-async
+             "textDocument/formatting"
+             (lsp--make-document-formatting-params)
+             ;; Success Handler: runs when LSP replies
+             (lambda (edits)
+               (when edits
+                 (with-current-buffer scratch
+                   (lsp--apply-text-edits edits scratch)))
+               ;; CRITICAL: Tell Apheleia we are done
+               (funcall callback)))
+          ;; If LSP isn't active, just finish immediately
+          (funcall callback))))
+
+    ;; --- 2. Register Formatters ---
+    
+    ;; Register our new async LSP formatter
+    (setf (alist-get 'lsp-async apheleia-formatters) #'my/apheleia-lsp-async)
+    ;; Register yamlfmt
+    (setf (alist-get 'yamlfmt apheleia-formatters) '("yamlfmt" "-in"))
+
+    ;; --- 3. Map Modes to Formatters ---
+
+    ;; BINARIES (Fast, external tools)
+    (setf (alist-get 'go-mode apheleia-mode-alist) 'gofmt)
+    (setf (alist-get 'rust-mode apheleia-mode-alist) 'rustfmt)
+    (setf (alist-get 'yaml-mode apheleia-mode-alist) 'yamlfmt)
+
+    ;; LSP (Async)
+    (setf (alist-get 'toml-mode apheleia-mode-alist) 'lsp-async)
+
+    (apheleia-global-mode +1))
+
   ;; Snippets
   (use-package yasnippet
     :init (yas-global-mode 1))
@@ -267,9 +310,9 @@ This is the modern stack for completion, search, and in-buffer completion UI.
   (use-package lsp-mode
     :commands (lsp lsp-deferred)
     :hook ((prog-mode . (lambda()
-         			(unless (derived-mode-p 'emacs-lisp-mode)
-         			  (lsp-deferred))))
-         	 (lsp-mode . lsp-enable-which-key-integration))
+                         	(unless (derived-mode-p 'emacs-lisp-mode)
+                         	  (lsp-deferred))))
+           (lsp-mode . lsp-enable-which-key-integration))
     :custom
     (lsp-completion-provider :capf) ;; Use Corfu
     (lsp-prefer-flymake nil)
@@ -296,10 +339,10 @@ This is the modern stack for completion, search, and in-buffer completion UI.
   ;; Copilot LSP
   (use-package copilot
     :straight (:host github :repo "copilot-emacs/copilot.el"
-    		   :files ("*.el" "dist"))
+                     :files ("*.el" "dist"))
     :hook (prog-mode . copilot-mode)
     :bind (:map copilot-completion-map
-    	      ("C-<tab>" . copilot-accept-completion)
+                ("C-<tab>" . copilot-accept-completion)
                 ("C-c C-n" . copilot-next-completion)
                 ("C-c C-p" . copilot-previous-completion)
                 ("C-c C-d" . copilot-clear-overlay)))
@@ -319,7 +362,7 @@ This is the modern stack for completion, search, and in-buffer completion UI.
 
   (defun my/copilot-disable-p ()
     "Return non-nil if Copilot should be disabled in this b
-  uffer."
+                  uffer."
     (or (minibufferp)
         (derived-mode-p 'org-mode)))
 
@@ -351,9 +394,14 @@ This is the modern stack for completion, search, and in-buffer completion UI.
     :custom
     (rustic-lsp-client 'lsp-mode)
     (rustic-format-on-save nil)
+    (rustic-format-trigger nil)
     (rustic-carg-use-last-stored-arguments t)
-    (rustic-rustfmt-bin "~/.local/share/cargo/bin/rustfmt")
-    (rustic-format-trigger 'on-save))
+    (rustic-rustfmt-bin "~/.local/share/cargo/bin/rustfmt"))
+
+
+  (use-package toml-mode
+    :mode "/\\(\\.toml\\|Cargo.lock\\|\\.cargo/config\\)\\'"
+    :hook (toml-mode . lsp-deferred))
 #+end_src
 
 * 3. Custom Functions and Keybindings
