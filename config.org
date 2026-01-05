@@ -269,11 +269,12 @@ This is the modern stack for completion, search, and in-buffer completion UI.
     (setf (alist-get 'lsp-async apheleia-formatters) #'my/apheleia-lsp-async)
     ;; Register yamlfmt
     (setf (alist-get 'yamlfmt apheleia-formatters) '("yamlfmt" "-in"))
+    (setf (alist-get 'gofumpt apheleia-formatters) '("gofumpt"))
 
     ;; --- 3. Map Modes to Formatters ---
 
     ;; BINARIES (Fast, external tools)
-    (setf (alist-get 'go-mode apheleia-mode-alist) 'gofmt)
+    (setf (alist-get 'go-mode apheleia-mode-alist) '(goimports gofumpt))
     (setf (alist-get 'rust-mode apheleia-mode-alist) 'rustfmt)
     (setf (alist-get 'yaml-mode apheleia-mode-alist) 'yamlfmt)
 
@@ -398,10 +399,15 @@ This is the modern stack for completion, search, and in-buffer completion UI.
     (rustic-carg-use-last-stored-arguments t)
     (rustic-rustfmt-bin "~/.local/share/cargo/bin/rustfmt"))
 
-
   (use-package toml-mode
     :mode "/\\(\\.toml\\|Cargo.lock\\|\\.cargo/config\\)\\'"
     :hook (toml-mode . lsp-deferred))
+
+  (use-package go-mode
+    :ensure t
+    :mode "\\.go\\'"
+    :hook
+    (go-mode . lsp-deferred))
 #+end_src
 
 * 3. Custom Functions and Keybindings
