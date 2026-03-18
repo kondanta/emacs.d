@@ -391,7 +391,7 @@ This is the modern stack for completion, search, and in-buffer completion UI.
     (add-hook 'terraform-mode-hook #'terraform-format-on-save-mode))
   (use-package rustic
     :hook ((rustic-mode . lsp-deferred)
-  	 (rustic-mode . prettify-symbols-mode))
+    	 (rustic-mode . prettify-symbols-mode))
     :custom
     (rustic-lsp-client 'lsp-mode)
     (rustic-format-on-save nil)
@@ -408,7 +408,19 @@ This is the modern stack for completion, search, and in-buffer completion UI.
     :mode "\\.go\\'"
     :hook
     (go-mode . lsp-deferred))
-#+end_src
+
+  (use-package jsonnet-mode
+    :ensure t
+    :mode "\\.jsonnet\\'"
+    :hook
+    (jsonnet-mode . lsp-deferred))
+
+  (use-package just-mode
+    :ensure t
+    :mode "\\.just"
+    :hook
+    (just-mode . lsp-deferred))
+  #+end_src
 
 * 3. Custom Functions and Keybindings
 #+begin_src emacs-lisp
