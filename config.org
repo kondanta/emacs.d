@@ -170,47 +170,55 @@ This section configures all external packages using use-package.
 ** Completion (V-MOCE + Corfu)
 This is the modern stack for completion, search, and in-buffer completion UI.
 #+begin_src emacs-lisp
-  ;; Completion UI
-  (use-package vertico
-    :init (vertico-mode))
+    (unless (fboundp 'set-local)
+      (defun set-local (variable value)
+        (set (make-local-variable variable) value)))
 
-  ;; Completion Style
-  (use-package orderless
-    :custom
-    (completion-styles '(orderless basic))
-    (completion-category-defaults nil)
-    (completion-category-overrides '((file (styles . (partial-completion)))))
-    )
+    (use-package compat
+      :straight t
+      :demand t)
 
-  ;; Annotations in the minibuffer
-  (use-package marginalia
-    :init (marginalia-mode))
+    ;; Completion UI
+    (use-package vertico
+      :init (vertico-mode))
 
-  ;; Enhanced commands (M-x, C-x b, C-s)
-  (use-package consult
-    :demand t ;; Load immediately to ensure aliases are defined
-    :bind (("C-x b" . consult-buffer)
-           ("C-s" . consult-line)
-  	 ("C-c c f" . consult-fd)
-  	 ("C-c c g" . consult-ripgrep))
-    )
+    ;; Completion Style
+    (use-package orderless
+      :custom
+      (completion-styles '(orderless basic))
+      (completion-category-defaults nil)
+      (completion-category-overrides '((file (styles . (partial-completion)))))
+      )
 
-  ;; Contextual actions
-  (use-package embark
-    :bind (("C-." . embark-act)
-           ("C-;" . embark-dwim)))
+    ;; Annotations in the minibuffer
+    (use-package marginalia
+      :init (marginalia-mode))
 
-  (use-package embark-consult
-    :after (embark consult))
+    ;; Enhanced commands (M-x, C-x b, C-s)
+    (use-package consult
+      :demand t ;; Load immediately to ensure aliases are defined
+      :bind (("C-x b" . consult-buffer)
+             ("C-s" . consult-line)
+    	 ("C-c c f" . consult-fd)
+    	 ("C-c c g" . consult-ripgrep))
+      )
 
-  ;; In-buffer completion UI
-  (use-package corfu
-    :custom
-    (corfu-auto t)
-    (corfu-cycle t)
-    (corfu-auto-delay 0.2)
-    :init
-    (global-corfu-mode))
+    ;; Contextual actions
+    (use-package embark
+      :bind (("C-." . embark-act)
+             ("C-;" . embark-dwim)))
+
+    (use-package embark-consult
+      :after (embark consult))
+
+    ;; In-buffer completion UI
+    (use-package corfu
+      :custom
+      (corfu-auto t)
+      (corfu-cycle t)
+      (corfu-auto-delay 0.2)
+      :init
+      (global-corfu-mode))
 #+end_src
 
 ** General Editing Enhancements
@@ -338,15 +346,15 @@ This is the modern stack for completion, search, and in-buffer completion UI.
                 ("C-c p" . projectile-command-map)))
 
   ;; Copilot LSP
-  (use-package copilot
-    :straight (:host github :repo "copilot-emacs/copilot.el"
-                     :files ("*.el" "dist"))
-    :hook (prog-mode . copilot-mode)
-    :bind (:map copilot-completion-map
-                ("C-<tab>" . copilot-accept-completion)
-                ("C-c C-n" . copilot-next-completion)
-                ("C-c C-p" . copilot-previous-completion)
-                ("C-c C-d" . copilot-clear-overlay)))
+  ;;(use-package copilot
+  ;;  :straight (:host github :repo "copilot-emacs/copilot.el"
+  ;;                   :files ("*.el" "dist"))
+  ;;  :hook (prog-mode . copilot-mode)
+  ;;  :bind (:map copilot-completion-map
+  ;;              ("C-<tab>" . copilot-accept-completion)
+  ;;              ("C-c C-n" . copilot-next-completion)
+  ;;              ("C-c C-p" . copilot-previous-completion)
+  ;;              ("C-c C-d" . copilot-clear-overlay)))
 
   ;; A new way of installing packages
   ;;    (use-package copilot
@@ -367,10 +375,10 @@ This is the modern stack for completion, search, and in-buffer completion UI.
     (or (minibufferp)
         (derived-mode-p 'org-mode)))
 
-  (add-hook 'copilot-mode-hook
-            (lambda ()
-              (when (my/copilot-disable-p)
-                (copilot-mode -1))))
+  ;;(add-hook 'copilot-mode-hook
+  ;;          (lambda ()
+  ;;            (when (my/copilot-disable-p)
+  ;;              (copilot-mode -1))))
 
 #+end_src
 
